@@ -1,0 +1,55 @@
+{
+    "project_info": {
+      "project_number": "126096465796",
+      "firebase_url": "https://wrestlefeed-app.firebaseio.com",
+      "project_id": "wrestlefeed-app",
+      "storage_bucket": "wrestlefeed-app.appspot.com"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:126096465796:android:1e82f76d5d739d18",
+          "android_client_info": {
+            "package_name": "com.wrestlefeed"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "126096465796-t441d0um0pd0selkfhqk5s3cub3gkk0e.apps.googleusercontent.com",
+            "client_type": 1,
+            "android_info": {
+              "package_name": "com.wrestlefeed",
+              "certificate_hash": "ad052edebce57045176e4e036481762aa6b471a1"
+            }
+          },
+          {
+            "client_id": "126096465796-gkpjsiev07ggpv7p8669dfq3th9hopca.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyDoFrH6eACqqONhJSTrwcwltDE82Pdcs8o"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "126096465796-8v9vo61qobjuel9pgpdc0gfnpvctjg6h.apps.googleusercontent.com",
+                "client_type": 3
+              },
+              {
+                "client_id": "126096465796-j8u2rln4bg120cssev13v90etn6d5e7r.apps.googleusercontent.com",
+                "client_type": 2,
+                "ios_info": {
+                  "bundle_id": "com.wrestlefeed.news"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }
