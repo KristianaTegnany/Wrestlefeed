@@ -28,15 +28,18 @@ function Tabs(props) {
         routes.map((r,i) => {
             if(r.key == "News" && data[0].new_data.length != 0 ){
                 routes[i].newPost = true
-            }else if(r.key == "Raw" && data[1].new_data.length != 0){
-                routes[i].newPost = true
             }else if(r.key == "Divas" && data[2].new_data.length != 0){
                 routes[i].newPost = true
-            }else if(r.key == "SmackDown" && data[3].new_data.length != 0){
-                routes[i].newPost = true
-            }else if(r.key == "Nxt" && data[4].new_data.length != 0){
-                routes[i].newPost = true
-            }else if(r.key == "Aew" && data[5].new_data.length != 0){
+            }
+            // else if(r.key == "SmackDown" && data[3].new_data.length != 0){
+            //     routes[i].newPost = true
+            // }else if(r.key == "Raw" && data[1].new_data.length != 0){
+            //     routes[i].newPost = true
+            // }
+            // else if(r.key == "Nxt" && data[4].new_data.length != 0){
+            //     routes[i].newPost = true
+            // }
+            else if(r.key == "Aew" && data[5].new_data.length != 0){
                 routes[i].newPost = true
             }else if(r.key == "Videos" && data[6].new_data.length != 0){
                 routes[i].newPost = true

@@ -11,6 +11,7 @@ import Login from './user/Login';
 import SignUp from './user/SignUp';
 import ForgotPassword from './user/ForgotPassword';
 import ContactUs from './menu/ContactUs';
+import WrestleMoney from './menu/WrestleMoney';
 import FullWebview from './common/FullWebview';
 import PinchImage from './timeline/PinchImage';
 import { TabLabel } from './common/Component';
@@ -36,9 +37,9 @@ const Dashboard = createMaterialTopTabNavigator(
         Divas: Divas,
         Videos: Videos,
         OldSchool: OldSchool,
-        Raw: Raw,
-        SmackDown: SmackDown,
-        Nxt: Nxt,
+        // Raw: Raw,
+        // SmackDown: SmackDown,
+        // Nxt: Nxt,
         Aew: Aew
     },{
         defaultNavigationOptions: ({ navigation }) => ({
@@ -88,6 +89,7 @@ const AppNavigator = createStackNavigator(
         ForgotPassword: ForgotPassword,
         Dashboard: Dashboard,
         ContactUs: ContactUs,
+        WrestleMoney,
         FullWebview: FullWebview,
         PinchImage: PinchImage,
     },

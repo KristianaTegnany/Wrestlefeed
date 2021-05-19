@@ -451,14 +451,14 @@ class Dashboard extends Component {
                                 onReadMorePress={this.onReadMorePress}
                                 onCommentOpen={this.onCommentOpen}
                             />
-                            : name == "RAW" ?
-                            <PagerListWrapper2
-                                index={post_pos}
-                                post_list={post_list}
-                                onPostChange={(position) => this.onPostChange(position)}
-                                onReadMorePress={this.onReadMorePress}
-                                onCommentOpen={this.onCommentOpen}
-                            />
+                            // : name == "RAW" ?
+                            // <PagerListWrapper2
+                            //     index={post_pos}
+                            //     post_list={post_list}
+                            //     onPostChange={(position) => this.onPostChange(position)}
+                            //     onReadMorePress={this.onReadMorePress}
+                            //     onCommentOpen={this.onCommentOpen}
+                            // />
                             : name == "VIDEOS" ?
                             <PagerListWrapper3
                                 index={post_pos}
@@ -467,22 +467,22 @@ class Dashboard extends Component {
                                 onReadMorePress={this.onReadMorePress}
                                 onCommentOpen={this.onCommentOpen}
                             />
-                            : name == "SMACKDOWN" ?
-                            <PagerListWrapper4
-                                index={post_pos}
-                                post_list={post_list}
-                                onPostChange={(position) => this.onPostChange(position)}
-                                onReadMorePress={this.onReadMorePress}
-                                onCommentOpen={this.onCommentOpen}
-                            />
-                            : name == "NXT" ?
-                            <PagerListWrapper5
-                                index={post_pos}
-                                post_list={post_list}
-                                onPostChange={(position) => this.onPostChange(position)}
-                                onReadMorePress={this.onReadMorePress}
-                                onCommentOpen={this.onCommentOpen}
-                            />
+                            // : name == "SMACKDOWN" ?
+                            // <PagerListWrapper4
+                            //     index={post_pos}
+                            //     post_list={post_list}
+                            //     onPostChange={(position) => this.onPostChange(position)}
+                            //     onReadMorePress={this.onReadMorePress}
+                            //     onCommentOpen={this.onCommentOpen}
+                            // />
+                            // : name == "NXT" ?
+                            // <PagerListWrapper5
+                            //     index={post_pos}
+                            //     post_list={post_list}
+                            //     onPostChange={(position) => this.onPostChange(position)}
+                            //     onReadMorePress={this.onReadMorePress}
+                            //     onCommentOpen={this.onCommentOpen}
+                            // />
                             : name == "AEW" ?
                             <PagerListWrapper6
                                 index={post_pos}

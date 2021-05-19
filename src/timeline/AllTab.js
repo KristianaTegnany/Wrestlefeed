@@ -26,9 +26,9 @@ class AllTab extends Component{
             { name: "DIVAS", status: false },
             { name: "VIDEOS", status: false },
             { name: "OLD SCHOOL", status: false },
-            { name: "RAW", status: false },
-            { name: "SMACKDOWN", status: false },
-            { name: "NXT", status: false },
+            // { name: "RAW", status: false },
+            // { name: "SMACKDOWN", status: false },
+            // { name: "NXT", status: false },
             { name: "AEW", status: false },
         ],
         hideMenu: false
