@@ -160,8 +160,12 @@ class Menu extends Component {
         </View>
 
         {
-          this.state.showGoPro && <View style={{ ...StyleSheet.absoluteFill, backgroundColor: 'white' }}>
-
+          this.state.showGoPro && <View style={styles.notSubscribed}>
+            <View style={styles.notSubscribedCard}>
+              <View>
+                <Text>You need to be subscribed to acces this </Text>
+              </View>
+            </View>
           </View>
         }
       </React.Fragment>
@@ -229,5 +233,12 @@ class Menu extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  notSubscribed: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'yellow'
+  }
+})
 
 export default Menu;
