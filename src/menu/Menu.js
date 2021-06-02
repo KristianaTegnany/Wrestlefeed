@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, Alert, Image, Linking, BackHandler, StyleSheet } from 'react-native';
+import { View, Text, Alert, Image, Linking, BackHandler, Dimensions } from 'react-native';
 import BottomSheet from 'reanimated-bottom-sheet'
 import AsyncStorage from '@react-native-community/async-storage';
 import { StackActions, NavigationActions } from 'react-navigation';
 import AndroidOpenSettings from 'react-native-android-open-settings'
 import { AppEventsLogger } from "react-native-fbsdk";
+import NotSubscribed from './NotSubscribed'
+
 
 import config from '../config';
 import { TouchableComponent } from '../common/Press';
@@ -42,7 +44,7 @@ class Menu extends Component {
   state = {
     user_data: '',
     isPro: false,
-    showGoPro: true
+    showGoPro: false
   }
 
   onRateUs = () => {
@@ -112,63 +114,51 @@ class Menu extends Component {
     let { user_data } = this.state
     let navigation = this.props.navigation;
     return (
-      <React.Fragment>
-        <View style={{ height: 550, backgroundColor: '#212121' }}>
-          <View style={{ height: 440 }}>
-            <View style={{ alignItems: 'center' }}>
-              {
-                user_data ?
-                  <Profile user={user_data} />
-                  // : <ActivityIndicator size="large" />
-                  : null
-              }
-            </View>
-            <View style={{ alignItems: 'center' }}>
-              <MenuItem
-                name="WrestleMoney"
-                itemPress={() => this.onWrestleMoney(user_data, navigation)}
-              />
+      <View style={{ height: 550, backgroundColor: '#212121' }}>
+        <View style={{ height: 440 }}>
+          <View style={{ alignItems: 'center' }}>
+            {
+              user_data ?
+                <Profile user={user_data} />
+                // : <ActivityIndicator size="large" />
+                : null
+            }
+          </View>
+          <View style={{ alignItems: 'center' }}>
+            <MenuItem
+              name="WrestleMoney"
+              itemPress={() => this.onWrestleMoney(user_data, navigation)}
+            />
 
-              <MenuItem
-                name="Privacy Policy" // / GDPR
-                itemPress={() => navigation.navigate("FullWebview", 'https://app.wwfoldschool.com/privacy-policy/')}
-              />
-              {/* <MenuItem
+            <MenuItem
+              name="Privacy Policy" // / GDPR
+              itemPress={() => navigation.navigate("FullWebview", 'https://app.wwfoldschool.com/privacy-policy/')}
+            />
+            {/* <MenuItem
               name="WWF Old School"
               itemPress={() => Linking.openURL('https://wwfoldschool.com/')}
             /> */}
-              <MenuItem
-                name="Notifications"
-                itemPress={() => this.onNotification()}
-              />
-              <MenuItem name="Contact Us" itemPress={() => this.goToContactUs(user_data, navigation)} />
-              <MenuItem name="Rate Us" itemPress={this.onRateUs} />
-              <MenuItem name="Logout" itemPress={this.onLogout} />
-              {
-                !config.ios ?
-                  <MenuItem name="Exit" itemPress={() => this.onExitApp()} />
-                  : null
-              }
-            </View>
-          </View>
-          <View style={{ paddingLeft: 60, paddingRight: 60, height: 110, paddingTop: 16, }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Text style={{ fontSize: 30, fontFamily: config.ios ? 'Eurostile' : 'Eurostile-Bold', color: '#b21a1a' }}>Wrestle</Text>
-              <Text style={{ fontSize: 30, fontFamily: config.ios ? 'Eurostile' : 'Eurostile-Bold', color: 'white' }}>Feed</Text>
-            </View>
+            <MenuItem
+              name="Notifications"
+              itemPress={() => this.onNotification()}
+            />
+            <MenuItem name="Contact Us" itemPress={() => this.goToContactUs(user_data, navigation)} />
+            <MenuItem name="Rate Us" itemPress={this.onRateUs} />
+            <MenuItem name="Logout" itemPress={this.onLogout} />
+            {
+              !config.ios ?
+                <MenuItem name="Exit" itemPress={() => this.onExitApp()} />
+                : null
+            }
           </View>
         </View>
-
-        {
-          this.state.showGoPro && <View style={styles.notSubscribed}>
-            <View style={styles.notSubscribedCard}>
-              <View>
-                <Text>You need to be subscribed to acces this </Text>
-              </View>
-            </View>
+        <View style={{ paddingLeft: 60, paddingRight: 60, height: 110, paddingTop: 16, }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <Text style={{ fontSize: 30, fontFamily: config.ios ? 'Eurostile' : 'Eurostile-Bold', color: '#b21a1a' }}>Wrestle</Text>
+            <Text style={{ fontSize: 30, fontFamily: config.ios ? 'Eurostile' : 'Eurostile-Bold', color: 'white' }}>Feed</Text>
           </View>
-        }
-      </React.Fragment>
+        </View>
+      </View>
     )
   }
 
@@ -229,16 +219,23 @@ class Menu extends Component {
           // enabledInnerScrolling={false}
           onCloseEnd={this.onCloseMenu}
         />
+        {
+          <View
+            style={{
+              position: 'absolute',
+              overflow: 'hidden',
+              zIndex: 9999999,
+              bottom: 0, left: 0,
+              right: 0,
+              height: this.state.showGoPro ? Dimensions.get('screen').height : 0
+            }}
+          >
+            <NotSubscribed cancelable close={_ => this.setState({showGoPro: false})}/>
+          </View>
+        }
       </View>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  notSubscribed: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: 'yellow'
-  }
-})
 
 export default Menu;
