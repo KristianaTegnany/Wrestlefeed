@@ -375,7 +375,7 @@ class News extends Component {
                         onHandlerStateChange={this.doubleTap} 
                         ref={this.doubleTapRef} 
                         style={{ width, height }}
-                    >
+                    > 
                         <Animated.View style={{ flex: 1 }}>
                             {
                                 post_list.length != 0 ?

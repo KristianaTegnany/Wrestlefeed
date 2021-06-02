@@ -1,4 +1,8 @@
-const INITIAL_STATE = { dark_mode: true, tab_name: 'NEWS' };
+const INITIAL_STATE = {
+  dark_mode: true,
+  tab_name: 'NEWS',
+  
+};
   
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {

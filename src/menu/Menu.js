@@ -112,6 +112,7 @@ class Menu extends Component {
 
   renderContent = () => {
     let { user_data } = this.state
+    console.log({user_data})
     let navigation = this.props.navigation;
     return (
       <View style={{ height: 550, backgroundColor: '#212121' }}>
