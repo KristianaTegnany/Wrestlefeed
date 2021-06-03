@@ -8,24 +8,44 @@ import Error from './Error';
 import PointsTable from './PointsTable';
 import TeamBuilder from './TeamBuilder';
 import TextComponent from './TextComponent';
+import Axios from 'axios'
+
+
+export const wf = {
+  wrestlers: [],
+  baseUrl: 'https://devapp.wwfoldschool.com/wrestler/'
+}
+
+const getWrestlers = async () => {
+  const {data} = await Axios.get(`${wf.baseUrl}api/wrestler`)
+  wf.wrestlers = data.data
+  return wf.wrestlers
+}
 
 const _defTitle = "Wrestle Money"
 
 const WrestleMoney = (props) => {
   const {
-    navigation
+    navigation,
+    navigation: {state: {params: user}}
   } = props
+
   // States
   const [active, setActive] = React.useState({title: _defTitle})
+  const [wrestlers, setWrestlers] = React.useState(wf.wrestlers)
   const [errorText, setErrorText] = React.useState('')
+  let { ID, user_email, display_name } = user
+
   const goBackHome = () => {
     if(active.title === _defTitle) navigation.goBack()
     else setActive({title: _defTitle})
     return false
   }
+  
   React.useEffect(() => {
-    const backHandler = BackHandler.addEventListener("hardwareBackPress", goBackHome);
-    return () => backHandler.remove();
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", goBackHome)
+    getWrestlers().then(wlrs => setWrestlers(wlrs))
+    return () => backHandler.remove()
   }, []);
   const Component = active.component
   return (
@@ -51,7 +71,7 @@ const WrestleMoney = (props) => {
             })
           }
         </View>
-        { Component && <Component/> }
+        { Component && <Component {...{user, navigation}}/> }
         { !!errorText && <Error text={errorText} close={ _ => setErrorText('')}/> }
       </View>
     </SafeAreaView>

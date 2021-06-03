@@ -1,8 +1,7 @@
 import React from 'react'
 import {
-  View, Text, StyleSheet, } from 'react-native'
-
-
+  View, Text, StyleSheet
+} from 'react-native'
 const TextComponent = () => {
   const [chosen, setChosen] = React.useState([])
   const showWrestler = (id) => {

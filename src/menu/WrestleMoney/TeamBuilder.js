@@ -2,14 +2,21 @@ import React from 'react'
 import {
   View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native'
 import { addZero } from '../../functions'
+import { wf } from '.'
+import Axios from 'axios'
+
+const url = ''
 
 const Wrestler = ({item}) => {
-  const {
+  let {
     id,
     name = "Marson Jr.",
     image = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/John_Cena_2010.jpg/170px-John_Cena_2010.jpg',
-    toggler, chosen
+    toggler,
+    chosen
   } = item
+  if(!image) image = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/John_Cena_2010.jpg/170px-John_Cena_2010.jpg'
+  else if(!image.startsWith('http')) image = `${wf.baseUrl}${image}`
 
   return (
     <View key={id} activeOpacity={.9} style={styles.Wrestler}>
@@ -23,15 +30,18 @@ const Wrestler = ({item}) => {
 
 const list = Array.from(new Array(4).keys())
 
-const TeamBuilder = () => {
+const TeamBuilder = (props) => {
+  const { user } = props
   const [chosen, setChosen] = React.useState([2])
   const toggleWrestler = (id) => {
     if(chosen.includes(id)) setChosen(chosen.filter(i => id !== i))
     else if(chosen.length < 5) {
-      console.log("a", {chosen})
       setChosen([ ...chosen, id ])
-      console.log("b", {chosen})
     }
+  }
+  const save = () => {
+    Axios.post(`${wf.baseUrl}api/team`).then(console.log)
+    navigation.back()
   }
   return (
     <View style={styles.TeamBuilder}>
@@ -41,18 +51,43 @@ const TeamBuilder = () => {
       </View>
       <FlatList
         style={styles.wFList}
-        data={list.map((id) => {
-          return { id, toggler: toggleWrestler, chosen}
+        data={wf.wrestlers.map(wrestler => {
+          return { ...wrestler, toggler: toggleWrestler, chosen }
         })}
         // keyExtractor={(_, i) => i}
         renderItem={Wrestler}
         numColumns={2}
       />
+      {
+        chosen.length === 5 && <View style={styles.submitParent}>
+          <TouchableOpacity onPress={save} style={styles.submitButton}>
+            <Text  style={styles.submitText}>Save my team</Text>
+          </TouchableOpacity>
+        </View>
+      }
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  submitParent: {
+    position: 'absolute',
+    bottom: 20,
+    left: 0,
+    right: 0,
+    alignItems: 'center'
+  },
+  submitButton: {
+    backgroundColor: '#b21a1a',
+    borderRadius: 30,
+    width: '60%',
+    padding: 10
+  },
+  submitText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
   TeamBuilder: {
     backgroundColor: 'rgba(240, 240, 240, .8)',
     ...StyleSheet.absoluteFill,

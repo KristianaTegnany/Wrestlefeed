@@ -43,7 +43,7 @@ const Profile = (props) => {
 class Menu extends Component {
   state = {
     user_data: '',
-    isPro: false,
+    isPro: true,
     showGoPro: false
   }
 
@@ -112,7 +112,6 @@ class Menu extends Component {
 
   renderContent = () => {
     let { user_data } = this.state
-    console.log({user_data})
     let navigation = this.props.navigation;
     return (
       <View style={{ height: 550, backgroundColor: '#212121' }}>
