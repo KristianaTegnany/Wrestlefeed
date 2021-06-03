@@ -1,11 +1,27 @@
 import React from 'react'
 import {
   View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
-
+  import RNIap from 'react-native-iap'
 
 const NotSubscribed = (props) => {
   const { close, cancelable } = props
   
+  requestPurchase = async (sku) => {
+    try {
+      await RNIap.requestPurchase(sku, false);
+    } catch (err) {
+      console.warn(err.code, err.message);
+    }
+  }
+
+  requestSubscription = async (sku) => {
+    try {
+      await RNIap.requestSubscription(sku);
+    } catch (err) {
+      console.warn(err.code, err.message);
+    }
+  }
+
   return (
     <View
       style={[styles.Error, cancelable ? {} : {backgroundColor: '#212121'}]}
@@ -26,7 +42,7 @@ const NotSubscribed = (props) => {
               <Text style={styles.okText}>Cancel</Text>
             </TouchableOpacity>
           }
-          <TouchableOpacity onPressIn={close} activeOpacity={.5} style={styles.ok}>
+          <TouchableOpacity onPress={() => requestPurchase('pro_user')} activeOpacity={.5} style={styles.ok}>
             <Text style={styles.okText}>Subscribe</Text>
           </TouchableOpacity>
         </View>
