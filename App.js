@@ -86,31 +86,6 @@ class App extends Component {
     })
   }
 
-  // CODE ao @ ilay page misy bouton Puchase
-  /*
-    requestPurchase = async (sku: string) => {
-    try {
-      await RNIap.requestPurchase(sku, false);
-    } catch (err) {
-      console.warn(err.code, err.message);
-    }
-  }
-
-  requestSubscription = async (sku: string) => {
-    try {
-      await RNIap.requestSubscription(sku);
-    } catch (err) {
-      console.warn(err.code, err.message);
-    }
-  }
-
-  render() {
-    ...
-      onPress={() => this.requestPurchase(product.productId)}
-    ...
-  }
-  */
-
   componentWillUnmount() {
     if (this.purchaseUpdateSubscription) {
       this.purchaseUpdateSubscription.remove()
