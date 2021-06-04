@@ -5,8 +5,6 @@ import { addZero } from '../../functions'
 import { wf } from '.'
 import Axios from 'axios'
 
-const url = ''
-
 const Wrestler = ({item}) => {
   let {
     id,
@@ -31,7 +29,7 @@ const Wrestler = ({item}) => {
 const list = Array.from(new Array(4).keys())
 
 const TeamBuilder = (props) => {
-  const { user } = props
+  const { user, wrestlers, team } = props
   const [chosen, setChosen] = React.useState([2])
   const toggleWrestler = (id) => {
     if(chosen.includes(id)) setChosen(chosen.filter(i => id !== i))
@@ -51,7 +49,7 @@ const TeamBuilder = (props) => {
       </View>
       <FlatList
         style={styles.wFList}
-        data={wf.wrestlers.map(wrestler => {
+        data={wrestlers.map(wrestler => {
           return { ...wrestler, toggler: toggleWrestler, chosen }
         })}
         // keyExtractor={(_, i) => i}

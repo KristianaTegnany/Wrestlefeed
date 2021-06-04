@@ -1,5 +1,16 @@
 import { Platform, StatusBar } from 'react-native';
 
+export const get = (obj, ...fields) => {
+  fields = fields.map(field => {
+    if(Array.isArray(field)){
+      const [key, handler] = field
+      return handler(key.split(".").reduce((obj, key) => (obj ? obj[key] : obj), obj))
+    }
+    else return field.split(".").reduce((obj, key) => (obj ? obj[key] : obj), obj)
+  })
+  return fields.length > 1 ? fields : fields[0]
+}
+
 const config = {
     base_api: 'https://app.wwfoldschool.com/API10/',
     prev_base_api: 'https://devapp.wwfoldschool.com/API9',

@@ -22,6 +22,11 @@ const getWrestlers = async () => {
   return wf.wrestlers
 }
 
+const getTeam = async (user_id) => {
+  const {data} = await Axios.get(`${wf.baseUrl}api/getmyteam`, {data: {user_id}})
+  return data
+}
+
 const _defTitle = "Wrestle Money"
 
 const WrestleMoney = (props) => {
@@ -33,8 +38,8 @@ const WrestleMoney = (props) => {
   // States
   const [active, setActive] = React.useState({title: _defTitle})
   const [wrestlers, setWrestlers] = React.useState(wf.wrestlers)
+  const [team, setTeam] = React.useState(null)
   const [errorText, setErrorText] = React.useState('')
-  let { ID, user_email, display_name } = user
 
   const goBackHome = () => {
     if(active.title === _defTitle) navigation.goBack()
@@ -45,6 +50,7 @@ const WrestleMoney = (props) => {
   React.useEffect(() => {
     const backHandler = BackHandler.addEventListener("hardwareBackPress", goBackHome)
     getWrestlers().then(wlrs => setWrestlers(wlrs))
+    getTeam(user.ID).then(team => setTeam(team))
     return () => backHandler.remove()
   }, []);
   const Component = active.component
@@ -61,8 +67,10 @@ const WrestleMoney = (props) => {
                   key={i}
                   style={styles.button}
                   onPress={_ => {
-                    if(condition && !condition()) setErrorText(errorText)
-                    else setActive({...func})
+                    if(i === 0 && team){
+                      if(condition && !condition()) setErrorText(errorText)
+                      else setActive({...func})
+                    }
                   }}
                 >
                   <Text style={styles.btnText}>{title}</Text>
@@ -71,7 +79,7 @@ const WrestleMoney = (props) => {
             })
           }
         </View>
-        { Component && <Component {...{user, navigation}}/> }
+        { Component && <Component {...{user, navigation, wrestlers, team}}/> }
         { !!errorText && <Error text={errorText} close={ _ => setErrorText('')}/> }
       </View>
     </SafeAreaView>
