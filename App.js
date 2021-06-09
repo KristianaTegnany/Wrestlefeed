@@ -17,10 +17,6 @@ const App = () => {
 
   useEffect(() => {
     checkForUpdates()
-    function check() {
-      checkSubscription()
-    }
-    check()
   }, [])
 
   checkForUpdates = () => {
