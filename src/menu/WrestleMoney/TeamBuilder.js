@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, SafeAreaView, Image } from 'react-native'
+  View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView, Image } from 'react-native'
 import { addZero } from '../../functions'
 import { wf } from '.'
 import Axios from 'axios'
@@ -53,7 +53,7 @@ const TeamBuilder = (props) => {
   }
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "padding"}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.TeamBuilder}
     >
       <View style={styles.counterParent}>
