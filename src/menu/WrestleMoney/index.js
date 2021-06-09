@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   View, Text, StyleSheet, BackHandler,
-  TouchableOpacity, SafeAreaView, Image
+  TouchableOpacity, SafeAreaView, Image, KeyboardAvoidingView, TextInput
 } from 'react-native'
 import { Navbar } from '../../common/Component';
 import Error from './Error';
@@ -10,6 +10,7 @@ import TeamBuilder from './TeamBuilder';
 import TextComponent from './TextComponent';
 import Axios from 'axios'
 import config from '../../config';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
 export const wf = {
@@ -62,7 +63,8 @@ const WrestleMoney = (props) => {
   }, []);
   const Component = active.component
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <View
+      style={{flex: 1}}>
       <Navbar leftPress={goBackHome} title={active.title} />
       <View style={styles.WrestleMoney}>
         <Image  />
@@ -91,7 +93,7 @@ const WrestleMoney = (props) => {
         { Component && <Component close={_ => setActive({title: _defTitle})} {...{user, navigation, wrestlers, team, setTeam}}/> }
         { !!errorText && <Error text={errorText} close={ _ => setErrorText('')}/> }
       </View>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -99,7 +101,7 @@ const funcs = (props, {team}) => [
   {
     title: 'My Team',
     component: TeamBuilder,
-    condition: _ => team && team.wrestlers && team.wrestlers.length === 0,
+    // condition: _ => team && team.wrestlers && team.wrestlers.length === 0,
     errorText: team ? "You've already built your team for the season!" : "Please wait..."
   },
   {

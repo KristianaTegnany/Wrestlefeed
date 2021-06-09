@@ -5,6 +5,7 @@ import { addZero } from '../../functions'
 import { wf } from '.'
 import Axios from 'axios'
 import config from '../../config'
+import Fuzzy from 'fuzzy'
 
 
 const Wrestler = ({item}) => {
@@ -27,7 +28,7 @@ const Wrestler = ({item}) => {
   )
 }
 
-const MAX = 4
+const MAX = 5
 
 const TeamBuilder = (props) => {
   const { user, wrestlers, team, setTeam, close } = props
@@ -51,16 +52,22 @@ const TeamBuilder = (props) => {
     }
   }
   return (
-    <SafeAreaView style={styles.TeamBuilder}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "padding"}
+      style={styles.TeamBuilder}
+    >
       <View style={styles.counterParent}>
         <Text style={styles.counterCount}>{addZero(chosen.length)} / 05</Text>
         <Text style={styles.counterText}>Selected</Text>
       </View>
       <FlatList
         style={styles.wFList}
-        data={wrestlers.map(wrestler => {
-          return { ...wrestler, toggler: toggleWrestler, chosen }
-        })}
+        data={
+          Fuzzy.filter(search, wrestlers, { extract: ({name}) => name }).map(one => one.original || one)
+          .map(wrestler => {
+            return { ...wrestler, toggler: toggleWrestler, chosen }
+          })
+        }
         keyExtractor={(_, i) => i}
         renderItem={Wrestler}
       />
@@ -91,7 +98,7 @@ const TeamBuilder = (props) => {
           </TouchableOpacity>
         </View>
       }
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -115,7 +122,11 @@ const styles = StyleSheet.create({
   },
   TeamBuilder: {
     backgroundColor: '#212121',
-    ...StyleSheet.absoluteFill,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '100%'
   },
   counterParent: {
     position: 'absolute',
