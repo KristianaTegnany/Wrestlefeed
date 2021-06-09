@@ -7,7 +7,6 @@ import Axios from 'axios'
 import config from '../../config'
 import Fuzzy from 'fuzzy'
 
-
 const Wrestler = ({item}) => {
   let {
     id,
@@ -53,7 +52,7 @@ const TeamBuilder = (props) => {
   }
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior="height"
       style={styles.TeamBuilder}
     >
       <View style={styles.counterParent}>

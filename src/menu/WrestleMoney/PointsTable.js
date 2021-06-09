@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native'
+  View, Text, StyleSheet } from 'react-native'
 
 
 const PointsTable = (props) => {
