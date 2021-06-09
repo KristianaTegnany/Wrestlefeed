@@ -57,7 +57,7 @@ const WrestleMoney = (props) => {
     const backHandler = BackHandler.addEventListener("hardwareBackPress", goBackHome)
     getWrestlers().then(wlrs => setWrestlers(wlrs))
     getTeam(user.ID).then(team => {
-      setTeam(team)
+      setTeam(team || {})
     })
     return () => backHandler.remove()
   }, []);
