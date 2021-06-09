@@ -472,7 +472,7 @@ export const Poll = (props) => {
         <View style={{ flex: 1, }}>
             <LinearGradient 
                 colors={['transparent', 'rgba(0,0,0,1)']} style={{ flex: 1,  }} 
-                start={{x: 0, y: 0.6}} 
+                start={{x: 0, y: 0.6}}
                 end={{x: 0, y: 0.8}} 
             >
                 <View style={{ flex: 1 }}></View>
@@ -516,9 +516,9 @@ export const Poll = (props) => {
 export const PagerList = (props) => {
     let { post_list, onReadMorePress, onCommentOpen, index, pageRef, onReactionPress, onPollPress, category } = props;
     return(
-        <ViewPager style={{ flex: 1 }} 
+        <ViewPager style={[{ flex: 1 }]} 
             ref={pageRef}
-            initialPage={index} 
+            initialPage={index}
             orientation='vertical'
             onPageSelected={(e) => props.onPostChange(e.nativeEvent.position)}
         >

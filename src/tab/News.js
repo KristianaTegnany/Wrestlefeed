@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StatusBar, Dimensions, BackHandler, AppState, Alert } from 'react-native'
+import { View, StatusBar, Dimensions, BackHandler, AppState, Text } from 'react-native'
 import { TapGestureHandler, State } from 'react-native-gesture-handler'
 import AsyncStorage from "@react-native-community/async-storage";
 import Animated, {  } from 'react-native-reanimated';
@@ -373,10 +373,10 @@ class News extends Component {
                     <TapGestureHandler 
                         numberOfTaps={2} 
                         onHandlerStateChange={this.doubleTap} 
-                        ref={this.doubleTapRef} 
+                        ref={this.doubleTapRef}
                         style={{ width, height }}
                     > 
-                        <Animated.View style={{ flex: 1 }}>
+                        <Animated.View style={{ flex: 1, marginBottom: -1}}>
                             {
                                 post_list.length != 0 ?
                                     <PagerListWrapper 

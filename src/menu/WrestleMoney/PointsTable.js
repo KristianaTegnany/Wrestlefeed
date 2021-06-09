@@ -2,60 +2,90 @@ import React from 'react'
 import {
   View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native'
 
-const Wrestler = (props) => {
-  const {
-    name = "John Cena",
-    point = "400",
-    image = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/John_Cena_2010.jpg/170px-John_Cena_2010.jpg',
-    onPress, chosen
-  } = props
-  return (
-    <TouchableOpacity activeOpacity={.9} onPress = {onPress} style={styles.Wrestler}>
-      <Image style={styles.wImage} source={{uri: image}}/>
-      <View  style={styles.wTextParent}>
-        <Text style={styles.wText}>{name}</Text>
-        <Text style={styles.wPoint}>{point}</Text>
-      </View>
-    </TouchableOpacity>
-  )
-}
 
-
-const PointsTable = () => {
-  const [chosen, setChosen] = React.useState([])
-  const showWrestler = (id) => {
-    if(chosen.includes(id)) setChosen(chosen.filter(i => id !== i))
-    else if(chosen.length < 5) setChosen([ ...chosen, id ])
-  }
+const PointsTable = (props) => {
+  const {team: {wrestlers}} = props
+  const total = wrestlers.reduce((tot, {point}) => tot + point, 0)
   return (
     <View style={styles.TeamBuilder}>
-      <View style={styles.counterParent}>
-        <Text style={styles.counterCount}>{'2 000'}</Text>
-        <Text style={styles.counterText}>Total point</Text>
+      <Text style={styles.title}>Your team for the ongoing season:</Text>
+      
+      <View style={styles.table}>
+        <View style={[styles.wLine, styles.wRed]}>
+          <Text style={styles.wNameText}>My Wrestlers</Text>
+          <Text style={styles.wPointText}>Points</Text>
+        </View>
+        {
+          wrestlers.map(({name, point}, i) => {
+            return <View key={i} style={[styles.wLine]}>
+              <Text style={styles.wNameText}>{name}</Text>
+              <Text style={styles.wPointText}>{point > 9 ? point : `0${point}`}</Text>
+            </View>
+          })
+        }
+        <View style={[styles.wLine, styles.wRed]}>
+          <Text style={styles.wNameText}>My Total Score</Text>
+          <Text style={styles.wPointText}>{total > 9 ? total : `0${total}`}</Text>
+        </View>
       </View>
-      <FlatList
-        style={styles.wFList}
-        data={Array.from(new Array(5).keys()).map((id) => {
-          return { id, onPress: _ => showWrestler(id) }
-        })}
-        keyExtractor={(_, i) => `${i}`}
-        renderItem={Wrestler}
-      />
+
+      <Text style={styles.detail}>
+        {`Wrestlers' point are regularly updated by the admins after every event. Your score will be refreshed whenever you come back here next time. Good luck!`}
+      </Text>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   TeamBuilder: {
-    backgroundColor: '#eee',
-    ...StyleSheet.absoluteFill,
+    backgroundColor: '#212121',
+    justifyContent: 'space-evenly',
+    ...StyleSheet.absoluteFill
   },
-  counterParent: {
-    position: 'absolute',
-    top: -56,
-    right: 10,
-    height: 56,
-    justifyContent: 'center'
+  table: {
+    width: '80%',
+    alignSelf: 'center',
+    borderColor: "#fff",
+    borderWidth: 1
+  },
+  title:{
+    color: "#fff",
+    textAlign: 'center',
+    fontSize: 20,
+    fontFamily: 'Eurostile-Bold'
+  },
+  wLine: {
+    flexDirection: 'row',
+  },
+  wRed: {
+    backgroundColor: '#b21a1a'
+  },
+  wNameText: {
+    paddingVertical: 10,
+    fontSize: 17,
+    color: '#fff',
+    borderColor: "#fff",
+    borderWidth: 1,
+    flex: 1,
+    textAlign: 'center'
+  },
+  wPointText: {
+    paddingVertical: 10,
+    fontSize: 17,
+    color: '#fff',
+    borderColor: "#fff",
+    borderWidth: 1,
+    width: '30%',
+    textAlign: 'center'
+  },
+  detail: {
+    width: '80%',
+    alignSelf: 'center',
+    fontStyle: 'italic',
+    color: '#fff',
+    fontSize: 16,
+    textAlign: 'center',
+    lineHeight: 23
   },
   counterText: {
     color: '#fff',

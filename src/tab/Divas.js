@@ -222,11 +222,11 @@ class Divas extends Component {
         let { post_list, hideMenu, refresh_load } = this.state
         return(
             <View style={{ backgroundColor: '#15202b', flex: 1 }}>
-                <NotSubscribed/>
                 <StatusBar hidden />
-                <View style={{ position: 'absolute', left: 16, top: 12, zIndex: 1 }}>
+                <View style={{ position: 'absolute', left: 16, top: 12, zIndex: 1001 }}>
                     { !hideMenu ? <MenuIcon onMenuPress={this.openMenu} /> : null }
                 </View>
+                <NotSubscribed/>
                 <RefreshIcon onRefreshPress={this.onRefreshPost} status={refresh_load} hideMenu={hideMenu} />
                 <View style={{ flex: 850 }}>
                     <TapGestureHandler

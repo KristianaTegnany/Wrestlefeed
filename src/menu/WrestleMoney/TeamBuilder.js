@@ -1,9 +1,11 @@
 import React from 'react'
 import {
-  View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native'
+  View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, SafeAreaView, Image } from 'react-native'
 import { addZero } from '../../functions'
 import { wf } from '.'
 import Axios from 'axios'
+import config from '../../config'
+
 
 const Wrestler = ({item}) => {
   let {
@@ -13,36 +15,43 @@ const Wrestler = ({item}) => {
     toggler,
     chosen
   } = item
+
   if(!image) image = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/John_Cena_2010.jpg/170px-John_Cena_2010.jpg'
-  else if(!image.startsWith('http')) image = `${wf.baseUrl}${image}`
+  else if(!image.startsWith('http')) image = `${wf.baseUrl}/${image}`
 
   return (
-    <View key={id} activeOpacity={.9} style={styles.Wrestler}>
-      <Image style={styles.wImage} source={{uri: image}} />
-      <View style={chosen.includes(id) ? styles.wChosen : {}}/>
-      <Text style={styles.wText}>{name}</Text>
+    <View key={id} activeOpacity={.9} style={[styles.Wrestler, {backgroundColor: chosen.includes(id) ? '#b21a1a' : "#eee"}]}>
+      <Text style={[styles.wText, {fontFamily: config.ios ? 'Eurostile' : 'Eurostile-Bold', color: chosen.includes(id) ? '#fff' : "#333"}]}>{name}</Text>
       <TouchableOpacity onPress = {_ => toggler(id)} style={StyleSheet.absoluteFill}/>
     </View>
   )
 }
 
-const list = Array.from(new Array(4).keys())
+const MAX = 4
 
 const TeamBuilder = (props) => {
-  const { user, wrestlers, team } = props
-  const [chosen, setChosen] = React.useState([2])
+  const { user, wrestlers, team, setTeam, close } = props
+  const [chosen, setChosen] = React.useState([])
+  const [search, setSearch] = React.useState('')
   const toggleWrestler = (id) => {
     if(chosen.includes(id)) setChosen(chosen.filter(i => id !== i))
-    else if(chosen.length < 5) {
+    else if(chosen.length < MAX) {
       setChosen([ ...chosen, id ])
     }
   }
-  const save = () => {
-    Axios.post(`${wf.baseUrl}api/team`).then(console.log)
-    navigation.back()
+  const save = async () => {
+    if(chosen.length === MAX){
+      const team = await Axios.post(`${wf.baseUrl}/api/team`, {
+        wrestlers: chosen,
+        user_id: user.ID,
+        name: user.display_name || ''
+      })
+      setTeam(team)
+      close()
+    }
   }
   return (
-    <View style={styles.TeamBuilder}>
+    <SafeAreaView style={styles.TeamBuilder}>
       <View style={styles.counterParent}>
         <Text style={styles.counterCount}>{addZero(chosen.length)} / 05</Text>
         <Text style={styles.counterText}>Selected</Text>
@@ -52,42 +61,60 @@ const TeamBuilder = (props) => {
         data={wrestlers.map(wrestler => {
           return { ...wrestler, toggler: toggleWrestler, chosen }
         })}
-        // keyExtractor={(_, i) => i}
+        keyExtractor={(_, i) => i}
         renderItem={Wrestler}
-        numColumns={2}
       />
       {
-        chosen.length === 5 && <View style={styles.submitParent}>
-          <TouchableOpacity onPress={save} style={styles.submitButton}>
-            <Text  style={styles.submitText}>Save my team</Text>
+        <View style={styles.submitParent}>
+          <View onPress={save} style={[styles.submitButton, { flex: 1, overflow: 'hidden', marginRight: 20, flexDirection: 'row'}]}>
+            <Image style={{width: 20, height: 20, opacity: .5 }} source={require('../../assets/images/search.png')}/>
+            <TextInput value={search} onChangeText={setSearch} returnKeyType="search" selectionColor={'#b21a1a'} underlineColorAndroid ='rgba(0,0,0,0)' style={
+              {
+                width: '100%',
+                display: 'flex',
+                paddingVertical: 0,
+                color: '#333',
+                height: 35,
+                borderStyle: 'solid',
+                marginLeft: 5,
+                marginRight: 5,
+                fontSize: 18,
+                marginTop: 2,
+                position: 'absolute',
+                zIndex: 2,
+                paddingLeft: 30
+              }
+            }/>
+          </View>
+          <TouchableOpacity activeOpacity={chosen.length < MAX ? 1 : .5} onPress={save} style={[styles.submitButton, {backgroundColor: chosen.length < MAX ? "gray" : '#eee'}]}>
+            <Text  style={styles.submitText}>Submit</Text>
           </TouchableOpacity>
         </View>
       }
-    </View>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   submitParent: {
-    position: 'absolute',
-    bottom: 20,
-    left: 0,
-    right: 0,
-    alignItems: 'center'
+    flexDirection: 'row',
+    marginBottom: 10,
+    justifyContent: 'center',
+    paddingHorizontal: 20
   },
   submitButton: {
-    backgroundColor: '#b21a1a',
-    borderRadius: 30,
-    width: '60%',
+    backgroundColor: '#eee',
+    borderRadius: 5,
+    width: '40%',
     padding: 10
   },
   submitText: {
-    color: '#fff',
+    color: '#333',
     fontWeight: 'bold',
     textAlign: 'center'
   },
   TeamBuilder: {
-    backgroundColor: 'rgba(240, 240, 240, .8)',
+    backgroundColor: '#212121',
     ...StyleSheet.absoluteFill,
   },
   counterParent: {
@@ -119,15 +146,18 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 5,
     borderRadius: 4,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    paddingVertical: 6,
+    width: '90%',
+    alignSelf: 'center'
   },
   wText: {
     textAlign: 'center',
     color: "white",
     fontWeight: 'bold',
-    backgroundColor: '#b21a1a',
     minHeight: 30,
     paddingHorizontal: 5,
+    fontSize: 18,
     textAlignVertical: 'center'
   },
   wImage: {
