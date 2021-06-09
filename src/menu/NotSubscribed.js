@@ -1,10 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
-  View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
+  View, Text, StyleSheet, TouchableOpacity, Platform, Image, Alert } from 'react-native'
   import RNIap from 'react-native-iap'
 
 const NotSubscribed = (props) => {
   const { close, cancelable } = props
+  
+  const productIds = Platform.select({
+    ios: [
+      'com.wrestlefeed.news'
+    ],
+    android: [
+      'com.wrestlefeed'
+    ]
+  })
   
   requestPurchase = async (sku) => {
     try {
@@ -21,6 +30,19 @@ const NotSubscribed = (props) => {
       console.warn(err.code, err.message);
     }
   }
+
+  getProduct = async () => {
+    try {
+      const products = await RNIap.getProducts(productIds)
+      Alert.alert(products)
+    } catch(err) {
+      console.warn(err)
+    }
+  }
+
+  /*useEffect(() => {
+    getProduct()
+  }, [])*/
 
   return (
     <View
@@ -42,7 +64,7 @@ const NotSubscribed = (props) => {
               <Text style={styles.okText}>Cancel</Text>
             </TouchableOpacity>
           }
-          <TouchableOpacity onPress={() => requestPurchase('pro_user')} activeOpacity={.5} style={styles.ok}>
+          <TouchableOpacity onPress={() => requestSubscription('pro_user')} activeOpacity={.5} style={styles.ok}>
             <Text style={styles.okText}>Subscribe</Text>
           </TouchableOpacity>
         </View>

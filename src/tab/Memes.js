@@ -15,6 +15,7 @@ import Menu from '../menu/Menu';
 import config from '../config';
 import { updateDarkMode, pushTabData } from '../action';
 import NotSubscribed from '../menu/NotSubscribed';
+import { BottomAction } from '../common/Component'
 
 let sheetOpen = false
 let loading_more = false
@@ -55,7 +56,8 @@ class Memes extends Component {
                 this.refs.comment.closeStory();
                 this.refs.storyview.closeStory();
             }
-            this.refs.menu.closeStory();
+            if(this.refs.menu)
+                this.refs.menu.closeStory();
         });
         this.props.navigation.addListener('didFocus', (route) => { 
             this.setToLatest(8, false, 0)
@@ -225,10 +227,10 @@ class Memes extends Component {
     doubleTapRef = React.createRef();
 
     render() {
-        let { post_list, hideMenu, refresh_load } = this.state
+        let { post_list, post_position, hideMenu, refresh_load } = this.state
         return(
             <View style={{ backgroundColor: '#15202b', flex: 1 }}>
-                {<NotSubscribed/>}
+                {/*<NotSubscribed/>*/}
                 <StatusBar hidden />
                 <View style={{ position: 'absolute', left: 16, top: 12, zIndex: 1001 }}>
                     { !hideMenu ? <MenuIcon onMenuPress={this.openMenu} /> : null }
@@ -248,16 +250,21 @@ class Memes extends Component {
                         <Animated.View style={{ flex: 1 }}>
                             {
                                 post_list.length != 0 ?
-                                    <PagerListWrapper 
-                                        pageRef={this.viewPager}
-                                        index={0}
-                                        post_list={post_list}
-                                        onPostChange={(position) => this.onPostChange(position)}
-                                        onReadMorePress={this.onReadMorePress}
-                                        onCommentOpen={this.onCommentOpen}
-                                        onReactionPress={(type) => this.onReactionPress(type)}
-                                        category="memes"
-                                    />
+                                    <>
+                                        <PagerListWrapper 
+                                            pageRef={this.viewPager}
+                                            index={0}
+                                            post_list={post_list}
+                                            onPostChange={(position) => this.onPostChange(position)}
+                                        />
+                                        <BottomAction
+                                            category="memes"
+                                            post={post_list[post_position]}
+                                            onReadMorePress={this.onReadMorePress}
+                                            onCommentPress={this.onCommentOpen}
+                                            onReactionPress={(type) => this.onReactionPress(type)}
+                                        />
+                                    </>
                                 : <PleaseWait />
                             }
                         </Animated.View>

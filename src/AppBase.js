@@ -89,7 +89,7 @@ const AppNavigator = createStackNavigator(
         ForgotPassword: ForgotPassword,
         Dashboard: Dashboard,
         ContactUs: ContactUs,
-        WrestleMoney,
+        WrestleMoney: WrestleMoney,
         FullWebview: FullWebview,
         PinchImage: PinchImage,
     },

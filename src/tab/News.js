@@ -16,6 +16,7 @@ import Comment from '../timeline/Comment';
 import Menu from '../menu/Menu';
 import config from '../config';
 import { pushTabData, updateDarkMode } from '../action'
+import { BottomAction } from '../common/Component'
 
 let sheetOpen = false
 let loading_more = false
@@ -70,7 +71,8 @@ class News extends Component {
                 this.refs.comment.closeStory();
                 this.refs.storyview.closeStory();
             }
-            this.refs.menu.closeStory();
+            if(this.refs.menu)
+                this.refs.menu.closeStory();
         });
         this.props.navigation.addListener('didFocus', (route) => {
             this.setToLatest(0, false, 0)
@@ -379,16 +381,21 @@ class News extends Component {
                         <Animated.View style={{ flex: 1, marginBottom: -1}}>
                             {
                                 post_list.length != 0 ?
-                                    <PagerListWrapper 
-                                        pageRef={this.viewPager}
-                                        index={post_position}
-                                        post_list={post_list}
-                                        onPostChange={(position) => this.onPostChange(position)}
-                                        onReadMorePress={this.onReadMorePress}
-                                        onCommentOpen={this.onCommentOpen}
-                                        onReactionPress={(type) => this.onReactionPress(type)}
-                                        onPollPress={(poll_index) => this.onPollPress(poll_index)}
-                                    />
+                                    <>
+                                        <PagerListWrapper 
+                                            pageRef={this.viewPager}
+                                            index={post_position}
+                                            post_list={post_list}
+                                            onPostChange={(position) => this.onPostChange(position)}
+                                            onPollPress={(poll_index) => this.onPollPress(poll_index)}
+                                        />
+                                        <BottomAction
+                                            post={post_list[post_position]}
+                                            onReadMorePress={this.onReadMorePress}
+                                            onCommentPress={this.onCommentOpen}
+                                            onReactionPress={(type) => this.onReactionPress(type)}
+                                        />
+                                    </>
                                 : <PleaseWait />
                             }
                         </Animated.View>
@@ -397,7 +404,7 @@ class News extends Component {
                 </View>
                 <View style={{ flex: 2 }}>
                     <StoryView 
-                        ref="storyview" 
+                        ref="storyview"
                         onCloseStory={this.onCloseStory} 
                         onDarkToggle={() => this.onDarkToggle()} 
                         onPrevNext={(type) => this.onPrevNext(type)}
