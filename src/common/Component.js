@@ -60,7 +60,7 @@ export const TabLabel = (props) => {
 }
 
 export const MenuIcon = (props) => {
-    let { onMenuPress, smallMenu } = props
+    let { onMenuPress } = props
     return(
         <TouchableOpacity onPress={onMenuPress} style={{ justifyContent: 'center', paddingBottom: 16, paddingRight: 8, paddingTop: config.ios ? notch ? 24 : 0 : 0, }}>
             <Image source={{ uri: 'menu_square_logo' }} style={{ width: 30, height: 30 }} />
@@ -134,8 +134,7 @@ export const BackWithText = (props) => {
 }
 
 export const Twitter = (props) => {
-    let { onReactionPress } = props
-    let { post_image_url, post_title, no_title, reaction, react_user  } = props.data
+    let { post_image_url, post_title, no_title } = props.data
     const sourceTweetId = post_image_url;
     const screen_bar_height = (height-30-32)/20;
     const height_tweet = screen_bar_height*16;
@@ -187,19 +186,8 @@ export const Twitter = (props) => {
 	`;
     return(
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <View style={{ position: 'absolute', bottom: 8, left: 16, right: 16, zIndex: 1 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <View style={{ flex: 4 }}>
-                            <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => onReactionPress(type)} btn_opacity={0.5} />
-                        </View>
-                        <View style={{ flex: 1 }}>
-                            <Sidebar onCommentPress={props.onCommentPress}/>
-                        </View>
-                        <View style={{ flex: 2 }}></View>
-                    </View>
-                </View>
                 <View style={{ flex: 1 }}></View>
-                <View style={{ flex: flex_title, justifyContent: 'flex-end', paddingLeft: 16, paddingRight: 16, paddingTop: 16, paddingBottom: 16 }}>
+                <View style={{ flex: flex_title, justifyContent: 'flex-end', paddingLeft: 16, paddingRight: 16, paddingTop: 16, paddingBottom: 80 /*16*/ }}>
                     {
                         no_title == "No" || no_title == '' ? 
                         <Text style={{ color: 'white', fontFamily: 'Merriweather-Black', fontSize:  Wrestlefeed.normalizeText(22), fontWeight: '600' }} >
@@ -208,10 +196,10 @@ export const Twitter = (props) => {
                         : null
                     }
                 </View>
-                <View style={{ flex: flex_tweet, justifyContent: 'flex-end',}} pointerEvents="none">
+                <View style={{ flex: flex_tweet, justifyContent: 'flex-end'}} pointerEvents="none">
                 <AutoHeightWebView
                     androidHardwareAccelerationDisabled={true}
-                    style={{  }}
+                    style={{ }}
                     onSizeUpdated={(size => { })}
                     scrollEnabled={false}
                     hasIframe={true}
@@ -344,8 +332,8 @@ export const ReadMoreButton = (props) => {
 }
 
 export const Stories = (props) => {
-    let { data, onReadMorePress, onCommentPress, onReactionPress, category } = props;
-    let { post_title, short_desc, post_image_url, isStory, post_date, no_title, image_resize, reaction, react_user } = data;
+    let { data } = props;
+    let { post_title, short_desc, post_image_url, post_date, no_title, image_resize } = data;
     return(
         <ImageBackground source={{ uri: post_image_url }} resizeMode={image_resize} style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)'}}>
             <LinearGradient 
@@ -354,7 +342,7 @@ export const Stories = (props) => {
                 end={{x: 0, y: 0.8}} 
             >
                 <View style={{ flex: 5 }}></View>
-                <View style={{ flex: 6, paddingLeft: 16, paddingRight: 16, justifyContent: 'flex-end' }}>
+                <View style={{ flex: 6, paddingLeft: 16, paddingRight: 16, justifyContent: 'flex-end', paddingBottom: 80 }}>
                     <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-end', paddingBottom: 2 }}>
                         <PostTime post_date={post_date} post_title={post_title} />
                     </View>
@@ -371,23 +359,8 @@ export const Stories = (props) => {
                         </View>
                         : <View style={{ paddingTop: 16 }}></View>
                     }
-                    <View style={{ flexDirection: 'row', paddingTop: 16, paddingBottom: 32 }}>
-                        <View style={{ flex: 4 }}>
-                            <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => onReactionPress(type)} btn_opacity={0.5} />
-                        </View>
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <Sidebar onCommentPress={onCommentPress} react_user={react_user} />
-                        </View>
-                        <View style={{ flex: 2, alignItems: 'flex-end' }}>
-                            {
-                                isStory ?
-                                    category == "videos" ? <PlayButton onReadMorePress={onReadMorePress} /> : <ReadMoreButton onReadMorePress={onReadMorePress} />
-                                : null
-                            }
-                        </View>
-                    </View>
                 </View>
-                </LinearGradient>
+            </LinearGradient>
         </ImageBackground>
     )
 }
@@ -463,8 +436,8 @@ export const PollBarResult = (props) => {
 }
 
 export const Poll = (props) => {
-    let { data, onCommentPress, onReactionPress, onPollPress } = props;
-    let { post_title, post_date, no_title, reaction, react_user, poll } = data;
+    let { data, onPollPress } = props;
+    let { post_title, post_date, no_title, poll } = data;
     let { poll_data, poll_user } = poll
     let total = poll_data.reduce((a, b) => +a + b.count, 0)
  
@@ -476,7 +449,7 @@ export const Poll = (props) => {
                 end={{x: 0, y: 0.8}} 
             >
                 <View style={{ flex: 1 }}></View>
-                <View style={{ flex: 4, paddingLeft: 16, paddingRight: 16 }}>
+                <View style={{ flex: 4, paddingLeft: 16, paddingRight: 16, paddingBottom: 80 }}>
                     <View style={{ flex: 2 }}>
                         <View style={{ alignItems: 'flex-start', justifyContent: 'center' }}>
                             <PostTime post_date={post_date} post_title={post_title} />
@@ -497,24 +470,13 @@ export const Poll = (props) => {
                         })
                     }
                 </View>
-                <View style={{ flex: 1, paddingLeft: 16, paddingRight: 16, justifyContent: 'flex-end' }}>
-                    <View style={{ flexDirection: 'row', paddingTop: 16, paddingBottom: 32 }}>
-                        <View style={{ flex: 4 }}>
-                            <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => onReactionPress(type)} />
-                        </View>
-                        <View style={{ flex: 1 }}>
-                            <Sidebar onCommentPress={onCommentPress}/>
-                        </View>
-                        <View style={{ flex: 1 }}></View>
-                    </View>
-                </View>
-                </LinearGradient>
+            </LinearGradient>
         </View>
     )
 }
 
 export const PagerList = (props) => {
-    let { post_list, onReadMorePress, onCommentOpen, index, pageRef, onReactionPress, onPollPress, category } = props;
+    let { post_list, onReadMorePress, onCommentOpen, index, pageRef, onReactionPress, onPollPress } = props;
     return(
         <ViewPager style={{ flex: 1 }} 
             ref={pageRef}
@@ -534,7 +496,6 @@ export const PagerList = (props) => {
                                         onReadMorePress={onReadMorePress} 
                                         onCommentPress={onCommentOpen}
                                         onReactionPress={(type) => onReactionPress(type)}
-                                        category={category}
                                     />
                                 : post.post_type == "twitter" ?
                                     <Twitter 
@@ -547,7 +508,6 @@ export const PagerList = (props) => {
                                         data={post} 
                                         onCommentPress={onCommentOpen}
                                         onReactionPress={(type) => onReactionPress(type)}
-                                        category={category}
                                     />
                                 : post.post_type == "poll" ?
                                     <Poll 
@@ -568,8 +528,7 @@ export const PagerList = (props) => {
 }
 
 export const PagerListWrapper = (props) => {
-    let { post_list, onReadMorePress, onCommentOpen, index, pageRef, onReactionPress, onPollPress, category } = props;
-    // Alert.alert(category)
+    let { post_list, onReadMorePress, onCommentOpen, index, pageRef, onReactionPress, onPollPress } = props;
     return(
         <PagerList 
             pageRef={pageRef}
@@ -580,9 +539,65 @@ export const PagerListWrapper = (props) => {
             onCommentOpen={onCommentOpen}
             onReactionPress={(type) => onReactionPress(type)}
             onPollPress={(poll_index) => onPollPress(poll_index)}
-            category={category}
         />
     )
 }
 
+export const BottomAction = (props) => {
+    const { post, onCommentPress, onReactionPress, onReadMorePress, category } = props
+    const { post_type, reaction, react_user, short_desc, isStory } = post
+    return (
+        <View style={{ position: 'absolute', bottom: 8, left: 16, right: 16, zIndex: 1 }}>
+        {
+            post_type == "stories" && short_desc ?
+                <View style={{ flexDirection: 'row', paddingBottom: 8 }}>
+                    <View style={{ flex: 4 }}>
+                        <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => onReactionPress(type)} btn_opacity={0.5} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <Sidebar onCommentPress={onCommentPress} react_user={react_user} />
+                    </View>
+                    <View style={{ flex: 2, alignItems: 'flex-end' }}>
+                        {
+                            isStory ?
+                                category == "videos" ? <PlayButton onReadMorePress={onReadMorePress} /> : <ReadMoreButton onReadMorePress={onReadMorePress} />
+                            : null
+                        }
+                    </View>
+                </View>
+            : post_type == "twitter" ?
+                <View style={{ flexDirection: 'row', paddingBottom: 8 }}>
+                    <View style={{ flex: 4 }}>
+                        <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => onReactionPress(type)} btn_opacity={0.5} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <Sidebar onCommentPress={onCommentPress}/>
+                    </View>
+                    <View style={{ flex: 2 }}></View>
+                </View>
+            : post_type == "stories" && !short_desc ?
+                <View style={{ flexDirection: 'row', paddingBottom: 8 }}>
+                    <View style={{ flex: 4 }}>
+                        <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => onReactionPress(type)} btn_opacity={category == "memes" ? 0.5 : 0.8} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <Sidebar onCommentPress={onCommentPress} react_user={react_user} />
+                    </View>
+                    <View style={{ flex: 2 }}/>
+                </View>
+            : post_type == "poll" ?
+                <View style={{ flexDirection: 'row', paddingBottom: 8 }}>
+                    <View style={{ flex: 4 }}>
+                        <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => onReactionPress(type)} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <Sidebar onCommentPress={onCommentPress}/>
+                    </View>
+                    <View style={{ flex: 1 }}></View>
+                </View>
+            : null
+        }
+        </View>
+    )
+}
 

@@ -3,7 +3,7 @@ import Animated, { Value, cond, eq, set, lessOrEq, greaterOrEq } from 'react-nat
 import { State, PinchGestureHandler } from 'react-native-gesture-handler';
 import { vec, onGestureEvent, transformOrigin, timing } from 'react-native-redash';
 import { Dimensions, View } from 'react-native';
-import { PostTitle, Sidebar, PostTime, ReactionBtns } from '../common/Component';
+import { PostTitle, PostTime } from '../common/Component';
 
 let { width, height } = Dimensions.get('window')
 
@@ -55,12 +55,11 @@ export default class PinchImage extends Component {
     render() {
         let { gestureHandler, scale, hideDetail, adjustedFocal } = this
         let { post_title, post_image_url, post_date, image_resize, no_title, reaction, react_user } = this.props.data;
-        let { onCommentPress, onReactionPress, category } = this.props
         return(
             <>
                 <PinchGestureHandler {...gestureHandler}>
                     <Animated.View style={{ width, height, }}>
-                        <Animated.View style={{ position: 'absolute', bottom: 16, left: 0, right: 0, zIndex: 1 }}>
+                        <Animated.View style={{ position: 'absolute', bottom: 16, left: 0, right: 0, zIndex: 1, paddingBottom: 80 }}>
                             <Animated.View style={{ transform: [ { translateX: hideDetail } ] }}>
                                 
                                 <View style={{ flex: 2, justifyContent: 'center', alignItems: 'flex-start', paddingLeft: 16 }}>
@@ -73,16 +72,6 @@ export default class PinchImage extends Component {
                                     </Animated.View>
                                     : null
                                 }
-                                <Animated.View style={{ flexDirection: 'row', paddingBottom: 8, paddingLeft: 16 }}>
-                                    <View style={{ flex: 4 }}>
-                                        <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => onReactionPress(type)} btn_opacity={category == "memes" ? 0.5 : 0.8} />
-                                    </View>
-                                    <View style={{ flex: 1 }}>
-                                        <Sidebar onCommentPress={onCommentPress} react_user={react_user} />
-                                    </View>
-                                    <View style={{ flex: 2 }}></View>
-
-                                </Animated.View>
                             </Animated.View>
                         </Animated.View>
                         <Animated.Image 

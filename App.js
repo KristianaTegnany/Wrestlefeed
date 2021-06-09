@@ -8,7 +8,6 @@ import RNIap, {
 } from 'react-native-iap'
 
 import {
-  Alert,
   Platform
 } from 'react-native'
 import { Provider } from 'react-redux'
@@ -17,15 +16,6 @@ import ReduxThunk from 'redux-thunk'
 import AppBase from './src/AppBase'
 import reducers from './src/reducers'
 import { Component } from 'react'
-
-const productIds = Platform.select({
-  ios: [
-    'com.wrestlefeed.news'
-  ],
-  android: [
-    'com.wrestlefeed'
-  ]
-})
 
 const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
 class App extends Component {
@@ -47,23 +37,22 @@ class App extends Component {
   
   async componentDidMount() {
     this.checkForUpdates()
-    try {
-      const products = await RNIap.getProducts(productIds)
-      Alert.alert(products)
-      this.setState({ products })
-    } catch(err) {
-      console.warn(err)
-    }
-
-    RNIap.initConnection().then(() => {
+    
+    /*RNIap.initConnection().then(() => {
       RNIap.flushFailedPurchasesCachedAsPendingAndroid().catch(() => {
       }).then(() => {
-        this.purchaseUpdateSubscription = purchaseUpdatedListener((purchase) => {
+        this.purchaseUpdateSubscription = purchaseUpdatedListener(async(purchase) => {
           console.log('purchaseUpdatedListener', purchase)
           const receipt = purchase.transactionReceipt
           if (receipt) {
+            if (Platform.OS === 'ios') {
+              await RNIap.finishTransactionIOS(purchase.transactionId)
+            } else if (Platform.OS === 'android') {
+              await RNIap.acknowledgePurchaseAndroid(purchase.purchaseToken)
+            }
+            await RNIap.finishTransaction(purchase, false)
             // Eto no antsoina ilay API manao update Purchase
-            /*yourAPI.deliverOrDownloadFancyInAppPurchase(purchase.transactionReceipt)
+            yourAPI.deliverOrDownloadFancyInAppPurchase(purchase.transactionReceipt)
             .then( async (deliveryResult) => {
               if (isSuccess(deliveryResult)) {
                 if (Platform.OS === 'ios') {
@@ -75,7 +64,7 @@ class App extends Component {
               } else {
                 
               }
-            })*/
+            })
           }
         })
 
@@ -83,7 +72,7 @@ class App extends Component {
           console.warn('purchaseErrorListener', error)
         })
       })
-    })
+    }).catch(e => console.log('initConnection' + e))*/
   }
 
   componentWillUnmount() {
@@ -97,22 +86,6 @@ class App extends Component {
     }
   }
   
-  requestPurchase = async (sku) => {
-    try {
-      await RNIap.requestPurchase(sku, false)
-    } catch (err) {
-      console.warn(err.code, err.message)
-    }
-  }
-
-  requestSubscription = async (sku) => {
-    try {
-      await RNIap.requestSubscription(sku)
-    } catch (err) {
-      console.warn(err.code, err.message)
-    }
-  }
-
   checkForUpdates = () => {
     this.inAppUpdates
       .checkNeedsUpdate({

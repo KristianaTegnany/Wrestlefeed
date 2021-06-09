@@ -29,7 +29,7 @@ const Wrestler = ({item}) => {
 const list = Array.from(new Array(4).keys())
 
 const TeamBuilder = (props) => {
-  const { user, wrestlers, team } = props
+  const { user, wrestlers, team, navigation } = props
   const [chosen, setChosen] = React.useState([2])
   const toggleWrestler = (id) => {
     if(chosen.includes(id)) setChosen(chosen.filter(i => id !== i))
