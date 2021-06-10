@@ -10,7 +10,6 @@ import TeamBuilder from './TeamBuilder';
 import TextComponent from './TextComponent';
 import Axios from 'axios'
 import config from '../../config';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import MyTeam from './MyTeam';
 import Updates from './Updates';
 
@@ -143,9 +142,9 @@ const styles = StyleSheet.create({
     opacity: 0.8
   },
   btnText: {
-    color: 'rgba(255,255,255,.7)',
+    color: 'white',
     textAlign: 'center',
-    fontSize: 30,
+    fontSize: 27,
     fontFamily: Platform.OS == 'ios'? 'Eurostile' : 'Eurostile-Bold'
   },
 })

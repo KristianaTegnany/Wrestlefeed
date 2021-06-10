@@ -4,8 +4,6 @@ import {
 
 
 const Updates = (props) => {
-  const {team: {wrestlers}} = props
-  const total = wrestlers.reduce((tot, {point}) => tot + point, 0)
   return (
     <View style={styles.Updates}>
       <ScrollView
@@ -29,7 +27,8 @@ const styles = StyleSheet.create({
   Updates: {
     backgroundColor: '#212121',
     justifyContent: 'space-evenly',
-    ...StyleSheet.absoluteFill
+    ...StyleSheet.absoluteFill,
+    padding: 10
   },
   UpdatesScrollView: {
     flex: 1
