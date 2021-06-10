@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import config from '../config'
 
 const NotSubscribed = (props) => {
   const { close, cancelable } = props
@@ -12,14 +13,35 @@ const NotSubscribed = (props) => {
     >
       <View style={[styles.body]}>
         <View style={styles.content}>
-          <Image
-            source={{ uri: 'menu_square_logo' }}
-            style={{ width: 50, height: 50, alignSelf: 'center', marginBottom: 20 }} />
+          <View style={styles.titleParent}>
+            <Image
+              source={{ uri: 'menu_square_logo' }}
+              style={{ width: 50, height: 50 }}
+            />
+            <Text style={styles.titleText}>Legend Pack</Text>
+          </View>
           <Text style={styles.contentText}>
-            {'Only Pro users can access this section'}
+            <Text>Dear loyal user, subscribe today to{`\n`}begin your</Text>
+            <Text style={{fontWeight: 'bold'}}> 30 days free trial </Text>
+            <Text>and get:</Text>
+          </Text>
+          <View>
+            <Text style={styles.listItem}>- Access to funniest Memes ever</Text>
+            <Text style={styles.listItem}>- Access to breathtaking Divas section</Text>
+            <Text style={styles.listItem}>- Access to funniest Memes ever</Text>
+            <Text style={styles.listItem}>- Access to all new WrestleMoney League</Text>
+            <Text style={styles.listItem}>- A classy Legend Badge on your comments</Text>
+          </View>
+          <Text style={[styles.contentText, styles.marginedText]}>
+            <Text>You will be only charged only</Text>
+            <Text style={{fontWeight: 'bold'}}> $0.99 </Text>
+            <Text>a month, should you wish to continue supporting us.</Text>
+          </Text>
+          <Text style={styles.contentText}>
+            <Text>You can unsubscribe any time you like</Text>
           </Text>
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
           {
             cancelable && <TouchableOpacity onPressIn={close} activeOpacity={.5} style={styles.ko}>
               <Text style={styles.okText}>Cancel</Text>
@@ -42,6 +64,27 @@ const styles = StyleSheet.create({
     zIndex: 1000,
     ...StyleSheet.absoluteFill,
   },
+  marginedText: {
+    marginVertical: 20
+  },
+  listItem: {
+    marginLeft: 10,
+    fontSize: 14,
+    color: '#212121'
+  },
+  titleParent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginBottom: 20
+  },
+  titleText: {
+    fontSize: 30,
+    fontFamily: 'Exo-SemiBold',
+    marginLeft: 15,
+    alignItems: 'center',
+    color: '#212121'
+  },
   body: {
     backgroundColor: '#eee',
     maxWidth: '90%',
@@ -49,7 +92,8 @@ const styles = StyleSheet.create({
     borderRadius: 10
   },
   contentText: {
-    fontSize: 20
+    fontSize: 16,
+    color: '#504f4f'
   },
   ok: {
     alignSelf: 'flex-end',
@@ -70,7 +114,8 @@ const styles = StyleSheet.create({
   },
   okText: {
     color: 'white',
-    fontSize: 15
+    fontSize: 22,
+    fontFamily: Platform.OS == 'ios'? 'Eurostile' : 'Eurostile-Bold'
   },
 })
 
