@@ -100,8 +100,8 @@ const funcs = (props, {team}) => [
   {
     title: 'My Team',
     component: team && team.wrestlers ? MyTeam : TeamBuilder,
-    // condition: _ => team && team.wrestlers && team.wrestlers.length === 0,
-    // errorText: team ? "You've already built your team for the season!" : "Please wait..."
+    condition: _ => !!team,
+    errorText: "Please wait..."
   },
   {
     title: 'Points Table',
