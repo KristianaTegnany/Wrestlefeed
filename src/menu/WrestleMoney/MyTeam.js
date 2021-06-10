@@ -1,9 +1,10 @@
 import React from 'react'
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
+import {
+  View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native'
 
 
-const PointsTable = (props) => {
-  const { wrestlers } = props
+const MyTeam = (props) => {
+  const {team: {wrestlers}} = props
   const total = wrestlers.reduce((tot, {point}) => tot + point, 0)
   return (
     <View style={styles.TeamBuilder}>
@@ -14,7 +15,6 @@ const PointsTable = (props) => {
           <Text style={styles.wNameText}>My Wrestlers</Text>
           <Text style={styles.wPointText}>Points</Text>
         </View>
-        <ScrollView>
         {
           wrestlers
           .filter(({point}) => point > 0)
@@ -29,11 +29,14 @@ const PointsTable = (props) => {
             </View>
           })
         }
-        </ScrollView>
+        <View style={[styles.wLine, styles.wRed]}>
+          <Text style={styles.wNameText}>My Total Score</Text>
+          <Text style={styles.wPointText}>{total > 9 ? total : `0${total}`}</Text>
+        </View>
       </View>
 
       <Text style={styles.detail}>
-        {`* Any Wrestler not appearing in this table has zero points in the current season`}
+        {`Wrestlers' point are regularly updated by the admins after every event. Your score will be refreshed whenever you come back here next time. Good luck!`}
       </Text>
     </View>
   )
@@ -49,8 +52,7 @@ const styles = StyleSheet.create({
     width: '80%',
     alignSelf: 'center',
     borderColor: "#fff",
-    borderWidth: 1,
-    height: '75%'
+    borderWidth: 1
   },
   title:{
     color: "#fff",
@@ -154,4 +156,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default PointsTable
+export default MyTeam

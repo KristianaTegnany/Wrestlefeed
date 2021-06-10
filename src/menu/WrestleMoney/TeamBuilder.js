@@ -31,31 +31,64 @@ const Wrestler = ({item}) => {
 const MAX = 5
 
 const TeamBuilder = (props) => {
-  const { user, wrestlers, team, setTeam, close } = props
+  const { user, wrestlers, setTeam, close } = props
   const [chosen, setChosen] = React.useState([])
   const [search, setSearch] = React.useState('')
+  const [showConf, setShowConf] = React.useState(false)
   const toggleWrestler = (id) => {
     if(chosen.includes(id)) setChosen(chosen.filter(i => id !== i))
     else if(chosen.length < MAX) {
       setChosen([ ...chosen, id ])
     }
   }
+
   const save = async () => {
     if(chosen.length === MAX){
-      const team = await Axios.post(`${wf.baseUrl}/api/team`, {
-        wrestlers: chosen,
-        user_id: user.ID,
-        name: user.display_name || ''
-      })
-      setTeam(team)
-      close()
+      if(showConf){
+        const {data: team} = await Axios.post(`${wf.baseUrl}/api/team`, {
+          wrestlers: chosen,
+          user_id: user.ID,
+          name: user.display_name || ''
+        })
+        setTeam(team)
+        console.log(team)
+        close()
+      }
+      else setShowConf(true)
     }
   }
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.TeamBuilder}
     >
+      {
+        showConf && <View style={styles.conf}>
+          <View style={styles.confContent}>
+            <Text style={styles.confTitle}>Confirm your final team and tap freeze:</Text>
+            <View style={styles.confList}>
+            {
+              chosen.map((id, i) => {
+                const {name} = wrestlers.find(({id: Id}) => Id === id)
+                return <Text key={i} style={styles.confW}>{i+1}. {name}</Text>
+              })
+            }
+            </View>
+            <Text style={styles.confDetail}>
+              {`You will not be able to make any changes before the next season.`}
+            </Text>
+            <View style={styles.confButtons}>
+              <TouchableOpacity onPressIn={_ => setShowConf(false)} style={styles.confButton}>
+                <Text style={styles.confButtonText}>Edit Team</Text>
+              </TouchableOpacity>
+              <TouchableOpacity  onPressIn={save} style={styles.confButton}>
+                <Text style={styles.confButtonText}>Freeze</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      }
       <View style={styles.counterParent}>
         <Text style={styles.counterCount}>{addZero(chosen.length)} / 05</Text>
         <Text style={styles.counterText}>Selected</Text>
@@ -105,9 +138,55 @@ const TeamBuilder = (props) => {
 const styles = StyleSheet.create({
   submitParent: {
     flexDirection: 'row',
-    marginBottom: 10,
+    marginVertical: 10,
     justifyContent: 'center',
     paddingHorizontal: 20
+  },
+  conf: {
+    ...StyleSheet.absoluteFill,
+    zIndex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  confW: {
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+  confContent: {
+    backgroundColor: '#fff',
+    width: '90%',
+    borderRadius: 5,
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    shadowColor: "#555",
+    shadowRadius: 5,
+    elevation: 3,
+
+  },
+  confTitle: {
+    fontSize: 15
+  },
+  confButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10
+  },
+  confDetail: {
+    fontStyle: 'italic',
+  },
+  confButton: {
+    backgroundColor: '#b21a1a',
+    padding: 7,
+    paddingHorizontal: 20,
+    borderRadius: 7
+  },
+  confButtonText: {
+    color: '#fff',
+    fontSize: 16
+  },
+  confList: {
+    marginVertical: 15,
+    paddingLeft: 15
   },
   submitButton: {
     backgroundColor: '#eee',
@@ -159,7 +238,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     overflow: 'hidden',
     paddingVertical: 6,
-    width: '90%',
+    width: '80%',
     alignSelf: 'center'
   },
   wText: {

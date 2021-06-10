@@ -11,6 +11,8 @@ import TextComponent from './TextComponent';
 import Axios from 'axios'
 import config from '../../config';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import MyTeam from './MyTeam';
+import Updates from './Updates';
 
 
 export const wf = {
@@ -100,9 +102,9 @@ const WrestleMoney = (props) => {
 const funcs = (props, {team}) => [
   {
     title: 'My Team',
-    component: TeamBuilder,
+    component: team && team.wrestlers ? MyTeam : TeamBuilder,
     // condition: _ => team && team.wrestlers && team.wrestlers.length === 0,
-    errorText: team ? "You've already built your team for the season!" : "Please wait..."
+    // errorText: team ? "You've already built your team for the season!" : "Please wait..."
   },
   {
     title: 'Points table',
@@ -116,7 +118,7 @@ const funcs = (props, {team}) => [
   },
   {
     title: 'Updates',
-    component: TextComponent
+    component: Updates
   }
 ]
 
