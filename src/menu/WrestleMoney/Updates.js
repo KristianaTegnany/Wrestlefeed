@@ -1,29 +1,55 @@
 import React from 'react'
-import {
-  View, Text, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, ScrollView } from 'react-native'
+import Wrestlefeed from '../../common/Wrestlefeed'
 
+export const addZero = (nb) => nb <= 9 ? `0${nb}` : `${nb}`
+
+const updates = []
 
 const Updates = (props) => {
+  const {user: {ID: id}} = props
+  const [posts, setPosts] = React.useState(updates)
+  React.useEffect(() => {
+    const last_id = updates.length ? updates[updates.length - 1].id : 0
+    Wrestlefeed.fetchUpdates(id, last_id).then(posts => {
+      updates.push(...posts)
+      setPosts(updates.slice(0, 10))
+    })
+  }, [])
   return (
     <View style={styles.Updates}>
       <ScrollView
         style={styles.UpdatesScrollView}
         contentContainerStyle={styles.UpdatesContainer}
       >
-        <View style={styles.update}>
-          <Text style={styles.updateText}>
-            {'lorem ipsum'}
-          </Text>
-          <Text style={styles.updateDate}>
-            {"12:03 GMT "}
-          </Text>
-        </View>
+        {
+          posts.map(({content, post_date}, i) => {
+            const d = new Date(post_date)
+            const hour = `${addZero(d.getHours())}:${addZero(d.getMinutes())}`
+            const date = `${addZero(d.getDate())}/${addZero(d.getMonth() + 1)}/${addZero(d.getFullYear())}`
+            return <View key={i} style={styles.update}>
+              <Text style={styles.updateText}>{content}</Text>
+              <Text style={styles.updateDate}>{`${hour}, ${date}`}</Text>
+            </View>
+          })
+        }
+        {
+          !posts.length &&
+            <Text style={styles.none}>No updates for now</Text>
+        }
       </ScrollView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  none: {
+    fontSize: 12,
+    color: '#fff',
+    opacity: .6,
+    textAlign: 'center',
+    marginVertical: 40
+  },
   Updates: {
     backgroundColor: '#212121',
     justifyContent: 'space-evenly',

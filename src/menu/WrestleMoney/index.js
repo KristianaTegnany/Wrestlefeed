@@ -12,6 +12,7 @@ import Axios from 'axios'
 import config from '../../config';
 import MyTeam from './MyTeam';
 import Updates from './Updates';
+import Rules from './Rules';
 
 export const wf = {
   wrestlers: [],
@@ -41,10 +42,12 @@ const WrestleMoney = (props) => {
     navigation: {state: {params: user}}
   } = props
 
+  console.log(navigation.state.params)
+
   // States
   const [active, setActive] = React.useState({title: _defTitle})
   const [wrestlers, setWrestlers] = React.useState(wf.wrestlers)
-  const [team, setTeam] = React.useState([])
+  const [team, setTeam] = React.useState(null)
   const [errorText, setErrorText] = React.useState('')
 
   const goBackHome = () => {
@@ -112,7 +115,7 @@ const funcs = (props, {team}) => [
   },
   {
     title: 'Rules',
-    component: TextComponent
+    component: Rules
   },
   {
     title: 'Updates',

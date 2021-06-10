@@ -48,8 +48,7 @@ const Dashboard = createMaterialTopTabNavigator(
                 return(
                     <TabLabel name={tab_name} status={focused} />
                 )
-            },
-           
+            }
         }),
         tabBarComponent: (props) => { return(<Tabs {...props} />) },
         tabBarOptions: {
