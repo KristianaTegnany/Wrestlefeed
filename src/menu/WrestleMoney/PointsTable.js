@@ -1,7 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
 
-
 const PointsTable = (props) => {
   const { wrestlers } = props
   const total = wrestlers.reduce((tot, {point}) => tot + point, 0)

@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   View, Text, StyleSheet, BackHandler,
-  TouchableOpacity, SafeAreaView, Image, KeyboardAvoidingView, TextInput
+  TouchableOpacity, Platform, ImageBackground
 } from 'react-native'
 import { Navbar } from '../../common/Component';
 import Error from './Error';
@@ -13,7 +13,6 @@ import config from '../../config';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import MyTeam from './MyTeam';
 import Updates from './Updates';
-
 
 export const wf = {
   wrestlers: [],
@@ -68,8 +67,7 @@ const WrestleMoney = (props) => {
     <View
       style={{flex: 1}}>
       <Navbar leftPress={goBackHome} title={active.title} />
-      <View style={styles.WrestleMoney}>
-        <Image  />
+      <ImageBackground source={require('../../assets/images/bg.png')} style={styles.WrestleMoney}>
         <View style={styles.buttons}>
           {
             funcs(props, {team}).map((func, i) => {
@@ -94,7 +92,7 @@ const WrestleMoney = (props) => {
         </View>
         { Component && <Component close={_ => setActive({title: _defTitle})} {...{user, navigation, wrestlers, team, setTeam}}/> }
         { !!errorText && <Error text={errorText} close={ _ => setErrorText('')}/> }
-      </View>
+      </ImageBackground>
     </View>
   )
 }
@@ -140,11 +138,13 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     paddingHorizontal: 40,
     paddingVertical: 15,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    opacity: 0.8
   },
   btnText: {
     color: 'rgba(255,255,255,.7)',
     textAlign: 'center',
-    fontSize: 20
+    fontSize: 30,
+    fontFamily: Platform.OS == 'ios'? 'Eurostile' : 'Eurostile-Bold'
   },
 })
