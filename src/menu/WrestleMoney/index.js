@@ -60,6 +60,7 @@ const WrestleMoney = (props) => {
     getTeam(user.ID).then(team => {
       setTeam(team || {})
     })
+    // setTeam({})
     return () => backHandler.remove()
   }, []);
   const Component = active.component

@@ -50,7 +50,6 @@ const TeamBuilder = (props) => {
           name: user.display_name || ''
         })
         setTeam(team)
-        console.log(team)
         close()
       }
       else setShowConf(true)
@@ -100,7 +99,7 @@ const TeamBuilder = (props) => {
             return { ...wrestler, toggler: toggleWrestler, chosen }
           })
         }
-        keyExtractor={(_, i) => i}
+        keyExtractor={(_, i) => `${i}`}
         renderItem={Wrestler}
       />
       {
