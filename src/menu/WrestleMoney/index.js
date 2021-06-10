@@ -59,10 +59,11 @@ const WrestleMoney = (props) => {
   React.useEffect(() => {
     const backHandler = BackHandler.addEventListener("hardwareBackPress", goBackHome)
     getWrestlers().then(wlrs => setWrestlers(wlrs))
-    getTeam(user.ID).then(team => {
-      setTeam(team || {})
-    })
-    // setTeam({})
+    // getTeam(user.ID).then(team => {
+    //   console.log({team})
+    //   setTeam(team || {})
+    // })
+    setTeam({})
     return () => backHandler.remove()
   }, []);
   const Component = active.component

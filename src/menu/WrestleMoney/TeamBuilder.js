@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  View, Text, StyleSheet, FlatList,
+  View, Text, StyleSheet, FlatList, Keyboard,
   TextInput, TouchableOpacity, KeyboardAvoidingView, Image
 } from 'react-native'
 import { addZero } from '../../functions'
@@ -35,6 +35,7 @@ const TeamBuilder = (props) => {
   const { user, wrestlers, setTeam, close } = props
   const [chosen, setChosen] = React.useState([])
   const [search, setSearch] = React.useState('')
+  const [keyboard, setKeyboard] = React.useState(false)
   const [showConf, setShowConf] = React.useState(false)
   const toggleWrestler = (id) => {
     if(chosen.includes(id)) setChosen(chosen.filter(i => id !== i))
@@ -57,6 +58,15 @@ const TeamBuilder = (props) => {
       else setShowConf(true)
     }
   }
+
+  React.useEffect(() => {
+    const k1 = Keyboard.addListener('keyboardDidShow', _ => setKeyboard(true))
+    const k2 = Keyboard.addListener('keyboardDidHide', _ => setKeyboard(false))
+    return _ => {
+      k1.remove()
+      k2.remove()
+    }
+  }, [])
 
   return (
     <KeyboardAvoidingView
@@ -93,10 +103,13 @@ const TeamBuilder = (props) => {
         <Text style={styles.counterCount}>{addZero(chosen.length)} / 05</Text>
         <Text style={styles.counterText}>Selected</Text>
       </View>
+      <Text style={styles.title}>Choose your 5 wrestlers to complete.</Text>
       <FlatList
         style={styles.wFList}
+        extraData={props}
         data={
           Fuzzy.filter(search, wrestlers, { extract: ({name}) => name }).map(one => one.original || one)
+          .sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
           .map(wrestler => {
             return { ...wrestler, toggler: toggleWrestler, chosen }
           })
@@ -105,8 +118,11 @@ const TeamBuilder = (props) => {
         renderItem={Wrestler}
       />
       {
+        keyboard && <Image style={{width: 50, height: 50, alignSelf: 'center', marginTop: 10 }} source={require('../../assets/images/cancel.png')}/>
+      }
+      {
         <View style={styles.submitParent}>
-          <View onPress={save} style={[styles.submitButton, { flex: 1, overflow: 'hidden', marginRight: 20, flexDirection: 'row'}]}>
+          <View onPress={save} style={[styles.submitButton, { alignItems: 'center', flex: 1, overflow: 'hidden', marginRight: 20, flexDirection: 'row'}]}>
             <Image style={{width: 20, height: 20, opacity: .5 }} source={require('../../assets/images/search.png')}/>
             <TextInput value={search} onChangeText={setSearch} returnKeyType="search" selectionColor={'#b21a1a'} underlineColorAndroid ='rgba(0,0,0,0)' style={
               {
@@ -126,8 +142,8 @@ const TeamBuilder = (props) => {
               }
             }/>
           </View>
-          <TouchableOpacity activeOpacity={chosen.length < MAX ? 1 : .5} onPress={save} style={[styles.submitButton, {backgroundColor: chosen.length < MAX ? "gray" : '#eee'}]}>
-            <Text  style={styles.submitText}>Submit</Text>
+          <TouchableOpacity activeOpacity={chosen.length < MAX ? 1 : .5} onPress={save} style={[styles.submitButton, {backgroundColor: chosen.length < MAX ? "gray" : '#b21a1a'}]}>
+            <Text style={[styles.submitText, {color: chosen.length < MAX ? "#333" : '#fff'}]}>Submit</Text>
           </TouchableOpacity>
         </View>
       }
@@ -141,6 +157,12 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     justifyContent: 'center',
     paddingHorizontal: 20
+  },
+  title: {
+    fontSize: 20,
+    paddingVertical: 15,
+    textAlign: 'center',
+    color: '#fff'
   },
   conf: {
     ...StyleSheet.absoluteFill,
@@ -168,16 +190,18 @@ const styles = StyleSheet.create({
   },
   confButtons: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     marginTop: 10
   },
   confDetail: {
     fontStyle: 'italic',
+    marginVertical: 15,
+    lineHeight: 20
   },
   confButton: {
     backgroundColor: '#b21a1a',
     padding: 7,
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
     borderRadius: 7
   },
   confButtonText: {
@@ -192,12 +216,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
     borderRadius: 5,
     width: '40%',
-    padding: 10
+    paddingVertical: 5,
+    paddingHorizontal: 10
   },
   submitText: {
     color: '#333',
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize: 20
   },
   TeamBuilder: {
     backgroundColor: '#212121',
