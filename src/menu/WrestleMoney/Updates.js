@@ -53,7 +53,8 @@ const styles = StyleSheet.create({
   Updates: {
     backgroundColor: '#212121',
     justifyContent: 'space-evenly',
-    ...StyleSheet.absoluteFill
+    ...StyleSheet.absoluteFill,
+    padding: 10
   },
   UpdatesScrollView: {
     flex: 1

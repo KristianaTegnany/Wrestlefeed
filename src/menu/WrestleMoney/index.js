@@ -145,9 +145,9 @@ const styles = StyleSheet.create({
     opacity: 0.8
   },
   btnText: {
-    color: 'rgba(255,255,255,.7)',
+    color: 'white',
     textAlign: 'center',
-    fontSize: 30,
+    fontSize: 27,
     fontFamily: Platform.OS == 'ios'? 'Eurostile' : 'Eurostile-Bold'
   },
 })
