@@ -476,7 +476,7 @@ export const Poll = (props) => {
 }
 
 export const PagerList = (props) => {
-    let { post_list, onReadMorePress, onCommentOpen, index, pageRef, onReactionPress, onPollPress } = props;
+    let { post_list, index, pageRef, onPollPress } = props;
     return(
         <ViewPager style={[{ flex: 1 }]} 
             ref={pageRef}
@@ -493,27 +493,18 @@ export const PagerList = (props) => {
                                 post.post_type == "stories" && post.short_desc ?
                                     <Stories 
                                         data={post} 
-                                        onReadMorePress={onReadMorePress} 
-                                        onCommentPress={onCommentOpen}
-                                        onReactionPress={(type) => onReactionPress(type)}
                                     />
                                 : post.post_type == "twitter" ?
                                     <Twitter 
                                         data={post} 
-                                        onCommentPress={onCommentOpen}
-                                        onReactionPress={(type) => onReactionPress(type)}
                                     />
                                 : post.post_type == "stories" && !post.short_desc ?
                                     <PinchImage 
                                         data={post} 
-                                        onCommentPress={onCommentOpen}
-                                        onReactionPress={(type) => onReactionPress(type)}
                                     />
                                 : post.post_type == "poll" ?
                                     <Poll 
                                         data={post} 
-                                        onCommentPress={onCommentOpen}
-                                        onReactionPress={(type) => onReactionPress(type)}
                                         onPollPress={(poll_index) => onPollPress(poll_index)}
                                     />
                                 : null
@@ -528,16 +519,13 @@ export const PagerList = (props) => {
 }
 
 export const PagerListWrapper = (props) => {
-    let { post_list, onReadMorePress, onCommentOpen, index, pageRef, onReactionPress, onPollPress } = props;
+    let { post_list, index, pageRef, onPollPress } = props;
     return(
         <PagerList 
             pageRef={pageRef}
             post_list={post_list}
             index={index}
             onPostChange={(position) => props.onPostChange(position)}
-            onReadMorePress={onReadMorePress}
-            onCommentOpen={onCommentOpen}
-            onReactionPress={(type) => onReactionPress(type)}
             onPollPress={(poll_index) => onPollPress(poll_index)}
         />
     )

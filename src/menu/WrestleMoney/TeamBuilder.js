@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  View, Text, StyleSheet, FlatList, Keyboard,
+  FlatList, Keyboard, View, Text, ActivityIndicator, StyleSheet,
   TextInput, TouchableOpacity, KeyboardAvoidingView, Image
 } from 'react-native'
 import { addZero } from '../../functions'
@@ -33,6 +33,7 @@ const MAX = 5
 
 const TeamBuilder = (props) => {
   const { user, wrestlers, setTeam, close } = props
+  const [loading, setLoading] = React.useState(false)
   const [chosen, setChosen] = React.useState([])
   const [search, setSearch] = React.useState('')
   const [keyboard, setKeyboard] = React.useState(false)
@@ -47,12 +48,14 @@ const TeamBuilder = (props) => {
   const save = async () => {
     if(chosen.length === MAX){
       if(showConf){
+        setLoading(true)
         const {data: team} = await Axios.post(`${wf.baseUrl}/api/team`, {
           wrestlers: chosen,
           user_id: user.ID,
           name: user.display_name || ''
         })
         setTeam(team)
+        setLoading(false)
         close()
       }
       else setShowConf(true)
@@ -73,6 +76,10 @@ const TeamBuilder = (props) => {
       behavior="height"
       style={styles.TeamBuilder}
     >
+      {
+        loading &&
+        <ActivityIndicator style={{position:'absolute', zIndex: 3, top: '49%', left:'49%'}} />
+      }
       {
         showConf && <View style={styles.conf}>
           <View style={styles.confContent}>
@@ -114,6 +121,7 @@ const TeamBuilder = (props) => {
             return { ...wrestler, toggler: toggleWrestler, chosen }
           })
         }
+        extraData={props}
         keyExtractor={(_, i) => `${i}`}
         renderItem={Wrestler}
       />

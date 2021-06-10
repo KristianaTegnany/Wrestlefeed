@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native'
 
 const PointsTable = (props) => {
   const { wrestlers } = props
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: 'center',
     fontSize: 20,
-    fontFamily: 'Eurostile-Bold'
+    fontFamily: Platform.OS == 'ios'? 'Eurostile' : 'Eurostile-Bold'
   },
   wLine: {
     flexDirection: 'row',

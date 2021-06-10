@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native'
+  View, Text, StyleSheet, Platform } from 'react-native'
 
 
 const MyTeam = (props) => {
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: 'center',
     fontSize: 20,
-    fontFamily: 'Eurostile-Bold'
+    fontFamily: Platform.OS == 'ios'? 'Eurostile' : 'Eurostile-Bold'
   },
   wLine: {
     flexDirection: 'row',
