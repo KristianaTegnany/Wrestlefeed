@@ -25,11 +25,8 @@ const getWrestlers = async () => {
 }
 
 const getTeam = async (user_id) => {
-  const {data} = await Axios.request({
-    method: "GET",
-    url: `${wf.baseUrl}/api/getmyteam`,
-    params: { user_id }
-  })
+  const {data} = await Axios.get(`${wf.baseUrl}/api/getmyteam?user_id=${user_id}`)
+  console.log({data})
   return data
 }
 
@@ -41,7 +38,6 @@ const WrestleMoney = (props) => {
     navigation: {state: {params: user}}
   } = props
 
-  console.log(navigation.state.params)
 
   // States
   const [active, setActive] = React.useState({title: _defTitle})
