@@ -1,6 +1,8 @@
 import React from 'react'
 import {
-  View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView, Image } from 'react-native'
+  View, Text, StyleSheet, FlatList,
+  TextInput, TouchableOpacity, KeyboardAvoidingView, Image
+} from 'react-native'
 import { addZero } from '../../functions'
 import { wf } from '.'
 import Axios from 'axios'

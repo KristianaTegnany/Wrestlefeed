@@ -11,17 +11,20 @@ import RNBootSplash from "react-native-bootsplash";
 let { width, height } = Dimensions.get('window')
 
 class Wrestlefeed {
-    static fetchPostData(tab_name, last_id, user_id){
-        return new Promise((resolve, reject) => {
-            axios.post(config.base_api+'/all_feed.php', {
-               tab_name, last_id, user_id
-            }).then((resFeed) => {
-                let { data } = resFeed;
-                resolve(data)
-            }).catch((err) => {
-                reject(err)
-            })
-        })
+    static async  fetchPostData(tab_name, last_id, user_id){
+      const {data} = await axios.post(
+        config.base_api+'/all_feed.php',
+        { tab_name, last_id, user_id}
+      )
+      return tab_name === 'NEWS' ? data.filter(({post_title}) => post_title !== 'wrestlemoney_updates') : data
+    }
+
+    static async fetchUpdates(user_id, last_id){
+      const {data} = await axios.post(
+        config.base_api+'/all_feed.php',
+        { tab_name: 'NEWS', last_id, user_id}
+      )
+      return data.filter(({post_title}) => post_title === 'wrestlemoney_updates')
     }
 
     static getPushPostList(last_id){
@@ -279,22 +282,18 @@ class Wrestlefeed {
         }
     }
 
-    static fetchNewPost(tab_name, post_list, user_data){
-        const post_data = post_list[0];
-        const user_id = user_data.ID;
-        const first_id = post_data.id
-        return new Promise((resolve, reject) => {
-            axios.post(config.base_api+'/fetch_new_post.php', { tab_name, first_id, user_id }).then((resNewPost) =>{
-                if(resNewPost.data.length != 0 ){
-                    const new_post_list = [...resNewPost.data, ...post_list];
-                    resolve(new_post_list);
-                }else{
-                    resolve([])
-                }
-            }).catch((err) => {
-                reject(err)
-            })
-        })
+    static async fetchNewPost(tab_name, post_list, user_data){
+      const post_data = post_list[0];
+      const user_id = user_data.ID;
+      const first_id = post_data.id
+      let { data } = await axios.post(
+        config.base_api+'/fetch_new_post.php',
+        { tab_name, first_id, user_id }
+      )
+      data = data.filter(({post_title}) => post_title !== 'wrestlemoney_updates')
+      
+      if(data.length != 0 ) return [...data, ...post_list]
+      else return []
     }
 
     static showSplash(){
