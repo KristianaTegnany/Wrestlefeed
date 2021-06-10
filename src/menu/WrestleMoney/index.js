@@ -7,7 +7,6 @@ import { Navbar } from '../../common/Component';
 import Error from './Error';
 import PointsTable from './PointsTable';
 import TeamBuilder from './TeamBuilder';
-import TextComponent from './TextComponent';
 import Axios from 'axios'
 import config from '../../config';
 import MyTeam from './MyTeam';
@@ -108,7 +107,7 @@ const funcs = (props, {team}) => [
     // errorText: team ? "You've already built your team for the season!" : "Please wait..."
   },
   {
-    title: 'Points table',
+    title: 'Points Table',
     component: PointsTable,
     condition: _ => team && team.wrestlers && team.wrestlers.length,
     errorText: team ? 'You need to make a team first!' : "Please wait..."
