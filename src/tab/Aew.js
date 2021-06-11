@@ -235,7 +235,7 @@ class Aew extends Component {
                         ref={this.doubleTapRef} 
                         style={{ width, height }}
                     >
-                        <Animated.View style={{ flex: 1 }}>
+                        <Animated.View style={{ flex: 1, marginBottom: -1 }}>
                             {
                                 post_list.length != 0 ?
                                     <>
