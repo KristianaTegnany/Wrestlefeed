@@ -42,20 +42,27 @@ const WrestleMoney = (props) => {
   // States
   const [active, setActive] = React.useState({title: _defTitle})
   const [wrestlers, setWrestlers] = React.useState(wf.wrestlers)
+  const backHandler = React.useRef(null)
   const [team, setTeam] = React.useState(null)
   const [errorText, setErrorText] = React.useState('')
 
   const goBackHome = () => {
-    if(active.title === _defTitle) navigation.goBack()
-    else setActive({title: _defTitle})
-    return false
+    if(backHandler.current) backHandler.current()
+    else {
+      if(active.title === _defTitle) navigation.goBack()
+      else setActive({title: _defTitle})
+      return false
+    }
   }
+
+  React.useEffect(() => {
+    if(active.title === _defTitle) backHandler.current = null
+  }, [active])
   
   React.useEffect(() => {
     const backHandler = BackHandler.addEventListener("hardwareBackPress", goBackHome)
     getWrestlers().then(wlrs => setWrestlers(wlrs))
     getTeam(user.ID).then(team => {
-      console.log({team})
       setTeam(team || {})
     })
     // setTeam({})
@@ -89,7 +96,7 @@ const WrestleMoney = (props) => {
             })
           }
         </View>
-        { Component && <Component close={_ => setActive({title: _defTitle})} {...{user, navigation, wrestlers, team, setTeam}}/> }
+        { Component && <Component close={_ => setActive({title: _defTitle})} {...{user, navigation, wrestlers, backHandler, team, setTeam}}/> }
         { !!errorText && <Error text={errorText} close={ _ => setErrorText('')}/> }
       </ImageBackground>
     </View>
