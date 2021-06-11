@@ -8,6 +8,7 @@ import { wf } from '.'
 import Axios from 'axios'
 import config from '../../config'
 import Fuzzy from 'fuzzy'
+import { RenderLoading } from '../../common/Component'
 
 const Wrestler = ({item}) => {
   let {
@@ -83,7 +84,7 @@ const TeamBuilder = (props) => {
     >
       {
         loading &&
-        <ActivityIndicator style={{position:'absolute', zIndex: 3, top: '49%', left:'49%'}} />
+        <RenderLoading/>
       }
       {
         showConf && <View style={styles.conf}>
@@ -115,7 +116,7 @@ const TeamBuilder = (props) => {
         <Text style={styles.counterCount}>{addZero(chosen.length)} / 05</Text>
         <Text style={styles.counterText}>Selected</Text>
       </View>
-      <Text style={styles.title}>Choose your 5 wrestlers to complete.</Text>
+      <Text style={styles.title}>Choose your 5 wrestlers to compete.</Text>
       <FlatList
         style={styles.wFList}
         extraData={props}
@@ -126,12 +127,11 @@ const TeamBuilder = (props) => {
             return { ...wrestler, toggler: toggleWrestler, chosen }
           })
         }
-        extraData={props}
         keyExtractor={(_, i) => `${i}`}
         renderItem={Wrestler}
       />
       {
-        keyboard && <TouchableOpacity activeOpacity={.8} onPress={_ => Keyboard.dismiss()} style={{marginTop: 10, justifyContent: 'center', alignItems: 'center'}}>
+        !!search && <TouchableOpacity activeOpacity={.8} onPress={_ => {!!keyboard && Keyboard.dismiss(); setSearch('')}} style={{marginTop: 10, justifyContent: 'center', alignItems: 'center'}}>
           <Image style={{width: 50, height: 50 }} source={require('../../assets/images/cancel.png')}/>
         </TouchableOpacity>
       }

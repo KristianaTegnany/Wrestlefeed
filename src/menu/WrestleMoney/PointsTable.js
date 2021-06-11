@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native'
+import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import { toDate } from './Updates'
 
 const PointsTable = (props) => {
