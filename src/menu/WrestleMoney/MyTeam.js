@@ -1,46 +1,49 @@
 import React from 'react'
 import {
-  View, Text, StyleSheet, Platform } from 'react-native'
+  View, Text, StyleSheet, Platform, KeyboardAvoidingView
+} from 'react-native'
 
 
 const MyTeam = (props) => {
-  const {team: {wrestlers}, backHandler, close} = props
-  const total = wrestlers.reduce((tot, {point}) => tot + point, 0)
+  const { team: { wrestlers }, backHandler, close, navbar } = props
+  const total = wrestlers.reduce((tot, { point }) => tot + point, 0)
   React.useEffect(() => {
     backHandler.current = close
   }, [])
   return (
-    <View style={styles.TeamBuilder}>
-      <Text style={styles.title}>Your team for the ongoing season:</Text>
-      
-      <View style={styles.table}>
-        <View style={[styles.wLine, styles.wRed]}>  
-          <Text style={styles.wNameText}>My Wrestlers</Text>
-          <Text style={styles.wPointText}>Points</Text>
+    <View style={{ flex: 1}}>
+      {navbar}
+      <View style={styles.TeamBuilder}>
+        <Text style={styles.title}>Your team for the ongoing season:</Text>
+        <View style={styles.table}>
+          <View style={[styles.wLine, styles.wRed]}>
+            <Text style={styles.wNameText}>My Wrestlers</Text>
+            <Text style={styles.wPointText}>Points</Text>
+          </View>
+          {
+            wrestlers
+              .filter(({ point }) => point > 0)
+              .sort(({ point: a, name: na }, { point: b, name: nb }) => {
+                if (a !== b) return a > b ? -1 : 1
+                else return na.toLowerCase() > nb.toLowerCase() ? 1 : -1
+              })
+              .map(({ name, point }, i) => {
+                return <View key={i} style={[styles.wLine]}>
+                  <Text style={styles.wNameText}>{name}</Text>
+                  <Text style={styles.wPointText}>{point > 9 ? point : `0${point}`}</Text>
+                </View>
+              })
+          }
+          <View style={[styles.wLine, styles.wRed]}>
+            <Text style={styles.wNameText}>My Total Score</Text>
+            <Text style={styles.wPointText}>{total > 9 ? total : `0${total}`}</Text>
+          </View>
         </View>
-        {
-          wrestlers
-          .filter(({point}) => point > 0)
-          .sort(({point: a, name: na}, {point: b, name: nb}) => {
-            if(a !== b) return a > b ? -1 : 1
-            else return na.toLowerCase() > nb.toLowerCase() ? 1 : -1   
-          })
-          .map(({name, point}, i) => {
-            return <View key={i} style={[styles.wLine]}>
-              <Text style={styles.wNameText}>{name}</Text>
-              <Text style={styles.wPointText}>{point > 9 ? point : `0${point}`}</Text>
-            </View>
-          })
-        }
-        <View style={[styles.wLine, styles.wRed]}>
-          <Text style={styles.wNameText}>My Total Score</Text>
-          <Text style={styles.wPointText}>{total > 9 ? total : `0${total}`}</Text>
-        </View>
-      </View>
 
-      <Text style={styles.detail}>
-        {`Wrestlers' points are regularly updated by\nthe admins after every event. Your score\nwill be refreshed whenever you come\nback here next time. Good luck!`}
-      </Text>
+        <Text style={styles.detail}>
+          {`Wrestlers' points are regularly updated by\nthe admins after every event. Your score\nwill be refreshed whenever you come\nback here next time. Good luck!`}
+        </Text>
+      </View>
     </View>
   )
 }
@@ -49,7 +52,7 @@ const styles = StyleSheet.create({
   TeamBuilder: {
     backgroundColor: '#212121',
     justifyContent: 'space-evenly',
-    ...StyleSheet.absoluteFill
+    flex: 1,
   },
   table: {
     width: '80%',
@@ -57,11 +60,11 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
     borderWidth: 1
   },
-  title:{
+  title: {
     color: "#fff",
     textAlign: 'center',
     fontSize: 20,
-    fontFamily: Platform.OS == 'ios'? 'Eurostile' : 'Eurostile-Bold'
+    fontFamily: Platform.OS == 'ios' ? 'Eurostile' : 'Eurostile-Bold'
   },
   wLine: {
     flexDirection: 'row',
@@ -120,7 +123,7 @@ const styles = StyleSheet.create({
     marginBottom: 30
   },
   wTextParent: {
-    
+
   },
   wText: {
     textAlign: 'center',

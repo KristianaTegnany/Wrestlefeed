@@ -1,26 +1,29 @@
 import React from 'react'
-import { View, StyleSheet, Dimensions} from 'react-native'
+import { View, StyleSheet, Dimensions } from 'react-native'
 import { WebView } from 'react-native-webview';
 import { RenderLoading } from '../../common/Component';
 
 const Rules = (props) => {
-  const {close, backHandler} = props
+  const { close, backHandler, navbar } = props
   const { height } = Dimensions.get('screen')
   const heightView = height - 56
-    
+
   React.useEffect(() => {
     backHandler.current = close
   }, [])
   return (
-    <View style={styles.Rules}>
-      <WebView
-        style={{ flex: 1, height: heightView}}
-        source={{ uri: 'https://wrestlefeed.wwfoldschool.com/rules/' }}
-        javaScriptEnabled
-        domStorageEnabled
-        startInLoadingState
-        renderLoading={() => <RenderLoading/>}
-      />
+    <View style={{ flex: 1 }}>
+      {navbar}
+      <View style={styles.Rules}>
+        <WebView
+          style={{ flex: 1, height: heightView }}
+          source={{ uri: 'https://wrestlefeed.wwfoldschool.com/rules/' }}
+          javaScriptEnabled
+          domStorageEnabled
+          startInLoadingState
+          renderLoading={() => <RenderLoading />}
+        />
+      </View>
     </View>
   )
 }
@@ -29,7 +32,7 @@ const styles = StyleSheet.create({
   Rules: {
     backgroundColor: '#212121',
     justifyContent: 'space-evenly',
-    ...StyleSheet.absoluteFill
+    flex: 1
   },
   table: {
     width: '80%',
@@ -37,7 +40,7 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
     borderWidth: 1
   },
-  title:{
+  title: {
     color: "#fff",
     textAlign: 'center',
     fontSize: 20,
@@ -100,7 +103,7 @@ const styles = StyleSheet.create({
     marginBottom: 30
   },
   wTextParent: {
-    
+
   },
   wText: {
     textAlign: 'center',

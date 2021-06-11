@@ -1,7 +1,7 @@
 import React from 'react'
 import {
-  View, Text, StyleSheet, BackHandler,
-  TouchableOpacity, Platform, ImageBackground
+  View, StyleSheet, BackHandler,
+  Platform
 } from 'react-native'
 import { Navbar, RenderLoading } from '../../common/Component';
 import Error from './Error';
@@ -12,6 +12,7 @@ import config from '../../config';
 import MyTeam from './MyTeam';
 import Updates from './Updates';
 import Rules from './Rules';
+import Main from './Main';
 
 export const wf = {
   wrestlers: [],
@@ -43,17 +44,16 @@ const WrestleMoney = (props) => {
     navigation: {state: {params: user}}
   } = props
 
-
   // States
-  const [active, setActive] = React.useState({title: _defTitle})
+  const [team, setTeam] = React.useState(wf.team)
   const [wrestlers, setWrestlers] = React.useState(wf.wrestlers)
   const backHandler = React.useRef(null)
-  const [team, setTeam] = React.useState(wf.team)
-  const [errorText, setErrorText] = React.useState('')
+  const fct = funcs(props, {team})
+  const [active, setActive] = React.useState(fct[0])
 
   const goBackHome = () => {
     if(backHandler.current) backHandler.current()
-    else if(_defTitle !== active.title) setActive({title: _defTitle})
+    else if(_defTitle !== active.title) setActive(fct[0])
     else navigation.goBack()
   }
 
@@ -77,57 +77,27 @@ const WrestleMoney = (props) => {
     return () => backHandler.remove()
   }, [])
 
-  React.useEffect(() => {
-    if(errorText === 'Loading' && wrestlers)
-      setErrorText('')
-  }, [wrestlers])
-
   const Component = active.component
   return (
     <View
       style={{flex: 1}}>
-      <Navbar leftPress={goBackHome} title={active.title} />
-      <ImageBackground source={require('../../assets/images/bg.png')} style={styles.WrestleMoney}>
-        <View style={styles.buttons}>
-          {
-            funcs(props, {team}).map((func, i) => {
-              const {title, condition, errorText} = func
-              return (
-                <TouchableOpacity
-                  key={i}
-                  style={styles.button}
-                  onPress={_ => {
-                    if(condition && !condition()) {
-                      setErrorText(errorText)
-                      backHandler.current = _ => {
-                        setErrorText('')
-                        backHandler.current = null
-                      }
-                    }
-                    else setActive({...func})
-                  }}
-                >
-                  <Text style={[styles.btnText, {fontFamily: config.ios ? 'Eurostile' : 'Eurostile-Bold'}]}>{title}</Text>
-                </TouchableOpacity>
-              )
-            })
-          }
-        </View>
-        { Component && <Component close={_ => setActive({title: _defTitle})} {...{user, updateData, navigation, wrestlers, backHandler, team, setTeam}}/> }
-        {
-          (!!errorText && errorText === 'Loading') &&
-          <RenderLoading color='white' withoutText/>
-        }
-        {
-          (!!errorText && errorText !== 'Loading') &&
-          <Error text={errorText} close={backHandler.current}/>
-        }
-      </ImageBackground>
+      {
+        Component && <Component
+          close={_ => setActive(fct[0])}
+          {...{user, funcs: fct, setActive, updateData, navigation, wrestlers, backHandler, team, setTeam}}
+          navbar = {<Navbar leftPress={goBackHome} title={active.title} />}
+        />
+      }
     </View>
   )
 }
 
 const funcs = (props, {team}) => [
+  {
+    title: _defTitle,
+    component: Main,
+    nobutton: true
+  },
   {
     title: 'My Team',
     component: team && team.wrestlers ? MyTeam : TeamBuilder,
@@ -151,30 +121,3 @@ const funcs = (props, {team}) => [
 ]
 
 export default WrestleMoney
-
-const styles = StyleSheet.create({
-  WrestleMoney:{
-    flex: 1,
-    backgroundColor: '#212121',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  buttons: {
-    flexDirection: 'column'
-  },
-  button: {
-    borderRadius: 30,
-    backgroundColor: '#b21a1a',
-    marginVertical: 15,
-    paddingHorizontal: 40,
-    paddingVertical: 15,
-    justifyContent: 'center',
-    opacity: 0.8
-  },
-  btnText: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 27,
-    fontFamily: Platform.OS == 'ios'? 'Eurostile' : 'Eurostile-Bold'
-  },
-})

@@ -3,45 +3,47 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import { toDate } from './Updates'
 
 const PointsTable = (props) => {
-  const { wrestlers, close, backHandler, updateData } = props
-  const total = wrestlers.reduce((tot, {point}) => tot + point, 0)
+  const { wrestlers, close, backHandler, updateData, navbar } = props
+  const total = wrestlers.reduce((tot, { point }) => tot + point, 0)
   React.useEffect(() => {
     backHandler.current = close
     updateData()
   }, [])
-  const lastUpdate = wrestlers.reduce((last, {updated_at: ua}) => {
+  const lastUpdate = wrestlers.reduce((last, { updated_at: ua }) => {
     return last < ua ? ua : last
   }, "0000")
   return (
-    <View style={styles.TeamBuilder}>
-
-      <Text style={styles.title}>Points last updated at: <Text style={{color: '#b21a1a'}}>{toDate(lastUpdate)}</Text></Text>
-      <View style={styles.table}>
-        <View style={[styles.wLine, styles.wRed]}>  
-          <Text style={styles.wNameText}>Wrestlers</Text>
-          <Text style={styles.wPointText}>Points</Text>
+    <View style={{ flex: 1 }}>
+      {navbar}
+      <View style={styles.TeamBuilder}>
+        <Text style={styles.title}>Points last updated at: <Text style={{ color: '#b21a1a' }}>{toDate(lastUpdate)}</Text></Text>
+        <View style={styles.table}>
+          <View style={[styles.wLine, styles.wRed]}>
+            <Text style={styles.wNameText}>Wrestlers</Text>
+            <Text style={styles.wPointText}>Points</Text>
+          </View>
+          <ScrollView>
+            {
+              wrestlers
+                .filter(({ point }) => point > 0)
+                .sort(({ point: a, name: na }, { point: b, name: nb }) => {
+                  if (a !== b) return a > b ? -1 : 1
+                  else return na.toLowerCase() > nb.toLowerCase() ? 1 : -1
+                })
+                .map(({ name, point }, i) => {
+                  return <View key={i} style={[styles.wLine]}>
+                    <Text style={styles.wNameText}>{name}</Text>
+                    <Text style={styles.wPointText}>{point > 9 ? point : `0${point}`}</Text>
+                  </View>
+                })
+            }
+          </ScrollView>
         </View>
-        <ScrollView>
-        {
-          wrestlers
-          .filter(({point}) => point > 0)
-          .sort(({point: a, name: na}, {point: b, name: nb}) => {
-            if(a !== b) return a > b ? -1 : 1
-            else return na.toLowerCase() > nb.toLowerCase() ? 1 : -1   
-          })
-          .map(({name, point}, i) => {
-            return <View key={i} style={[styles.wLine]}>
-              <Text style={styles.wNameText}>{name}</Text>
-              <Text style={styles.wPointText}>{point > 9 ? point : `0${point}`}</Text>
-            </View>
-          })
-        }
-        </ScrollView>
-      </View>
 
-      <Text style={styles.detail}>
-        {`* Any Wrestler not appearing in this table has zero points in the current season`}
-      </Text>
+        <Text style={styles.detail}>
+          {`* Any Wrestler not appearing in this table has zero points in the current season`}
+        </Text>
+      </View>
     </View>
   )
 }
@@ -50,9 +52,9 @@ const styles = StyleSheet.create({
   TeamBuilder: {
     backgroundColor: '#212121',
     justifyContent: 'space-evenly',
-    ...StyleSheet.absoluteFill
+    flex: 1
   },
-  title:{
+  title: {
     color: "#fff",
     textAlign: 'center',
     fontSize: 16,
@@ -121,7 +123,7 @@ const styles = StyleSheet.create({
     marginBottom: 30
   },
   wTextParent: {
-    
+
   },
   wText: {
     textAlign: 'center',

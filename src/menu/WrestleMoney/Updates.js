@@ -13,7 +13,7 @@ export const toDate = (origDate, gmt = true) => {
 const updates = []
 
 const Updates = (props) => {
-  const {user: {ID: id}, close, backHandler} = props
+  const { user: { ID: id }, close, backHandler, navbar } = props
   React.useEffect(() => {
     backHandler.current = close
   }, [])
@@ -26,24 +26,27 @@ const Updates = (props) => {
     })
   }, [])
   return (
-    <View style={styles.Updates}>
-      <ScrollView
-        style={styles.UpdatesScrollView}
-        contentContainerStyle={styles.UpdatesContainer}
-      >
-        {
-          posts.map(({content, post_date}, i) => {
-            return <View key={i} style={styles.update}>
-              <Text style={styles.updateText}>{content}</Text>
-              <Text style={styles.updateDate}>{toDate(post_date)}</Text>
-            </View>
-          })
-        }
-        {
-          !posts.length &&
+    <View style={{ flex: 1 }}>
+      {navbar}
+      <View style={styles.Updates}>
+        <ScrollView
+          style={styles.UpdatesScrollView}
+          contentContainerStyle={styles.UpdatesContainer}
+        >
+          {
+            posts.map(({ content, post_date }, i) => {
+              return <View key={i} style={styles.update}>
+                <Text style={styles.updateText}>{content}</Text>
+                <Text style={styles.updateDate}>{toDate(post_date)}</Text>
+              </View>
+            })
+          }
+          {
+            !posts.length &&
             <Text style={styles.none}>No updates for now</Text>
-        }
-      </ScrollView>
+          }
+        </ScrollView>
+      </View>
     </View>
   )
 }
@@ -59,7 +62,7 @@ const styles = StyleSheet.create({
   Updates: {
     backgroundColor: '#212121',
     justifyContent: 'space-evenly',
-    ...StyleSheet.absoluteFill,
+    flex: 1,
     padding: 10
   },
   UpdatesScrollView: {
