@@ -25,11 +25,8 @@ const getWrestlers = async () => {
 }
 
 const getTeam = async (user_id) => {
-  const {data} = await Axios.request({
-    method: "GET",
-    url: `${wf.baseUrl}/api/getmyteam`,
-    params: { user_id }
-  })
+  const {data} = await Axios.get(`${wf.baseUrl}/api/getmyteam?user_id=${user_id}`)
+  console.log({data})
   return data
 }
 
@@ -41,25 +38,31 @@ const WrestleMoney = (props) => {
     navigation: {state: {params: user}}
   } = props
 
-  console.log(navigation.state.params)
 
   // States
   const [active, setActive] = React.useState({title: _defTitle})
   const [wrestlers, setWrestlers] = React.useState(wf.wrestlers)
+  const backHandler = React.useRef(null)
   const [team, setTeam] = React.useState(null)
   const [errorText, setErrorText] = React.useState('')
 
   const goBackHome = () => {
-    if(active.title === _defTitle) navigation.goBack()
-    else setActive({title: _defTitle})
-    return false
+    if(backHandler.current) backHandler.current()
+    else {
+      if(active.title === _defTitle) navigation.goBack()
+      else setActive({title: _defTitle})
+      return false
+    }
   }
+
+  React.useEffect(() => {
+    if(active.title === _defTitle) backHandler.current = null
+  }, [active])
   
   React.useEffect(() => {
     const backHandler = BackHandler.addEventListener("hardwareBackPress", goBackHome)
     getWrestlers().then(wlrs => setWrestlers(wlrs))
     getTeam(user.ID).then(team => {
-      console.log({team})
       setTeam(team || {})
     })
     // setTeam({})
@@ -93,7 +96,7 @@ const WrestleMoney = (props) => {
             })
           }
         </View>
-        { Component && <Component close={_ => setActive({title: _defTitle})} {...{user, navigation, wrestlers, team, setTeam}}/> }
+        { Component && <Component close={_ => setActive({title: _defTitle})} {...{user, navigation, wrestlers, backHandler, team, setTeam}}/> }
         { !!errorText && <Error text={errorText} close={ _ => setErrorText('')}/> }
       </ImageBackground>
     </View>
@@ -104,8 +107,8 @@ const funcs = (props, {team}) => [
   {
     title: 'My Team',
     component: team && team.wrestlers ? MyTeam : TeamBuilder,
-    // condition: _ => team && team.wrestlers && team.wrestlers.length === 0,
-    // errorText: team ? "You've already built your team for the season!" : "Please wait..."
+    condition: _ => !!team,
+    errorText: "Please wait..."
   },
   {
     title: 'Points Table',

@@ -32,7 +32,7 @@ const Wrestler = ({item}) => {
 const MAX = 5
 
 const TeamBuilder = (props) => {
-  const { user, wrestlers, setTeam, close } = props
+  const { user, wrestlers, setTeam, close, backHandler } = props
   const [loading, setLoading] = React.useState(false)
   const [chosen, setChosen] = React.useState([])
   const [search, setSearch] = React.useState('')
@@ -70,6 +70,11 @@ const TeamBuilder = (props) => {
       k2.remove()
     }
   }, [])
+
+  React.useEffect(() => {
+    if(showConf) backHandler.current = _ => setShowConf(false)
+    else backHandler.current = null
+  }, [showConf])
 
   return (
     <KeyboardAvoidingView
@@ -126,7 +131,9 @@ const TeamBuilder = (props) => {
         renderItem={Wrestler}
       />
       {
-        keyboard && <Image style={{width: 50, height: 50, alignSelf: 'center', marginTop: 10 }} source={require('../../assets/images/cancel.png')}/>
+        keyboard && <TouchableOpacity activeOpacity={.8} onPress={_ => Keyboard.dismiss()} style={{marginTop: 10, justifyContent: 'center', alignItems: 'center'}}>
+          <Image style={{width: 50, height: 50 }} source={require('../../assets/images/cancel.png')}/>
+        </TouchableOpacity>
       }
       {
         <View style={styles.submitParent}>
@@ -174,13 +181,15 @@ const styles = StyleSheet.create({
   },
   conf: {
     ...StyleSheet.absoluteFill,
-    zIndex: 1,
+    zIndex: 5,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,.6)'
   },
   confW: {
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+
   },
   confContent: {
     backgroundColor: '#fff',
@@ -209,8 +218,9 @@ const styles = StyleSheet.create({
   confButton: {
     backgroundColor: '#b21a1a',
     padding: 7,
-    paddingHorizontal: 30,
-    borderRadius: 7
+    alignItems: 'center',
+    borderRadius: 7,
+    width: '46%'
   },
   confButtonText: {
     color: '#fff',
@@ -239,7 +249,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: '100%'
+    top: 0,
+    zIndex: 1
   },
   counterParent: {
     position: 'absolute',

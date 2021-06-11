@@ -36,7 +36,7 @@ const MyTeam = (props) => {
       </View>
 
       <Text style={styles.detail}>
-        {`Wrestlers' point are regularly updated by the admins after every event. Your score will be refreshed whenever you come back here next time. Good luck!`}
+        {`Wrestlers' points are regularly updated by\nthe admins after every event. Your score\nwill be refreshed whenever you come\nback here next time. Good luck!`}
       </Text>
     </View>
   )

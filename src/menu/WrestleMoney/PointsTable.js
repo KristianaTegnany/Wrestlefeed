@@ -6,11 +6,9 @@ const PointsTable = (props) => {
   const total = wrestlers.reduce((tot, {point}) => tot + point, 0)
   return (
     <View style={styles.TeamBuilder}>
-      <Text style={styles.title}>Your team for the ongoing season:</Text>
-      
       <View style={styles.table}>
         <View style={[styles.wLine, styles.wRed]}>  
-          <Text style={styles.wNameText}>My Wrestlers</Text>
+          <Text style={styles.wNameText}>Wrestlers</Text>
           <Text style={styles.wPointText}>Points</Text>
         </View>
         <ScrollView>
@@ -50,12 +48,6 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
     borderWidth: 1,
     height: '75%'
-  },
-  title:{
-    color: "#fff",
-    textAlign: 'center',
-    fontSize: 20,
-    fontFamily: Platform.OS == 'ios'? 'Eurostile' : 'Eurostile-Bold'
   },
   wLine: {
     flexDirection: 'row',
