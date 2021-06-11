@@ -46,7 +46,6 @@ const WrestleMoney = (props) => {
   const [errorText, setErrorText] = React.useState('')
 
   const goBackHome = () => {
-    console.log(_defTitle, active.title)
     if(backHandler.current) backHandler.current()
     else if(_defTitle !== active.title) setActive({title: _defTitle})
     else navigation.goBack()
