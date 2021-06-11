@@ -131,7 +131,7 @@ const TeamBuilder = (props) => {
         renderItem={Wrestler}
       />
       {
-        keyboard && <TouchableOpacity activeOpacity={.8} onPress={_ => Keyboard.dismiss()} style={{marginTop: 10, justifyContent: 'center', alignItems: 'center'}}>
+        keyboard && <TouchableOpacity activeOpacity={.8} onPress={_ => {Keyboard.dismiss(); setSearch('')}} style={{marginTop: 10, justifyContent: 'center', alignItems: 'center'}}>
           <Image style={{width: 50, height: 50 }} source={require('../../assets/images/cancel.png')}/>
         </TouchableOpacity>
       }
