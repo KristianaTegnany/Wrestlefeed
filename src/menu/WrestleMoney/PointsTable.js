@@ -2,8 +2,11 @@ import React from 'react'
 import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native'
 
 const PointsTable = (props) => {
-  const { wrestlers } = props
+  const { wrestlers, close, backHandler } = props
   const total = wrestlers.reduce((tot, {point}) => tot + point, 0)
+  React.useEffect(() => {
+    backHandler.current = close
+  }, [])
   return (
     <View style={styles.TeamBuilder}>
       <View style={styles.table}>
