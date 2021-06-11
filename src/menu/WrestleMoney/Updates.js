@@ -3,6 +3,12 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import Wrestlefeed from '../../common/Wrestlefeed'
 
 export const addZero = (nb) => nb <= 9 ? `0${nb}` : `${nb}`
+export const toDate = (origDate, gmt = true) => {
+  const d = new Date(origDate)
+  const hour = `${addZero(d.getHours())}:${addZero(d.getMinutes())}`
+  const date = `${addZero(d.getDate())}/${addZero(d.getMonth() + 1)}/${addZero(d.getFullYear())}`
+  return `${hour}${gmt ? ' GMT' : ''}, ${date}`
+}
 
 const updates = []
 
@@ -27,12 +33,9 @@ const Updates = (props) => {
       >
         {
           posts.map(({content, post_date}, i) => {
-            const d = new Date(post_date)
-            const hour = `${addZero(d.getHours())}:${addZero(d.getMinutes())}`
-            const date = `${addZero(d.getDate())}/${addZero(d.getMonth() + 1)}/${addZero(d.getFullYear())}`
             return <View key={i} style={styles.update}>
               <Text style={styles.updateText}>{content}</Text>
-              <Text style={styles.updateDate}>{`${hour}, ${date}`}</Text>
+              <Text style={styles.updateDate}>{toDate(post_date)}</Text>
             </View>
           })
         }

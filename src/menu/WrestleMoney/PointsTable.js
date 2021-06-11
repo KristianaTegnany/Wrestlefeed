@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native'
+import { toDate } from './Updates'
 
 const PointsTable = (props) => {
   const { wrestlers, close, backHandler } = props
@@ -7,8 +8,13 @@ const PointsTable = (props) => {
   React.useEffect(() => {
     backHandler.current = close
   }, [])
+  const lastUpdate = wrestlers.reduce((last, {updated_at: ua}) => {
+    return last < ua ? ua : last
+  }, "0000")
   return (
     <View style={styles.TeamBuilder}>
+
+      <Text style={styles.title}>Points last updated at: <Text style={{color: '#b21a1a'}}>{toDate(lastUpdate)}</Text></Text>
       <View style={styles.table}>
         <View style={[styles.wLine, styles.wRed]}>  
           <Text style={styles.wNameText}>Wrestlers</Text>
@@ -44,6 +50,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#212121',
     justifyContent: 'space-evenly',
     ...StyleSheet.absoluteFill
+  },
+  title:{
+    color: "#fff",
+    textAlign: 'center',
+    fontSize: 16,
   },
   table: {
     width: '80%',
