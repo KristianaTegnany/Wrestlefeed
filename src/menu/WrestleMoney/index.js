@@ -106,11 +106,11 @@ const WrestleMoney = (props) => {
         </View>
         { Component && <Component close={_ => setActive({title: _defTitle})} {...{user, navigation, wrestlers, backHandler, team, setTeam}}/> }
         {
-          !!errorText && errorText === 'Loading' &&
+          (!!errorText && errorText === 'Loading') &&
           <RenderLoading color='white' withoutText/>
         }
         {
-          !!errorText && errorText !== 'Loading' &&
+          (!!errorText && errorText !== 'Loading') &&
           <Error text={errorText} close={backHandler.current}/>
         }
       </ImageBackground>
