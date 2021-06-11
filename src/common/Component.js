@@ -589,3 +589,27 @@ export const BottomAction = (props) => {
     )
 }
 
+export const RenderLoading = ({color, withoutText}) => {
+  return (
+    <View
+      style={{
+        flex: 1,
+        position: 'absolute',
+        top:0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      <ActivityIndicator animating size="large" color={color? color : '#b21a1a'} />
+      {
+          !withoutText &&
+          <Text style={{ fontSize: 18, color: color? color : 'black' }}>Please Wait...</Text>
+      }
+    </View>
+  );
+}
+

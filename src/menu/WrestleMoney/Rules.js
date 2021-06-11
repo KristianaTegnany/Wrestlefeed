@@ -1,36 +1,25 @@
 import React from 'react'
-import { View, Text, StyleSheet,} from 'react-native'
+import { View, StyleSheet, Dimensions} from 'react-native'
 import { WebView } from 'react-native-webview';
-
-const RenderLoading = () => {
-  return (
-    <View
-      style={{
-        flex: 1,  
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-    >
-      <ActivityIndicator animating size="large" color='#b21a1a' />
-      <Text style={{ fontSize: 18 }}>Please Wait...</Text>
-    </View>
-  );
-}
+import { RenderLoading } from '../../common/Component';
 
 const Rules = (props) => {
   const {close, backHandler} = props
+  const { height } = Dimensions.get('screen')
+  const heightView = height - 56
+    
   React.useEffect(() => {
     backHandler.current = close
   }, [])
   return (
     <View style={styles.Rules}>
       <WebView
-        style={{ flex: 1}}
+        style={{ flex: 1, height: heightView}}
         source={{ uri: 'https://wrestlefeed.wwfoldschool.com/rules/' }}
         javaScriptEnabled
         domStorageEnabled
-        renderLoading={RenderLoading}
+        startInLoadingState
+        renderLoading={() => <RenderLoading/>}
       />
     </View>
   )

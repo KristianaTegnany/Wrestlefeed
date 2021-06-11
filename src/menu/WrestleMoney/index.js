@@ -3,7 +3,7 @@ import {
   View, Text, StyleSheet, BackHandler,
   TouchableOpacity, Platform, ImageBackground
 } from 'react-native'
-import { Navbar } from '../../common/Component';
+import { Navbar, RenderLoading } from '../../common/Component';
 import Error from './Error';
 import PointsTable from './PointsTable';
 import TeamBuilder from './TeamBuilder';
@@ -30,6 +30,7 @@ const getTeam = async (user_id) => {
 }
 
 const _defTitle = "WrestleMoney"
+
 
 const WrestleMoney = (props) => {
   const {
@@ -64,9 +65,14 @@ const WrestleMoney = (props) => {
     getTeam(user.ID).then(team => {
       setTeam(team || {})
     })
-    // setTeam({})
     return () => backHandler.remove()
-  }, []);
+  }, [])
+
+  React.useEffect(() => {
+    if(errorText === 'Loading' && wrestlers)
+      setErrorText('')
+  }, [wrestlers])
+
   const Component = active.component
   return (
     <View
@@ -99,7 +105,14 @@ const WrestleMoney = (props) => {
           }
         </View>
         { Component && <Component close={_ => setActive({title: _defTitle})} {...{user, navigation, wrestlers, backHandler, team, setTeam}}/> }
-        { !!errorText && <Error text={errorText} close={backHandler.current}/> }
+        {
+          !!errorText && errorText === 'Loading' &&
+          <RenderLoading color='white' withoutText/>
+        }
+        {
+          !!errorText && errorText !== 'Loading' &&
+          <Error text={errorText} close={backHandler.current}/>
+        }
       </ImageBackground>
     </View>
   )
@@ -110,13 +123,13 @@ const funcs = (props, {team}) => [
     title: 'My Team',
     component: team && team.wrestlers ? MyTeam : TeamBuilder,
     condition: _ => !!team,
-    errorText: "Loading your data... Please wait..."
+    errorText: "Loading"
   },
   {
     title: 'Points Table',
     component: PointsTable,
     condition: _ => team && team.wrestlers && team.wrestlers.length,
-    errorText: team ? 'You need to make a team first!' : "Loading your data... Please wait..."
+    errorText: team ? 'You need to make a team first!' : 'Loading'
   },
   {
     title: 'Rules',

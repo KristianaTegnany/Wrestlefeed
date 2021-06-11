@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native'
+import { View, Text, StyleSheet, ScrollView } from 'react-native'
 
 const PointsTable = (props) => {
   const { wrestlers, close, backHandler } = props
