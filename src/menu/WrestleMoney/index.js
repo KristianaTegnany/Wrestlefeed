@@ -15,7 +15,12 @@ import Rules from './Rules';
 
 export const wf = {
   wrestlers: [],
+  team: null,
   baseUrl: 'https://devapp.wwfoldschool.com/wrestler'
+}
+
+export const updateWM = async (user_id) => {
+  return await Promise.all([getTeam(user_id), getWrestlers()])
 }
 
 const getWrestlers = async () => {
@@ -26,11 +31,11 @@ const getWrestlers = async () => {
 
 const getTeam = async (user_id) => {
   const {data} = await Axios.get(`${wf.baseUrl}/api/getmyteam?user_id=${user_id}`)
+  wf.team = data
   return data
 }
 
 const _defTitle = "WrestleMoney"
-
 
 const WrestleMoney = (props) => {
   const {
@@ -43,7 +48,7 @@ const WrestleMoney = (props) => {
   const [active, setActive] = React.useState({title: _defTitle})
   const [wrestlers, setWrestlers] = React.useState(wf.wrestlers)
   const backHandler = React.useRef(null)
-  const [team, setTeam] = React.useState(null)
+  const [team, setTeam] = React.useState(wf.team)
   const [errorText, setErrorText] = React.useState('')
 
   const goBackHome = () => {
@@ -56,14 +61,18 @@ const WrestleMoney = (props) => {
     if(active.title === _defTitle) backHandler.current = null
   }, [active])
   
-  React.useEffect(() => {
-    const backHandler = BackHandler.addEventListener("hardwareBackPress", _ => {
-      goBackHome()
-      return true
-    })
+  const updateData = () => {
     getWrestlers().then(wlrs => setWrestlers(wlrs))
     getTeam(user.ID).then(team => {
       setTeam(team || {})
+    })
+  }
+
+  React.useEffect(() => {
+    updateData()
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", _ => {
+      goBackHome()
+      return true
     })
     return () => backHandler.remove()
   }, [])
@@ -104,7 +113,7 @@ const WrestleMoney = (props) => {
             })
           }
         </View>
-        { Component && <Component close={_ => setActive({title: _defTitle})} {...{user, navigation, wrestlers, backHandler, team, setTeam}}/> }
+        { Component && <Component close={_ => setActive({title: _defTitle})} {...{user, updateData, navigation, wrestlers, backHandler, team, setTeam}}/> }
         {
           (!!errorText && errorText === 'Loading') &&
           <RenderLoading color='white' withoutText/>

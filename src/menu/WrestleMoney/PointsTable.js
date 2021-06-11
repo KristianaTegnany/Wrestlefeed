@@ -3,10 +3,11 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import { toDate } from './Updates'
 
 const PointsTable = (props) => {
-  const { wrestlers, close, backHandler } = props
+  const { wrestlers, close, backHandler, updateData } = props
   const total = wrestlers.reduce((tot, {point}) => tot + point, 0)
   React.useEffect(() => {
     backHandler.current = close
+    updateData()
   }, [])
   const lastUpdate = wrestlers.reduce((last, {updated_at: ua}) => {
     return last < ua ? ua : last

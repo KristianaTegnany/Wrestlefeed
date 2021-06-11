@@ -17,6 +17,7 @@ import Menu from '../menu/Menu';
 import config from '../config';
 import { pushTabData, updateDarkMode } from '../action'
 import { BottomAction } from '../common/Component'
+import { updateWM } from '../menu/WrestleMoney';
 
 let sheetOpen = false
 let loading_more = false
@@ -41,12 +42,11 @@ class News extends Component {
         this.pushManage()
         this.props.updateDarkMode(false, true);
         let params = this.props.navigation.state.params;
+        let { post, user } = params;
         if(params.push){
-            let { post, user } = this.props.navigation.state.params;
             this.showPushData(post, user);
             this.setState({ user_data: user })
         }else{
-            let { post, user } = this.props.navigation.state.params;
             if(post){
                 let redux_tab_data = []
                 post.map((post_data) => {
@@ -65,7 +65,8 @@ class News extends Component {
                 })
                 this.props.pushTabData('ALL', redux_tab_data)
             }
-        } 
+        }
+        user.ID && updateWM(user.ID)
         this.props.navigation.addListener('didBlur', (route) => { 
             if(sheetOpen){
                 this.refs.comment.closeStory();
