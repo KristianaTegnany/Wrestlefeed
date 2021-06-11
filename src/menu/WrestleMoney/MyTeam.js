@@ -4,8 +4,11 @@ import {
 
 
 const MyTeam = (props) => {
-  const {team: {wrestlers}} = props
+  const {team: {wrestlers}, backHandler, close} = props
   const total = wrestlers.reduce((tot, {point}) => tot + point, 0)
+  React.useEffect(() => {
+    backHandler.current = close
+  }, [])
   return (
     <View style={styles.TeamBuilder}>
       <Text style={styles.title}>Your team for the ongoing season:</Text>

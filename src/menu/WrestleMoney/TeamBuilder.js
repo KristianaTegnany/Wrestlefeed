@@ -73,7 +73,7 @@ const TeamBuilder = (props) => {
 
   React.useEffect(() => {
     if(showConf) backHandler.current = _ => setShowConf(false)
-    else backHandler.current = null
+    else backHandler.current = close
   }, [showConf])
 
   return (

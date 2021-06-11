@@ -26,7 +26,6 @@ const getWrestlers = async () => {
 
 const getTeam = async (user_id) => {
   const {data} = await Axios.get(`${wf.baseUrl}/api/getmyteam?user_id=${user_id}`)
-  console.log({data})
   return data
 }
 
@@ -48,11 +47,8 @@ const WrestleMoney = (props) => {
 
   const goBackHome = () => {
     if(backHandler.current) backHandler.current()
-    else {
-      if(active.title === _defTitle) navigation.goBack()
-      else setActive({title: _defTitle})
-      return false
-    }
+    else if(_defTitle !== active.title) setActive({title: _defTitle})
+    else navigation.goBack()
   }
 
   React.useEffect(() => {
@@ -60,7 +56,10 @@ const WrestleMoney = (props) => {
   }, [active])
   
   React.useEffect(() => {
-    const backHandler = BackHandler.addEventListener("hardwareBackPress", goBackHome)
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", _ => {
+      goBackHome()
+      return true
+    })
     getWrestlers().then(wlrs => setWrestlers(wlrs))
     getTeam(user.ID).then(team => {
       setTeam(team || {})
@@ -85,7 +84,10 @@ const WrestleMoney = (props) => {
                   onPress={_ => {
                     if(condition && !condition()) {
                       setErrorText(errorText)
-                      console.log(errorText)
+                      backHandler.current = _ => {
+                        setErrorText('')
+                        backHandler.current = null
+                      }
                     }
                     else setActive({...func})
                   }}
@@ -97,7 +99,7 @@ const WrestleMoney = (props) => {
           }
         </View>
         { Component && <Component close={_ => setActive({title: _defTitle})} {...{user, navigation, wrestlers, backHandler, team, setTeam}}/> }
-        { !!errorText && <Error text={errorText} close={ _ => setErrorText('')}/> }
+        { !!errorText && <Error text={errorText} close={backHandler.current}/> }
       </ImageBackground>
     </View>
   )
@@ -108,13 +110,13 @@ const funcs = (props, {team}) => [
     title: 'My Team',
     component: team && team.wrestlers ? MyTeam : TeamBuilder,
     condition: _ => !!team,
-    errorText: "Please wait..."
+    errorText: "Loading your data... Please wait..."
   },
   {
     title: 'Points Table',
     component: PointsTable,
     condition: _ => team && team.wrestlers && team.wrestlers.length,
-    errorText: team ? 'You need to make a team first!' : "Please wait..."
+    errorText: team ? 'You need to make a team first!' : "Loading your data... Please wait..."
   },
   {
     title: 'Rules',

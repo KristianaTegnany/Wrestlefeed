@@ -19,6 +19,10 @@ const RenderLoading = () => {
 }
 
 const Rules = (props) => {
+  const {close, backHandler} = props
+  React.useEffect(() => {
+    backHandler.current = close
+  }, [])
   return (
     <View style={styles.Rules}>
       <WebView

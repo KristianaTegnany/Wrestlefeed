@@ -7,7 +7,10 @@ export const addZero = (nb) => nb <= 9 ? `0${nb}` : `${nb}`
 const updates = []
 
 const Updates = (props) => {
-  const {user: {ID: id}} = props
+  const {user: {ID: id}, close, backHandler} = props
+  React.useEffect(() => {
+    backHandler.current = close
+  }, [])
   const [posts, setPosts] = React.useState(updates)
   React.useEffect(() => {
     const last_id = updates.length ? updates[updates.length - 1].id : 0
