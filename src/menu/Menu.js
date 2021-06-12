@@ -114,7 +114,15 @@ class Menu extends Component {
     let { user_data } = this.state
     let navigation = this.props.navigation;
     return (
-      <View style={{ height: 550, backgroundColor: '#212121' }}>
+      <View style={{ height: 550, backgroundColor: '#212121', borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
+        <View style={{
+          backgroundColor: isOpen ? '#212121' : 'black', borderTopLeftRadius: 16, borderTopRightRadius: 16,
+          paddingLeft: 16, paddingRight: 16, paddingTop: 8
+        }}>
+          <View style={{ alignItems: 'center', paddingBottom: 16 }}>
+            <View style={{ width: 64, height: 7, backgroundColor: 'white', borderRadius: 8 }}></View>
+          </View>
+        </View>
         <View style={{ height: 440 }}>
           <View style={{ alignItems: 'center' }}>
             {
@@ -162,19 +170,6 @@ class Menu extends Component {
     )
   }
 
-  renderHeader = () => {
-    return (
-      <View style={{
-        backgroundColor: isOpen ? '#212121' : 'black', borderTopLeftRadius: 16, borderTopRightRadius: 16,
-        paddingLeft: 16, paddingRight: 16, paddingTop: 8
-      }}>
-        <View style={{ alignItems: 'center', paddingBottom: 16 }}>
-          <View style={{ width: 64, height: 6, backgroundColor: 'white', borderRadius: 8 }}></View>
-        </View>
-      </View>
-    )
-  }
-
   openStory = (user_data) => {
     if (isOpen) {
       this.bottomSheetRef.current.snapTo(1);
@@ -212,7 +207,6 @@ class Menu extends Component {
           snapPoints={[550, 0]}
           initialSnap={1}
           renderContent={this.renderContent}
-          renderHeader={this.renderHeader}
           enabledGestureInteraction={true}
           enabledContentTapInteraction={true}
           // enabledContentGestureInteraction={false}
@@ -225,7 +219,8 @@ class Menu extends Component {
               position: 'absolute',
               overflow: 'hidden',
               zIndex: 9999999,
-              bottom: 0, left: 0,
+              bottom: 0,
+              left: 0,
               right: 0,
               height: this.state.showGoPro ? Dimensions.get('screen').height : 0
             }}

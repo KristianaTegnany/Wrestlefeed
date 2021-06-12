@@ -5,6 +5,7 @@ import {
 } from 'react-native'
 import { RenderLoading } from '../../common/Component';
 import config from '../../config';
+import bg from '../../assets/images/bg.png'
 
 const Main = (props) => {
   const { navbar, funcs, backHandler, setActive } = props
@@ -12,7 +13,7 @@ const Main = (props) => {
   return (
     <View style={{ flex: 1 }}>
       {navbar}
-      <ImageBackground source={require('../../assets/images/bg.png')} style={styles.WrestleMoney}>
+      <ImageBackground source={bg} style={styles.WrestleMoney}>
         <View style={styles.buttons}>
           {
             funcs
