@@ -1,8 +1,7 @@
 import React from 'react'
 import {
-  View, Text, StyleSheet, Platform, KeyboardAvoidingView
+  View, Text, StyleSheet, Platform
 } from 'react-native'
-
 
 const MyTeam = (props) => {
   const { team: { wrestlers }, backHandler, close, navbar } = props

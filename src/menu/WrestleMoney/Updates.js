@@ -19,11 +19,15 @@ const Updates = (props) => {
   }, [])
   const [posts, setPosts] = React.useState(updates)
   React.useEffect(() => {
+    let isSubscribed = true
     const last_id = updates.length ? updates[updates.length - 1].id : 0
     Wrestlefeed.fetchUpdates(id, last_id).then(posts => {
-      updates.push(...posts)
-      setPosts(updates.slice(0, 10))
+      if(isSubscribed){
+        updates.push(...posts)
+        setPosts(updates.slice(0, 10))
+      }
     })
+    return () => isSubscribed = false
   }, [])
   return (
     <View style={{ flex: 1 }}>

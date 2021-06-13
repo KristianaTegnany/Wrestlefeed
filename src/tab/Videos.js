@@ -266,7 +266,7 @@ class Videos extends Component {
                                         <BottomAction
                                             category="videos"
                                             post={post_list[post_position]}
-                                            onReadMorePress={this.onReadMorePress}
+                                            onReadMorePress={this.onPlayVideo}
                                             onCommentPress={this.onCommentOpen}
                                             onReactionPress={(type) => this.onReactionPress(type)}
                                         />
