@@ -58,7 +58,8 @@ class Videos extends Component {
                 this.refs.comment.closeStory();
                 this.refs.storyview.closeStory();
             }
-            this.refs.menu.closeStory();
+            if(this.refs.menu)
+                this.refs.menu.closeStory();
         });
         this.props.navigation.addListener('didFocus', (route) => { 
             this.setToLatest(6, false, 0)
