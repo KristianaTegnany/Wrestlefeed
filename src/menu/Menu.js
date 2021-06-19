@@ -43,7 +43,7 @@ const Profile = (props) => {
 class Menu extends Component {
   state = {
     user_data: '',
-    isPro: true,
+    isPro: false,
     showGoPro: false
   }
 

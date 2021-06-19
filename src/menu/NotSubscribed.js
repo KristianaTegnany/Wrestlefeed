@@ -1,11 +1,42 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
-  View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
-import config from '../config'
+  View, Alert, Text, Platform, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import RNIap from 'react-native-iap'
+
+const productIds = Platform.select({
+  ios: [
+    'com.wrestlefeed.news'
+  ],
+  android: [
+    'com.wrestlefeed'
+  ]
+})
 
 const NotSubscribed = (props) => {
   const { close, cancelable } = props
   
+
+const requestSubscription = async (sku) => {
+  try {
+    await RNIap.requestSubscription(sku);
+  } catch (err) {
+    console.warn(err.code, err.message)
+  }
+}
+
+/*const getProduct = async () => {
+  try {
+    const products = await RNIap.getProducts(['pro_user'])
+    console.log(products)
+  } catch(err) {
+    console.warn(err.code, err.message)
+  }
+}
+
+useEffect(() => {
+  getProduct()
+}, [])
+*/
   return (
     <View
       style={[styles.Error, cancelable ? {} : {backgroundColor: '#212121'}]}
@@ -47,7 +78,7 @@ const NotSubscribed = (props) => {
               <Text style={styles.okText}>Cancel</Text>
             </TouchableOpacity>
           }
-          <TouchableOpacity onPress={() => {}} activeOpacity={.5} style={styles.ok}>
+          <TouchableOpacity onPress={() => requestSubscription('pro_user')} activeOpacity={.5} style={styles.ok}>
             <Text style={styles.okText}>Subscribe</Text>
           </TouchableOpacity>
         </View>
