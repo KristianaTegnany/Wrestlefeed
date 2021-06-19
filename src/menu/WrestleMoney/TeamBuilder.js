@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: "white",
     fontWeight: 'bold',
-    minHeight: 30,
+    padding: 10,
     paddingHorizontal: 5,
     fontSize: 18,
     textAlignVertical: 'center'

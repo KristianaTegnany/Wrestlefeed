@@ -20,9 +20,6 @@ import News from './tab/News';
 import Memes from './tab/Memes';
 import Videos from './tab/Videos';
 import OldSchool from './tab/OldSchool';
-import Raw from './tab/Raw';
-import SmackDown from './tab/SmackDown';
-import Nxt from './tab/Nxt';
 import Aew from './tab/Aew';
 import Divas from './tab/Divas';
 import config from './config';
@@ -94,7 +91,7 @@ const AppNavigator = createStackNavigator(
     },
     {
       initialRouteName: 'Welcome',
-      headerMode: 'none'  
+      headerMode: 'none'
     }
 );
 const AppContainer = createAppContainer(AppNavigator);

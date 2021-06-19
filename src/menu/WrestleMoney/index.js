@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  View, BackHandler
+  View, BackHandler, SafeAreaView
 } from 'react-native'
 import { Navbar } from '../../common/Component';
 import PointsTable from './PointsTable';
@@ -78,6 +78,7 @@ const WrestleMoney = (props) => {
   return (
     <View
       style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1}}>
       {
         Component && <Component
           close={_ => setActive(fct[0])}
@@ -85,6 +86,7 @@ const WrestleMoney = (props) => {
           navbar = {<Navbar leftPress={goBackHome} title={active.title} />}
         />
       }
+      </SafeAreaView>
     </View>
   )
 }
