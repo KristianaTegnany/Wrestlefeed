@@ -26,19 +26,18 @@ const NotSubscribed = (props) => {
             <Text>and get:</Text>
           </Text>
           <View>
-            <Text style={styles.listItem}>- Access to funniest Memes ever</Text>
-            <Text style={styles.listItem}>- Access to breathtaking Divas section</Text>
-            <Text style={styles.listItem}>- Access to funniest Memes ever</Text>
+            <Text style={styles.listItem}>- Access to the funniest Memes ever</Text>
+            <Text style={styles.listItem}>- Access to a breathtaking Divas section</Text>
             <Text style={styles.listItem}>- Access to all new WrestleMoney League</Text>
             <Text style={styles.listItem}>- A classy Legend Badge on your comments</Text>
           </View>
           <Text style={[styles.contentText, styles.marginedText]}>
-            <Text>You will be only charged only</Text>
+            <Text>You will be charged only</Text>
             <Text style={{fontWeight: 'bold'}}> $0.99 </Text>
             <Text>a month, should you wish to continue supporting us.</Text>
           </Text>
           <Text style={styles.contentText}>
-            <Text>You can unsubscribe any time you like</Text>
+            <Text>You can unsubscribe any time you like.</Text>
           </Text>
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'center'}}>

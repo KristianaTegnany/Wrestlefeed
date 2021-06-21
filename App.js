@@ -10,13 +10,39 @@ import { createStore, applyMiddleware } from 'redux'
 import ReduxThunk from 'redux-thunk'
 import AppBase from './src/AppBase'
 import reducers from './src/reducers'
+import RNIap, {
+  Product,
+  ProductPurchase,
+  PurchaseError,
+  acknowledgePurchaseAndroid,
+  purchaseErrorListener,
+  purchaseUpdatedListener,
+} from 'react-native-iap';  
+
+const productIds = Platform.select({
+  ios: [
+    'com.example.coins100'
+  ],
+  android: [
+    'pro_user'
+  ]
+});
 
 const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
 const App = () => {
   const inAppUpdates = new SpInAppUpdates(true)
 
   useEffect(() => {
-    checkForUpdates()
+    checkForUpdates();
+
+    // TEst
+    (async _ => {
+      console.log('GOING TO CONNECT');
+      const result = await RNIap.initConnection();
+      console.log('connection is => ', result);
+      // const products = await RNIap.getProducts(productIds)
+      // console.log("vtdjckyfkvvk", products)
+    })()
   }, [])
 
   checkForUpdates = () => {
