@@ -1,20 +1,23 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   View, Alert, Text, Platform, StyleSheet, TouchableOpacity, Image } from 'react-native'
 import RNIap from 'react-native-iap'
 
 const productIds = Platform.select({
   ios: [
+    'pro_user',
     'com.wrestlefeed.news'
+
   ],
   android: [
+    'pro_user',
     'com.wrestlefeed'
   ]
 })
 
 const NotSubscribed = (props) => {
   const { close, cancelable } = props
-  
+  const [products, setProducts] = useState([])
 
 const requestSubscription = async (sku) => {
   try {
@@ -24,26 +27,29 @@ const requestSubscription = async (sku) => {
   }
 }
 
-/*const getProduct = async () => {
+const getProduct = async () => {
   try {
-    const products = await RNIap.getProducts(['pro_user'])
+    const products = await RNIap.getProducts(productIds)
+    Alert.alert(products)
     console.log(products)
+    setProducts(products)
   } catch(err) {
     console.warn(err.code, err.message)
   }
 }
 
 useEffect(() => {
-  getProduct()
+  (async () => {
+    getProduct()
+  })()
 }, [])
-*/
+
   return (
     <View
       style={[styles.Error, cancelable ? {} : {backgroundColor: '#212121'}]}
-      onTouchStart={close}
     >
       <View style={[styles.body]}>
-        <View style={styles.content}>
+        <View style={styles.center}>
           <View style={styles.titleParent}>
             <Image
               source={{ uri: 'menu_square_logo' }}
@@ -52,14 +58,13 @@ useEffect(() => {
             <Text style={styles.titleText}>Legend Pack</Text>
           </View>
           <Text style={styles.contentText}>
-            <Text>Dear loyal user, subscribe today to{`\n`}begin your</Text>
+            Dear loyal user, subscribe today to {'\n'} begin your
             <Text style={{fontWeight: 'bold'}}> 30 days free trial </Text>
-            <Text>and get:</Text>
+            and get:
           </Text>
-          <View>
-            <Text style={styles.listItem}>- Access to funniest Memes ever</Text>
-            <Text style={styles.listItem}>- Access to breathtaking Divas section</Text>
-            <Text style={styles.listItem}>- Access to funniest Memes ever</Text>
+          <View style={styles.center}>
+            <Text style={styles.listItem}>- Access to the funniest Memes ever</Text>
+            <Text style={styles.listItem}>- Access to a breathtaking Divas section</Text>
             <Text style={styles.listItem}>- Access to all new WrestleMoney League</Text>
             <Text style={styles.listItem}>- A classy Legend Badge on your comments</Text>
           </View>
@@ -69,7 +74,7 @@ useEffect(() => {
             <Text>a month, should you wish to continue supporting us.</Text>
           </Text>
           <Text style={styles.contentText}>
-            <Text>You can unsubscribe any time you like</Text>
+            <Text>You can unsubscribe any time you like.</Text>
           </Text>
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'center'}}>
@@ -78,7 +83,7 @@ useEffect(() => {
               <Text style={styles.okText}>Cancel</Text>
             </TouchableOpacity>
           }
-          <TouchableOpacity onPress={() => requestSubscription('pro_user')} activeOpacity={.5} style={styles.ok}>
+          <TouchableOpacity onPress={() => {if(products.length > 0) requestSubscription(products[0])}} activeOpacity={.5} style={styles.ok}>
             <Text style={styles.okText}>Subscribe</Text>
           </TouchableOpacity>
         </View>
@@ -88,6 +93,10 @@ useEffect(() => {
 }
 
 const styles = StyleSheet.create({
+  center: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   Error: {
     backgroundColor: 'rgba(0, 0, 0, .5)',
     alignItems: 'center',
@@ -99,8 +108,7 @@ const styles = StyleSheet.create({
     marginVertical: 20
   },
   listItem: {
-    marginLeft: 10,
-    fontSize: 14,
+    fontSize: 16,
     color: '#212121'
   },
   titleParent: {
@@ -123,6 +131,7 @@ const styles = StyleSheet.create({
     borderRadius: 10
   },
   contentText: {
+    textAlign:'center',
     fontSize: 16,
     color: '#504f4f'
   },
