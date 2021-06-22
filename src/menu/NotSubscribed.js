@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import {
-  View, Alert, Text, Platform, StyleSheet, TouchableOpacity, Image } from 'react-native'
+  View, Text, Platform, StyleSheet, TouchableOpacity, Image } from 'react-native'
 import RNIap from 'react-native-iap'
 
 const productIds = Platform.select({
-  ios: [
-    'pro_user',
-    'com.wrestlefeed.news'
-
-  ],
   android: [
-    'pro_user',
-    'com.wrestlefeed'
+    'pro_user'
   ]
 })
 
@@ -27,20 +21,16 @@ const requestSubscription = async (sku) => {
   }
 }
 
-const getProduct = async () => {
-  try {
-    const products = await RNIap.getProducts(productIds)
-    Alert.alert(products)
-    console.log(products)
-    setProducts(products)
-  } catch(err) {
-    console.warn(err.code, err.message)
-  }
-}
-
 useEffect(() => {
   (async () => {
-    getProduct()
+    try {
+      await RNIap.initConnection()
+      const products = await RNIap.getProducts(productIds);
+      console.log(products)
+      setProducts(products)
+    } catch (err) {
+      console.warn(err)
+    }
   })()
 }, [])
 

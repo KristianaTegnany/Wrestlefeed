@@ -2,10 +2,6 @@ import React from 'react'
 import SpInAppUpdates, {
   IAUUpdateKind
 } from 'sp-react-native-in-app-updates'
-import RNIap, {
-  purchaseErrorListener,
-  purchaseUpdatedListener
-} from 'react-native-iap'
 
 import {
   Platform
@@ -15,6 +11,11 @@ import { createStore, applyMiddleware } from 'redux'
 import ReduxThunk from 'redux-thunk'
 import AppBase from './src/AppBase'
 import reducers from './src/reducers'
+import RNIap, {
+  purchaseErrorListener,
+  purchaseUpdatedListener,
+} from 'react-native-iap';  
+
 import { Component } from 'react'
 
 const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
