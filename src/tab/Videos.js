@@ -58,7 +58,8 @@ class Videos extends Component {
                 this.refs.comment.closeStory();
                 this.refs.storyview.closeStory();
             }
-            this.refs.menu.closeStory();
+            if(this.refs.menu)
+                this.refs.menu.closeStory();
         });
         this.props.navigation.addListener('didFocus', (route) => { 
             this.setToLatest(6, false, 0)
@@ -265,7 +266,7 @@ class Videos extends Component {
                                         <BottomAction
                                             category="videos"
                                             post={post_list[post_position]}
-                                            onReadMorePress={this.onReadMorePress}
+                                            onReadMorePress={this.onPlayVideo}
                                             onCommentPress={this.onCommentOpen}
                                             onReactionPress={(type) => this.onReactionPress(type)}
                                         />

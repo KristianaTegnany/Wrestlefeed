@@ -230,7 +230,7 @@ class Memes extends Component {
         let { post_list, post_position, hideMenu, refresh_load } = this.state
         return(
             <View style={{ backgroundColor: '#15202b', flex: 1 }}>
-                {/*<NotSubscribed/>*/}
+                <NotSubscribed/>
                 <StatusBar hidden />
                 <View style={{ position: 'absolute', left: 16, top: 12, zIndex: 1001 }}>
                     { !hideMenu ? <MenuIcon onMenuPress={this.openMenu} /> : null }

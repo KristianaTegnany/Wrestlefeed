@@ -1,18 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   View, Text, StyleSheet,
   TouchableOpacity, Platform, ImageBackground
 } from 'react-native'
+import Error from './Error'
 import { RenderLoading } from '../../common/Component';
 import config from '../../config';
+import bg from '../../assets/images/bg.png'
 
 const Main = (props) => {
-  const { navbar, funcs, backHandler, setActive } = props
+  const { navbar, funcs, backHandler, updateData, setActive } = props
   const [errorText, setErrorText] = React.useState('')
+
+  useEffect(() => {
+    updateData()
+  }, [])
   return (
     <View style={{ flex: 1 }}>
       {navbar}
-      <ImageBackground source={require('../../assets/images/bg.png')} style={styles.WrestleMoney}>
+      <ImageBackground source={bg} style={styles.WrestleMoney}>
         <View style={styles.buttons}>
           {
             funcs

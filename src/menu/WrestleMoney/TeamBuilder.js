@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  FlatList, Keyboard, View, Text, StatusBar, StyleSheet,
+  FlatList, Keyboard, View, Text, StyleSheet,
   TextInput, TouchableOpacity, KeyboardAvoidingView, Image
 } from 'react-native'
 import { addZero } from '../../functions'
@@ -33,8 +33,8 @@ const Wrestler = ({ item }) => {
 const MAX = 5
 
 const TeamBuilder = (props) => {
-  const { user, wrestlers, setTeam, close, backHandler, navbar } = props
-  const [loading, setLoading] = React.useState(false)
+  const { user, wrestlers, setTeam, close, updateData, backHandler, navbar } = props
+  const [loading, setLoading] = React.useState(true)
   const [chosen, setChosen] = React.useState([])
   const [search, setSearch] = React.useState('')
   const [keyboard, setKeyboard] = React.useState(false)
@@ -73,6 +73,12 @@ const TeamBuilder = (props) => {
       k2.remove()
     }
   }, [])
+
+  React.useEffect(() => {
+    if(wrestlers)
+      setLoading(false)
+    else updateData()
+  }, [wrestlers])
 
   React.useEffect(() => {
     if (showConf) backHandler.current = _ => setShowConf(false)
@@ -294,7 +300,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: "white",
     fontWeight: 'bold',
-    minHeight: 30,
+    padding: 10,
     paddingHorizontal: 5,
     fontSize: 18,
     textAlignVertical: 'center'

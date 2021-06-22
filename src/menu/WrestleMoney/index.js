@@ -1,14 +1,11 @@
 import React from 'react'
 import {
-  View, StyleSheet, BackHandler,
-  Platform
+  View, BackHandler, SafeAreaView
 } from 'react-native'
-import { Navbar, RenderLoading } from '../../common/Component';
-import Error from './Error';
+import { Navbar } from '../../common/Component';
 import PointsTable from './PointsTable';
 import TeamBuilder from './TeamBuilder';
 import Axios from 'axios'
-import config from '../../config';
 import MyTeam from './MyTeam';
 import Updates from './Updates';
 import Rules from './Rules';
@@ -81,6 +78,7 @@ const WrestleMoney = (props) => {
   return (
     <View
       style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1}}>
       {
         Component && <Component
           close={_ => setActive(fct[0])}
@@ -88,6 +86,7 @@ const WrestleMoney = (props) => {
           navbar = {<Navbar leftPress={goBackHome} title={active.title} />}
         />
       }
+      </SafeAreaView>
     </View>
   )
 }
@@ -100,15 +99,13 @@ const funcs = (props, {team}) => [
   },
   {
     title: 'My Team',
-    component: team && team.wrestlers ? MyTeam : TeamBuilder,
-    condition: _ => !!team,
-    errorText: "Loading"
+    component: team && team.wrestlers ? MyTeam : TeamBuilder
   },
   {
     title: 'Points Table',
     component: PointsTable,
     condition: _ => team && team.wrestlers && team.wrestlers.length,
-    errorText: team ? 'You need to make a team first!' : 'Loading'
+    errorText: 'You need to make a team first!'
   },
   {
     title: 'Rules',

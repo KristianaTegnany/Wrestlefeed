@@ -480,6 +480,7 @@ export const PagerList = (props) => {
     return(
         <ViewPager style={[{ flex: 1 }]} 
             ref={pageRef}
+            scrollEnabled
             initialPage={index}
             orientation='vertical'
             onPageSelected={(e) => props.onPostChange(e.nativeEvent.position)}
