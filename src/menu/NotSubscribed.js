@@ -5,7 +5,7 @@ import RNIap from 'react-native-iap'
 
 const productIds = Platform.select({
   android: [
-    'pro_user'
+    'pro.user'
   ]
 })
 
@@ -73,7 +73,7 @@ useEffect(() => {
               <Text style={styles.okText}>Cancel</Text>
             </TouchableOpacity>
           }
-          <TouchableOpacity onPress={() => {if(products.length > 0) requestSubscription(products[0])}} activeOpacity={.5} style={styles.ok}>
+          <TouchableOpacity onPress={() => requestSubscription('pro.user')} activeOpacity={.5} style={styles.ok}>
             <Text style={styles.okText}>Subscribe</Text>
           </TouchableOpacity>
         </View>
