@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import {
-  View, Text, Platform, StyleSheet, TouchableOpacity, Image } from 'react-native'
+  View, Text, Platform, StyleSheet, TouchableOpacity, Image, Alert
+} from 'react-native'
 import RNIap from 'react-native-iap'
 
-const productIds = Platform.select({
+const itemSkus = Platform.select({
   android: [
-    'pro.user'
+    'wf_20_pro_user'
   ]
 })
 
@@ -13,31 +14,35 @@ const NotSubscribed = (props) => {
   const { close, cancelable } = props
   const [products, setProducts] = useState([])
 
-const requestSubscription = async (sku) => {
-  try {
-    await RNIap.requestSubscription(sku);
-    //
-  } catch (err) {
-    console.warn(err.code, err.message)
-  }
-}
-
-useEffect(() => {
-  (async () => {
+  const requestSubscription = async (sku) => {
     try {
-      await RNIap.initConnection()
-      const products = await RNIap.getProducts(productIds);
-      console.log(products)
-      setProducts(products)
+      await RNIap.requestSubscription(sku);
+      //
     } catch (err) {
-      console.warn(err)
+      console.warn(err.code, err.message)
     }
-  })()
-}, [])
+  }
+
+  useEffect(() => {
+    (async () => {
+      try {
+        await RNIap.requestSubscription(sku, false)
+      } catch (err) {
+        Alert.alert(err.code, err.message)
+      }
+      try {
+        await RNIap.initConnection()
+        const products = await RNIap.getSubscriptions(itemSkus)
+        const subs = await RNIap.getAvailablePurchases()
+      } catch (err) {
+        console.warn(err)
+      }
+    })()
+  }, [])
 
   return (
     <View
-      style={[styles.Error, cancelable ? {} : {backgroundColor: '#212121'}]}
+      style={[styles.Error, cancelable ? {} : { backgroundColor: '#212121' }]}
     >
       <View style={[styles.body]}>
         <View style={styles.center}>
@@ -50,7 +55,7 @@ useEffect(() => {
           </View>
           <Text style={styles.contentText}>
             Dear loyal user, subscribe today to {'\n'} begin your
-            <Text style={{fontWeight: 'bold'}}> 30 days free trial </Text>
+            <Text style={{ fontWeight: 'bold' }}> 30 days free trial </Text>
             and get:
           </Text>
           <View style={styles.center}>
@@ -61,20 +66,20 @@ useEffect(() => {
           </View>
           <Text style={[styles.contentText, styles.marginedText]}>
             <Text>You will be only charged only</Text>
-            <Text style={{fontWeight: 'bold'}}> $0.99 </Text>
+            <Text style={{ fontWeight: 'bold' }}> $0.99 </Text>
             <Text>a month, should you wish to continue supporting us.</Text>
           </Text>
           <Text style={styles.contentText}>
             <Text>You can unsubscribe any time you like.</Text>
           </Text>
         </View>
-        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           {
             cancelable && <TouchableOpacity onPressIn={close} activeOpacity={.5} style={styles.ko}>
               <Text style={styles.okText}>Cancel</Text>
             </TouchableOpacity>
           }
-          <TouchableOpacity onPress={() => requestSubscription('pro.user')} activeOpacity={.5} style={styles.ok}>
+          <TouchableOpacity onPress={() => requestSubscription('wf_20_pro_user')} activeOpacity={.5} style={styles.ok}>
             <Text style={styles.okText}>Subscribe</Text>
           </TouchableOpacity>
         </View>
@@ -123,7 +128,7 @@ const styles = StyleSheet.create({
     borderRadius: 10
   },
   contentText: {
-    textAlign:'center',
+    textAlign: 'center',
     fontSize: 16,
     color: '#504f4f'
   },
@@ -147,7 +152,7 @@ const styles = StyleSheet.create({
   okText: {
     color: 'white',
     fontSize: 22,
-    fontFamily: Platform.OS == 'ios'? 'Eurostile' : 'Eurostile-Bold'
+    fontFamily: Platform.OS == 'ios' ? 'Eurostile' : 'Eurostile-Bold'
   },
 })
 

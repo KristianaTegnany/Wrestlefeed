@@ -37,7 +37,6 @@ class App extends Component {
       RNIap.flushFailedPurchasesCachedAsPendingAndroid().catch(() => {
       }).then(() => {
         this.purchaseUpdateSubscription = purchaseUpdatedListener(async (purchase) => {
-          console.log('purchaseUpdatedListener', purchase)
           const receipt = purchase.transactionReceipt
           if (receipt) {
             if (Platform.OS === 'ios') {
