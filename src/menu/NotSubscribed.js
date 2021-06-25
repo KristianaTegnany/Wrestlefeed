@@ -16,6 +16,7 @@ const NotSubscribed = (props) => {
 const requestSubscription = async (sku) => {
   try {
     await RNIap.requestSubscription(sku);
+    //
   } catch (err) {
     console.warn(err.code, err.message)
   }
@@ -98,6 +99,7 @@ const styles = StyleSheet.create({
     marginVertical: 20
   },
   listItem: {
+    textAlign: 'center',
     fontSize: 16,
     color: '#212121'
   },

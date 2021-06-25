@@ -5,7 +5,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { StackActions, NavigationActions } from 'react-navigation';
 import AndroidOpenSettings from 'react-native-android-open-settings'
 import { AppEventsLogger } from "react-native-fbsdk";
-import NotSubscribed from './NotSubscribed'
 
 
 import config from '../config';
@@ -42,9 +41,7 @@ const Profile = (props) => {
 
 class Menu extends Component {
   state = {
-    user_data: '',
-    isPro: false,
-    showGoPro: false
+    user_data: ''
   }
 
   onRateUs = () => {
@@ -90,13 +87,8 @@ class Menu extends Component {
   }
 
   onWrestleMoney(user_data, navigation) {
-    if (this.state.isPro) {
-      navigation.navigate("WrestleMoney", user_data)
-      this.closeStory()
-    }
-    else {
-      this.setState({ showGoPro: true })
-    }
+    navigation.navigate("WrestleMoney", user_data)
+    this.closeStory()
   }
 
   onExitApp() {
@@ -213,21 +205,6 @@ class Menu extends Component {
           // enabledInnerScrolling={false}
           onCloseEnd={this.onCloseMenu}
         />
-        {
-          <View
-            style={{
-              position: 'absolute',
-              overflow: 'hidden',
-              zIndex: 9999999,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: this.state.showGoPro ? Dimensions.get('screen').height : 0
-            }}
-          >
-            <NotSubscribed cancelable close={_ => this.setState({showGoPro: false})}/>
-          </View>
-        }
       </View>
     )
   }
