@@ -13,8 +13,7 @@ import config from '../config';
 import appleAuth, {
     AppleButton,
     AppleAuthRequestOperation,
-    AppleAuthRequestScope,
-    AppleAuthCredentialState,
+    AppleAuthRequestScope
 }   from '@invertase/react-native-apple-authentication'
 import Wrestlefeed from '../common/Wrestlefeed';
 
