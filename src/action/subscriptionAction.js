@@ -14,3 +14,8 @@ export const subscribe = (user_id, name) => async dispatch => {
   await Service.subscribe(user_id, name)
   dispatch(setPro(true))
 }
+
+export const unsubscribe = (user_id) => async dispatch => {
+  await Service.unsubscribe(user_id)
+  // dispatch(setPro(true))
+}
