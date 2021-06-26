@@ -33,7 +33,7 @@ const Profile = (props) => {
       <View style={{ paddingTop: 8 }}>
         <Text style={{ alignSelf: 'center', fontSize: 18, color: 'white', fontWeight: '600', fontFamily: 'Exo-SemiBold' }}>
           Welcome, {first_name[0]}!
-                </Text>
+        </Text>
       </View>
     </View>
   )
