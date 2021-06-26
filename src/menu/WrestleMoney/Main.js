@@ -7,14 +7,32 @@ import Error from './Error'
 import { RenderLoading } from '../../common/Component';
 import config from '../../config';
 import bg from '../../assets/images/bg.png'
+import connect from '../../connector';
+import RNIap from 'react-native-iap'
+
+const itemSkus = Platform.select({
+  android: [
+    'wf_20_pro_user'
+  ]
+})
 
 const Main = (props) => {
   const { navbar, funcs, backHandler, updateData, setActive } = props
   const [errorText, setErrorText] = React.useState('')
 
   useEffect(() => {
+    (async () => {
+      try {
+        await RNIap.initConnection()
+        const products = await RNIap.getSubscriptions(itemSkus)
+        const subs = await RNIap.getAvailablePurchases()
+      } catch (err) {
+        console.warn(err)
+      }
+    })()
     updateData()
   }, [])
+  
   return (
     <View style={{ flex: 1 }}>
       {navbar}
@@ -44,6 +62,12 @@ const Main = (props) => {
                   </TouchableOpacity>
                 )
               })
+          }
+          {
+            props.subs && props.subs.isPro &&
+            <TouchableOpacity onPress={() => {}}>
+              <Text style={[styles.btnText, { fontFamily: config.ios ? 'Eurostile' : 'Eurostile-Bold' }]}>Cancel my subscription</Text>
+            </TouchableOpacity>
           }
         </View>
         {
@@ -86,4 +110,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Main
+export default connect(Main)

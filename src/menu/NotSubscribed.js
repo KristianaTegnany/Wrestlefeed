@@ -3,6 +3,7 @@ import {
   View, Text, Platform, StyleSheet, TouchableOpacity, Image, Alert
 } from 'react-native'
 import RNIap from 'react-native-iap'
+import connect from '../connector';
 
 const itemSkus = Platform.select({
   android: [
@@ -12,11 +13,12 @@ const itemSkus = Platform.select({
 
 const NotSubscribed = (props) => {
   const { close, cancelable } = props
-  const [products, setProducts] = useState([])
 
+  console.log(props.subscribe)
   const requestSubscription = async (sku) => {
     try {
       await RNIap.requestSubscription(sku);
+
       //
     } catch (err) {
       console.warn(err.code, err.message)
@@ -25,11 +27,6 @@ const NotSubscribed = (props) => {
 
   useEffect(() => {
     (async () => {
-      try {
-        await RNIap.requestSubscription(sku, false)
-      } catch (err) {
-        Alert.alert(err.code, err.message)
-      }
       try {
         await RNIap.initConnection()
         const products = await RNIap.getSubscriptions(itemSkus)
@@ -157,4 +154,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default NotSubscribed
+export default connect(NotSubscribed)
