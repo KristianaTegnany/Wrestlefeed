@@ -5,7 +5,6 @@ import {
 } from 'react-native'
 import Error from './Error'
 import { RenderLoading } from '../../common/Component';
-import config from '../../config';
 import bg from '../../assets/images/bg.png'
 import connect from '../../connector';
 import RNIap from 'react-native-iap'
@@ -25,6 +24,8 @@ const Main = (props) => {
       ios: Linking.openURL('https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/manageSubscriptions'),
       android: Linking.openURL('https://play.google.com/store/account/subscriptions?package=com.wrestlefeed&sku=wf_20_pro_user')
     })
+    // TO DO : how to get if the user was really unsubscribed? 
+    props.unsubscribe(props.user.ID)
   }
 
   useEffect(() => {
