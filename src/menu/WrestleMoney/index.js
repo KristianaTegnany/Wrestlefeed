@@ -125,7 +125,7 @@ const funcs = ({ subs: { isPro } }, { team }) => [
   },
   {
     title: 'Points Table',
-    component: PointsTable,
+    component: isPro? PointsTable : GoPro,
     condition: _ => team && team.wrestlers && team.wrestlers.length,
     errorText: 'You need to make a team first!'
   },
@@ -135,7 +135,7 @@ const funcs = ({ subs: { isPro } }, { team }) => [
   },
   {
     title: 'Updates',
-    component: Updates
+    component: isPro? Updates : GoPro
   }
 ]
 
