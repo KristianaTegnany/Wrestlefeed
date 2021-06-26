@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import {
-  View, Text, StyleSheet,
+  Linking, View, Text, StyleSheet,
   TouchableOpacity, Platform, ImageBackground
 } from 'react-native'
 import Error from './Error'
@@ -19,6 +19,13 @@ const itemSkus = Platform.select({
 const Main = (props) => {
   const { navbar, funcs, backHandler, updateData, setActive } = props
   const [errorText, setErrorText] = React.useState('')
+
+  const cancelSubscription = () => {
+    Platform.select({
+      ios: Linking.openURL('https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/manageSubscriptions'),
+      android: Linking.openURL('https://play.google.com/store/account/subscriptions?package=com.wrestlefeed&sku=wf_20_pro_user')
+    })
+  }
 
   useEffect(() => {
     (async () => {
@@ -58,16 +65,10 @@ const Main = (props) => {
                       else setActive({ ...func })
                     }}
                   >
-                    <Text style={[styles.btnText, { fontFamily: config.ios ? 'Eurostile' : 'Eurostile-Bold' }]}>{title}</Text>
+                    <Text style={styles.btnText}>{title}</Text>
                   </TouchableOpacity>
                 )
               })
-          }
-          {
-            props.subs && props.subs.isPro &&
-            <TouchableOpacity onPress={() => {}}>
-              <Text style={[styles.btnText, { fontFamily: config.ios ? 'Eurostile' : 'Eurostile-Bold' }]}>Cancel my subscription</Text>
-            </TouchableOpacity>
           }
         </View>
         {
@@ -77,6 +78,12 @@ const Main = (props) => {
         {
           (!!errorText && errorText !== 'Loading') &&
           <Error text={errorText} close={backHandler.current} />
+        }
+        {
+          props.subs && props.subs.isPro &&
+          <TouchableOpacity style={{ position: 'absolute', left: 0, right: 0, bottom: 60 }} onPress={cancelSubscription}>
+            <Text style={[styles.btnText, { fontSize: 14, color: '#d7d4d4' }]}>Cancel my subscription</Text>
+          </TouchableOpacity>
         }
       </ImageBackground>
     </View>

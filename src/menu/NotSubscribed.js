@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import {
-  View, Text, Platform, StyleSheet, TouchableOpacity, Image, Alert
+  View, Text, Platform, StyleSheet, TouchableOpacity, Image
 } from 'react-native'
 import RNIap from 'react-native-iap'
 import connect from '../connector';
@@ -12,13 +12,11 @@ const itemSkus = Platform.select({
 })
 
 const NotSubscribed = (props) => {
-  const { close, cancelable } = props
-
-  console.log(props.subscribe)
+  const { close, cancelable, user } = props
   const requestSubscription = async (sku) => {
     try {
       await RNIap.requestSubscription(sku);
-
+      props.subscribe(user.ID, user.display_name)
       //
     } catch (err) {
       console.warn(err.code, err.message)

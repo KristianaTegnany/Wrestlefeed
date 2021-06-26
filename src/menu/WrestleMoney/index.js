@@ -2,7 +2,7 @@ import React from 'react'
 import {Dimensions} from 'react-native'
 
 import {
-  View, BackHandler, SafeAreaView
+ View, BackHandler, SafeAreaView
 } from 'react-native'
 import { Navbar } from '../../common/Component';
 import PointsTable from './PointsTable';
@@ -96,7 +96,7 @@ const WrestleMoney = (props) => {
 }
 
 const GoPro = (props) => {
-  const { close } = props
+  const { close, user } = props
   return <View
     style={{
       backgroundColor: '#212121',
@@ -109,7 +109,7 @@ const GoPro = (props) => {
       height: Dimensions.get('screen').height
     }}
   >
-    <NotSubscribed cancelable close={close} />
+    <NotSubscribed user={user} cancelable close={close} />
   </View>
 }
 
