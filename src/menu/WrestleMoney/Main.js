@@ -20,12 +20,12 @@ const Main = (props) => {
   const [errorText, setErrorText] = React.useState('')
 
   const cancelSubscription = () => {
+    // TO DO : how to get if the user was really unsubscribed? 
+    props.unsubscribe(props.user.ID)
     Platform.select({
       ios: Linking.openURL('https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/manageSubscriptions'),
       android: Linking.openURL('https://play.google.com/store/account/subscriptions?package=com.wrestlefeed&sku=wf_20_pro_user')
     })
-    // TO DO : how to get if the user was really unsubscribed? 
-    props.unsubscribe(props.user.ID)
   }
 
   useEffect(() => {
