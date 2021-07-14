@@ -7,13 +7,6 @@ import Error from './Error'
 import { RenderLoading } from '../../common/Component';
 import bg from '../../assets/images/bg.png'
 import connect from '../../connector';
-import RNIap from 'react-native-iap'
-
-const itemSkus = Platform.select({
-  android: [
-    'wf_20_pro_user'
-  ]
-})
 
 const Main = (props) => {
   const { navbar, funcs, backHandler, updateData, setActive } = props
@@ -22,25 +15,12 @@ const Main = (props) => {
   const cancelSubscription = () => {
     // TO DO : how to get if the user was really unsubscribed? 
     props.unsubscribe(props.user.ID)
-    Platform.select({
-      ios: Linking.openURL('https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/manageSubscriptions'),
-      android: Linking.openURL('https://play.google.com/store/account/subscriptions?package=com.wrestlefeed&sku=wf_20_pro_user')
-    })
+    if(Platform.OS === 'ios')
+      Linking.openURL('https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/manageSubscriptions')
+    else if(Platform.OS === 'android')
+      Linking.openURL('https://play.google.com/store/account/subscriptions?package=com.wrestlefeed&sku=wf_20_pro_user')
   }
 
-  useEffect(() => {
-    (async () => {
-      try {
-        await RNIap.initConnection()
-        const products = await RNIap.getSubscriptions(itemSkus)
-        const subs = await RNIap.getAvailablePurchases()
-      } catch (err) {
-        console.warn(err)
-      }
-    })()
-    updateData()
-  }, [])
-  
   return (
     <View style={{ flex: 1 }}>
       {navbar}

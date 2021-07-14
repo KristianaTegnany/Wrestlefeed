@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import { View, Text, Alert, Image, Linking, BackHandler, Dimensions } from 'react-native';
+import { View, Text, Alert, Image, Linking, BackHandler, Platform } from 'react-native';
 import BottomSheet from 'reanimated-bottom-sheet'
 import AsyncStorage from '@react-native-community/async-storage';
 import { StackActions, NavigationActions } from 'react-navigation';
 import AndroidOpenSettings from 'react-native-android-open-settings'
 import { AppEventsLogger } from "react-native-fbsdk";
 
-
 import config from '../config';
 import { TouchableComponent } from '../common/Press';
+import legend_icon from '../assets/images/legend.png';
+import { useSelector } from 'react-redux';
+import { tracker } from '../tracker';
+import { withNavigationFocus } from 'react-navigation'
+
 let isOpen = false;
 
 const MenuItem = (props) => {
@@ -20,16 +24,40 @@ const MenuItem = (props) => {
   )
 }
 
+const Legend = (props) => {
+  return (
+    <View style={{margin: 20, marginBottom: 10, justifyContent:'center', alignSelf:'flex-end'}}> 
+      <Image
+        source={legend_icon}
+        style={{ width: 50, height: 50, marginBottom: 5}}
+      />
+      <Text style={{color: '#c9952c', fontFamily: Platform.OS === 'ios'? 'Eurostile' : 'Eurostile-Bold' }}>LEGEND</Text>
+    </View>
+  )
+}
+
 const Profile = (props) => {
+  const { isPro } = useSelector(state => state.subs)
+
   let { display_name, fb_id } = props.user
   let profile_image = fb_id.length < 35 ? `https://graph.facebook.com/${fb_id}/picture?type=large` : 'default_profile_icon';
   let first_name = display_name ? display_name.split(' ') : '';
   return (
     <View style={{ paddingBottom: 16, alignItems: 'center' }}>
-      <Image
-        source={{ uri: fb_id ? profile_image : 'default_profile_icon' }}
-        style={{ width: 120, height: 120, borderRadius: 60 }}
-      />
+      <View style={{ flexDirection:'row', justifyContent:'space-between' }}>
+        {
+          isPro &&
+          <Legend/>
+        }
+        <Image
+          source={{ uri: fb_id ? profile_image : 'default_profile_icon' }}
+          style={{ width: 120, height: 120, borderRadius: 60 }}
+        />
+        {
+          isPro &&
+          <Legend/>
+        }
+      </View>
       <View style={{ paddingTop: 8 }}>
         <Text style={{ alignSelf: 'center', fontSize: 18, color: 'white', fontWeight: '600', fontFamily: 'Exo-SemiBold' }}>
           Welcome, {first_name[0]}!
@@ -45,6 +73,9 @@ class Menu extends Component {
   }
 
   onRateUs = () => {
+    tracker.setUser(this.state.user_data.ID)
+    tracker.trackEvent('Click', 'RateUs')
+
     AppEventsLogger.logEvent("RateUs_click");
     if (config.ios) {
       Linking.openURL('https://apps.apple.com/us/app/wrestlefeed/id1398253505')

@@ -1,11 +1,15 @@
-import React, { Component } from 'react';
-import { View, Text, Dimensions, Image, Keyboard, ActivityIndicator } from 'react-native';
+import React, { Component, useEffect, useState } from 'react';
+import { View, Text, Dimensions, Image, Keyboard, Platform, ActivityIndicator } from 'react-native';
 import BottomSheet from 'reanimated-bottom-sheet'
 import { TouchableOpacity, TextInput, FlatList } from 'react-native-gesture-handler';
 import axios from 'axios';
 import config from '../config';
 import Wrestlefeed from '../common/Wrestlefeed';
 import { AppEventsLogger } from 'react-native-fbsdk';
+import legend_icon from '../assets/images/legend.png';
+import * as Service from '../services/subscription'
+import {  withNavigationFocus } from 'react-navigation'
+import { tracker } from '../tracker'
 
 let { height } = Dimensions.get('screen');
 let storyHeight = height-100
@@ -15,13 +19,40 @@ let heightForKeyboard = height + key_height - height/10
 isKeyboardActive = false;
 let commenting = false
 
+const Legend = (props) => {
+    return (
+      <View style={{marginLeft: 10, flexDirection:'row', alignSelf:'center', alignItems: 'flex-end'}}> 
+        <Image
+          source={legend_icon}
+          style={{ width: 25, height: 25}}
+        />
+        <Text style={{color: '#c9952c', fontFamily: Platform.OS === 'ios'? 'Eurostile' : 'Eurostile-Bold', marginHorizontal: 5}}>LEGEND</Text>
+        <Image
+          source={legend_icon}
+          style={{ width: 25, height: 25}}
+        />
+      </View>
+    )
+}
+
 const CommentItem = (props) => {
-    let { comment_content, comment_author, comment_date, comment_author_url } = props.data;
+    const [isPro, setIsPro] = useState(false)
+    let { user_id, comment_content, comment_author, comment_date, comment_author_url } = props.data;
     let valid_comment_date = Wrestlefeed.getFormatDate(comment_date);
+    
+    const getSubscription = async () => {
+        const { subscribed } = await Service.retrieveProState(user_id)
+        setIsPro(subscribed)
+    }
+
+    useEffect(() => {
+        getSubscription()
+    }, [])
+
     return(
         <View style={{  }}>
-            <View style={{ flexDirection: 'row' }}>
-                <View style={{  }}>
+            <View style={{ flexDirection: 'row', flexWrap:'wrap' }}>
+                <View>
                     {
                         comment_author_url ?
                         <Image source={{ uri: `https://graph.facebook.com/${comment_author_url}/picture?type=large` }} style={{ width: 32, height: 32, borderRadius: 16 }} />
@@ -30,15 +61,22 @@ const CommentItem = (props) => {
                     }
 
                 </View>
-                <View style={{ justifyContent: 'center', paddingLeft: 12 }}>
+                <View style={{ justifyContent: 'center', paddingLeft: 12}}>
                     <Text style={{ fontSize: 16, color: '#232632' }}>{comment_author}</Text>
                 </View>
                 <View style={{ justifyContent: 'center', paddingLeft: 8, paddingRight: 8 }}>
                     <View style={{  backgroundColor: '#B21A1A', width: 8, height: 8, borderRadius: 4 }}></View>
                 </View>
-                <View style={{ justifyContent: 'center' }}>
-                    <Text>{valid_comment_date}</Text>
-                </View>
+                {
+                    !isPro &&
+                    <View style={{ justifyContent: 'center' }}>
+                        <Text>{valid_comment_date}</Text>
+                    </View>
+                }
+                {
+                    isPro &&
+                    <Legend/>
+                }
             </View>
             <View style={{ paddingTop: 8, paddingBottom: 24, flexDirection: 'row', flexWrap: 'wrap'  }}>
                 <View style={{ backgroundColor: 'rgba(85,87,99,0.08)', alignItems: 'center', padding: 8, borderRadius: 8, paddingLeft: 16, paddingRight: 16 }}>
@@ -67,6 +105,11 @@ class Comment extends Component{
     }
 
     componentDidMount() {
+        
+        tracker.setUser(this.state.user_data.ID)
+        tracker.trackEvent("Click", "Comment")
+        tracker.trackScreenView("Comment")
+    
         Keyboard.addListener('keyboardDidHide', (e) => {
             if(this.bottomSheetRef && this.bottomSheetRef.current){
                 // if(!config.ios){
@@ -159,6 +202,9 @@ class Comment extends Component{
     onComment = () => {
         let { comment_content, post_data, user_data, comment_list } = this.state;
         let { ID, display_name, fb_id } = user_data;
+        
+        tracker.trackEvent("Made", "Comment")
+
         if(!comment_content){
             this.setState({ comment_placeholder: "Please Add Your Comment..." })
         }else{

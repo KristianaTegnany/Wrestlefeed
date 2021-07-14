@@ -14,6 +14,8 @@ import Rules from './Rules';
 import Main from './Main';
 import NotSubscribed from '../NotSubscribed'
 import connect from '../../connector';
+import { withNavigationFocus } from 'react-navigation'
+import { tracker } from '../../tracker';
 
 export const wf = {
   wrestlers: [],
@@ -78,6 +80,12 @@ const WrestleMoney = (props) => {
     return () => backHandler.remove()
   }, [])
 
+  React.useEffect(() => {
+    tracker.setUser(user.ID)
+    tracker.trackEvent("Click", "WrestleMoney")
+    tracker.trackScreenView('WrestleMoney')
+  },[props.isFocused])
+
   const Component = active.component
   return (
     <View
@@ -139,4 +147,4 @@ const funcs = ({ subs: { isPro } }, { team }) => [
   }
 ]
 
-export default connect(WrestleMoney)
+export default connect(withNavigationFocus(WrestleMoney))

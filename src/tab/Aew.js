@@ -13,7 +13,9 @@ import Comment from '../timeline/Comment';
 import Menu from '../menu/Menu';
 import config from '../config';
 import { updateDarkMode, pushTabData } from '../action';
-import { BottomAction } from '../common/Component'
+import { BottomAction } from '../common/Component';
+import { tracker } from '../tracker';
+import { withNavigationFocus } from 'react-navigation'
 
 let sheetOpen = false
 let loading_more = false
@@ -34,8 +36,17 @@ class Aew extends Component {
         refresh_load: false
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if(nextProps.isFocused){
+            tracker.setUser(this.props.navigation.state.params.user.ID)
+            tracker.trackEvent("Click", "AEW")
+            tracker.trackScreenView("AEW")
+        }
+    }
+
     componentDidMount() {
         let { post, user, push } = this.props.navigation.state.params;
+        
         if(post && !push){
             post.map((post_data) => {
                 let { name, data } = post_data;
@@ -279,4 +290,4 @@ const mapStateToProps = (state) => {
     };
 };
   
-export default connect(mapStateToProps, { updateDarkMode, pushTabData })(Aew);
+export default connect(mapStateToProps, { updateDarkMode, pushTabData })(withNavigationFocus(Aew));

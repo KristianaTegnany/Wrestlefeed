@@ -11,6 +11,7 @@ import Wrestlefeed from '../common/Wrestlefeed';
 import config from '../config';
 import { BridPlayer, Instagram, StoryAdvanceText, StoryEM, StoryImage, StoryNavbarLogo, StoryText, Twitter, YouTubeVideo } from '../common/StoryComponent';
 import { allStyle } from '../allStyles';
+import { tracker } from '../tracker';
 
 let { height, width } = Dimensions.get('window');
 let fullHeight = config.ios ? height : height;
@@ -149,6 +150,7 @@ class StoryView extends Component{
     }
 
     onSharePost = () => {
+        tracker.trackEvent('Click', 'ShareArticle')
         AppEventsLogger.logEvent('shareArticle');
         let { post_title, post_url } = this.state
         let shareOptions = {
@@ -165,9 +167,11 @@ class StoryView extends Component{
         this.setState({ dark_mode: !dark_mode });
         this.props.onDarkToggle()
         if(dark_mode){
+            tracker.trackEvent('Click', 'DayMode')
             AppEventsLogger.logEvent("DayMode_Click")
         }else{
             AppEventsLogger.logEvent("NightMode_Click")
+            tracker.trackEvent('Click', 'NightMode')
         }
     }
 
@@ -197,6 +201,7 @@ class StoryView extends Component{
     }
 
     render() {
+        tracker.trackEvent('Views', 'Story')
         this.bottomSheetRef = React.createRef();
         return(
             <View style={{ flex: 1 }}>

@@ -8,6 +8,7 @@ import config from '../config';
 import { allStyle } from '../allStyles';
 
 import { UserButton, BackWithText } from '../common/Component';
+import { tracker } from '../tracker';
 
 
 let { width, height } = Dimensions.get('screen');

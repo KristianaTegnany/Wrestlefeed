@@ -18,10 +18,13 @@ import config from '../config';
 import { pushTabData, updateDarkMode } from '../action'
 import { BottomAction } from '../common/Component'
 import { updateWM } from '../menu/WrestleMoney';
-
+import { tracker } from '../tracker';
+import { withNavigationFocus } from 'react-navigation'
+  
 let sheetOpen = false
 let loading_more = false
 let { width, height } = Dimensions.get('screen');
+
 class News extends Component {
     constructor() {
         super()
@@ -38,11 +41,20 @@ class News extends Component {
         refresh_load: false
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if(nextProps.isFocused){
+            tracker.setUser(this.props.navigation.state.params.user.ID)
+            tracker.trackEvent("Click", "NEWS")
+            tracker.trackScreenView("NEWS")
+        }
+    }
+      
     componentDidMount() {
         this.pushManage()
         this.props.updateDarkMode(false, true);
         let params = this.props.navigation.state.params;
         let { post, user } = params;
+        
         if(params.push){
             this.showPushData(post, user);
             this.setState({ user_data: user })
@@ -426,4 +438,4 @@ const mapStateToProps = (state) => {
     };
 };
   
-export default connect(mapStateToProps, { pushTabData, updateDarkMode })(News);
+export default connect(mapStateToProps, { pushTabData, updateDarkMode })(withNavigationFocus(News));

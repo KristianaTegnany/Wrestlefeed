@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
-  View, Text, Platform, StyleSheet, TouchableOpacity, Image
+  View, Text, Platform, StyleSheet, TouchableOpacity, Image, ActivityIndicator
 } from 'react-native'
 import RNIap from 'react-native-iap'
 import connect from '../connector';
@@ -8,18 +8,27 @@ import connect from '../connector';
 const itemSkus = Platform.select({
   android: [
     'wf_20_pro_user'
+  ],
+  ios: [
+    'com.wrestlefeed.news'
   ]
 })
 
 const NotSubscribed = (props) => {
   const { close, cancelable, user } = props
+  const [loading, setLoading] = useState(false)
+
   const requestSubscription = async (sku) => {
-    try {
-      await RNIap.requestSubscription(sku);
-      props.subscribe(user.ID, user.display_name)
-      close()
-    } catch (err) {
-      console.warn(err.code, err.message)
+    if(!loading) {
+      setLoading(true)
+      try {
+        await RNIap.requestSubscription(sku);
+        props.subscribe(user.ID, user.display_name)
+        close()
+      } catch (err) {
+        setLoading(false)
+        console.warn(err.code, err.message)
+      }
     }
   }
 
@@ -27,8 +36,7 @@ const NotSubscribed = (props) => {
     (async () => {
       try {
         await RNIap.initConnection()
-        const products = await RNIap.getSubscriptions(itemSkus)
-        const subs = await RNIap.getAvailablePurchases()
+        await RNIap.getSubscriptions(itemSkus)
       } catch (err) {
         console.warn(err)
       }
@@ -51,9 +59,9 @@ const NotSubscribed = (props) => {
           <Text style={styles.contentText}>
             Dear loyal user, subscribe today to {'\n'} begin your
             <Text style={{ fontWeight: 'bold' }}> 30 days free trial </Text>
-            and get:
+            and get:{'\n'}
           </Text>
-          <View style={styles.center}>
+          <View>
             <Text style={styles.listItem}>- Access to the funniest Memes ever</Text>
             <Text style={styles.listItem}>- Access to a breathtaking Divas section</Text>
             <Text style={styles.listItem}>- Access to all new WrestleMoney League</Text>
@@ -74,8 +82,15 @@ const NotSubscribed = (props) => {
               <Text style={styles.okText}>Cancel</Text>
             </TouchableOpacity>
           }
-          <TouchableOpacity onPress={() => requestSubscription('wf_20_pro_user')} activeOpacity={.5} style={styles.ok}>
-            <Text style={styles.okText}>Subscribe</Text>
+          <TouchableOpacity onPress={() => requestSubscription(itemSkus[0])} style={styles.ok}>
+            {
+              loading &&
+              <ActivityIndicator/>
+            }
+            { 
+              !loading &&
+              <Text style={styles.okText}>Subscribe</Text>
+            }
           </TouchableOpacity>
         </View>
       </View>
@@ -99,7 +114,6 @@ const styles = StyleSheet.create({
     marginVertical: 20
   },
   listItem: {
-    textAlign: 'center',
     fontSize: 16,
     color: '#212121'
   },
@@ -128,6 +142,8 @@ const styles = StyleSheet.create({
     color: '#504f4f'
   },
   ok: {
+    width: 150,
+    height: 35,
     alignSelf: 'flex-end',
     marginTop: 20,
     backgroundColor: '#b21a1a',
@@ -136,6 +152,8 @@ const styles = StyleSheet.create({
     borderRadius: 4
   },
   ko: {
+    width: 150,
+    height: 35,
     alignSelf: 'flex-end',
     marginTop: 20,
     backgroundColor: '#555',
@@ -145,6 +163,7 @@ const styles = StyleSheet.create({
     marginRight: 20
   },
   okText: {
+    textAlign:'center',
     color: 'white',
     fontSize: 22,
     fontFamily: Platform.OS == 'ios' ? 'Eurostile' : 'Eurostile-Bold'

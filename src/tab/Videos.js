@@ -16,6 +16,8 @@ import config from '../config';
 import { updateDarkMode, pushTabData } from '../action';
 import PlayVideoModal from '../common/PlayVideoModal';
 import { BottomAction } from '../common/Component'
+import { tracker } from '../tracker';
+import { withNavigationFocus } from 'react-navigation'
 
 let sheetOpen = false
 let loading_more = false
@@ -37,8 +39,20 @@ class Videos extends Component {
         refresh_load: false
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if(nextProps.isFocused){
+            tracker.setUser(this.props.navigation.state.params.user.ID)
+            tracker.trackEvent("Click", "VIDEOS")
+            tracker.trackScreenView("VIDEOS")
+        }
+    }
+
     componentDidMount() {
         let { post, user, push } = this.props.navigation.state.params;
+
+        tracker.trackScreenView("VIDEOS")
+        tracker.trackEvent("VIDEOS_click")
+
         if(post && !push){
             post.map((post_data) => {
                 let { name, data } = post_data;
@@ -296,4 +310,4 @@ const mapStateToProps = (state) => {
     };
 };
   
-export default connect(mapStateToProps, { updateDarkMode, pushTabData })(Videos);
+export default connect(mapStateToProps, { updateDarkMode, pushTabData })(withNavigationFocus(Videos));
