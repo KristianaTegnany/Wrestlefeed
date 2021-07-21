@@ -13,8 +13,7 @@ import config from '../config';
 import appleAuth, {
   AppleButton,
   AppleAuthRequestOperation,
-  AppleAuthRequestScope,
-  AppleAuthCredentialState,
+  AppleAuthRequestScope
 } from '@invertase/react-native-apple-authentication'
 import Wrestlefeed from '../common/Wrestlefeed';
 import connect from '../connector';
@@ -107,6 +106,11 @@ class Welcome extends Component {
       retrieveProState(uid)
       const resAllPost = await axios.post(config.base_api + "/feed_initial.php", { tab_name: "all", last_id: 0, user_id: uid })
       let { all_post, user } = resAllPost.data
+      all_post = all_post.map(post => {
+        if(post.name === "NEWS")
+          return {name: post.name, data: post.data.filter(item => item.post_title !== 'wrestlemoney_updates')}
+        else return post
+      })
       this.setState({ loading: false, loading_apple: false, loading_google: false })
       let resetAction = StackActions.reset({
         index: 0,

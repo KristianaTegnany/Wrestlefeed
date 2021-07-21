@@ -45,7 +45,7 @@ const NotSubscribed = (props) => {
 
   return (
     <View
-      style={[styles.Error, cancelable ? {} : { backgroundColor: '#212121' }]}
+      style={[styles.Error, cancelable ? {} : { zIndex: 1, backgroundColor: '#212121' }]}
     >
       <View style={[styles.body]}>
         <View style={styles.center}>
@@ -158,14 +158,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: '#555',
     paddingVertical: 7,
-    paddingHorizontal: 25,
+    paddingHorizontal: 10,
     borderRadius: 4,
     marginRight: 20
   },
   okText: {
     textAlign:'center',
     color: 'white',
-    fontSize: 22,
+    fontSize: 18,
     fontFamily: Platform.OS == 'ios' ? 'Eurostile' : 'Eurostile-Bold'
   },
 })

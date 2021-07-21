@@ -4,11 +4,10 @@ import {
   TextInput, TouchableOpacity, KeyboardAvoidingView, Image
 } from 'react-native'
 import { addZero } from '../../functions'
-import { wf } from '.'
-import Axios from 'axios'
 import config from '../../config'
 import Fuzzy from 'fuzzy'
 import { RenderLoading } from '../../common/Component'
+import Axios from 'axios'
 
 const Wrestler = ({ item }) => {
   let {
@@ -20,7 +19,7 @@ const Wrestler = ({ item }) => {
   } = item
 
   if (!image) image = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/John_Cena_2010.jpg/170px-John_Cena_2010.jpg'
-  else if (!image.startsWith('http')) image = `${wf.baseUrl}/${image}`
+  else if (!image.startsWith('http')) image = `${config.wrestler_api}/${image}`
 
   return (
     <View key={id} activeOpacity={.9} style={[styles.Wrestler, { backgroundColor: chosen.includes(id) ? '#b21a1a' : "#eee" }]}>
@@ -50,7 +49,7 @@ const TeamBuilder = (props) => {
     if (chosen.length === MAX) {
       if (showConf) {
         setLoading(true)
-        const { data: team } = await Axios.post(`${wf.baseUrl}/api/team`, {
+        const { data: team } = await Axios.post(`${config.wrestler_api}/api/team`, {
           wrestlers: chosen,
           user_id: user.ID,
           name: user.display_name || ''
@@ -117,7 +116,7 @@ const TeamBuilder = (props) => {
                 <TouchableOpacity onPressIn={_ => setShowConf(false)} style={styles.confButton}>
                   <Text style={styles.confButtonText}>Edit Team</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPressIn={save} style={styles.confButton}>
+                <TouchableOpacity onPressIn={save} style={[styles.confButton, { opacity: loading? 0.5 : 1 }]}>
                   <Text style={styles.confButtonText}>Freeze</Text>
                 </TouchableOpacity>
               </View>

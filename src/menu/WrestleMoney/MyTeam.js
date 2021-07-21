@@ -21,7 +21,7 @@ const MyTeam = (props) => {
           </View>
           {
             wrestlers
-              .filter(({ point }) => point > 0)
+              //.filter(({ point }) => point > 0)
               .sort(({ point: a, name: na }, { point: b, name: nb }) => {
                 if (a !== b) return a > b ? -1 : 1
                 else return na.toLowerCase() > nb.toLowerCase() ? 1 : -1
@@ -29,7 +29,7 @@ const MyTeam = (props) => {
               .map(({ name, point }, i) => {
                 return <View key={i} style={[styles.wLine]}>
                   <Text style={styles.wNameText}>{name}</Text>
-                  <Text style={styles.wPointText}>{point > 9 ? point : `0${point}`}</Text>
+                  <Text style={styles.wPointText}>{parseInt(point) === 0? '' : point > 9 ? point : `0${point}`}</Text>
                 </View>
               })
           }

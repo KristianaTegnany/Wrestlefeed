@@ -11,7 +11,6 @@ import { TouchableComponent } from '../common/Press';
 import legend_icon from '../assets/images/legend.png';
 import { useSelector } from 'react-redux';
 import { tracker } from '../tracker';
-import { withNavigationFocus } from 'react-navigation'
 
 let isOpen = false;
 
@@ -109,6 +108,7 @@ class Menu extends Component {
   }
 
   onNotification() {
+    tracker.trackEvent('Click', 'Notifications')
     AppEventsLogger.logEvent("Notifications_click");
     if (config.ios) {
       Linking.openURL('app-settings:')
@@ -163,7 +163,7 @@ class Menu extends Component {
 
             <MenuItem
               name="Privacy Policy" // / GDPR
-              itemPress={() => navigation.navigate("FullWebview", 'https://app.wwfoldschool.com/privacy-policy/')}
+              itemPress={() => navigation.navigate("FullWebview", `${config.base}/privacy-policy/`)}
             />
             {/* <MenuItem
               name="WWF Old School"

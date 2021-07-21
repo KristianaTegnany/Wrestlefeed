@@ -14,7 +14,7 @@ import { allStyle } from '../allStyles';
 import { tracker } from '../tracker';
 
 let { height, width } = Dimensions.get('window');
-let fullHeight = config.ios ? height : height;
+let fullHeight = height;
 let notch = DeviceInfo.hasNotch();
 
 class StoryView extends Component{
@@ -31,6 +31,12 @@ class StoryView extends Component{
         isPrevStory: true
     }
     storyScroll = React.createRef()
+    bottomSheetRef = React.createRef()
+    
+    componentDidMount() {
+        tracker.trackEvent('Views', 'Story')
+    }
+
     renderContent = (props) => {
         let { post_content, dark_mode, isNextStory, isPrevStory, post_title } = this.state;
         let post_data = [];
@@ -186,7 +192,7 @@ class StoryView extends Component{
 
     openStory = (post_url, post_content, post_title, dark_mode, isNextStory, isPrevStory) => {
         this.setState({ post_url, post_content, post_title, isNextStory, isPrevStory, dark_mode, hide_progress: false });
-        this.bottomSheetRef.current.snapTo()
+        this.bottomSheetRef.current.snapTo(0)
     }
 
     closeStory = () => {
@@ -201,8 +207,6 @@ class StoryView extends Component{
     }
 
     render() {
-        tracker.trackEvent('Views', 'Story')
-        this.bottomSheetRef = React.createRef();
         return(
             <View style={{ flex: 1 }}>
                 <BottomSheet

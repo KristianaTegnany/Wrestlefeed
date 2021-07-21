@@ -2,7 +2,6 @@ import React from 'react'
 import SpInAppUpdates, {
   IAUUpdateKind
 } from 'sp-react-native-in-app-updates'
-import moment from 'moment'
 import {
   Platform
 } from 'react-native'

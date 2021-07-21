@@ -12,11 +12,15 @@ let { width, height } = Dimensions.get('window')
 
 class Wrestlefeed {
     static async  fetchPostData(tab_name, last_id, user_id){
-      const {data} = await axios.post(
+      const { data } = await axios.post(
         config.base_api+'/all_feed.php',
         { tab_name, last_id, user_id}
       )
-      return tab_name === 'NEWS' ? data.filter(({post_title}) => post_title !== 'wrestlemoney_updates') : data
+      return tab_name === 'NEWS' ? data.filter(({post_title}) => post_title !== 'wrestlemoney_updates') : tab_name === 'all'? data.filter(post => {
+          if(post.name === 'NEWS')
+            return {name: post.name, data: post.data.filter(item => item.post_title !== 'wrestlemoney_updates')}
+          else return post
+       }) : data
     }
 
     static async fetchUpdates(user_id, last_id){

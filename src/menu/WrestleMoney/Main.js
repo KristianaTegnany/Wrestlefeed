@@ -7,6 +7,7 @@ import Error from './Error'
 import { RenderLoading } from '../../common/Component';
 import bg from '../../assets/images/bg.png'
 import connect from '../../connector';
+import { tracker } from '../../tracker';
 
 const Main = (props) => {
   const { navbar, funcs, backHandler, updateData, setActive } = props
@@ -14,6 +15,9 @@ const Main = (props) => {
 
   const cancelSubscription = () => {
     // TO DO : how to get if the user was really unsubscribed? 
+    tracker.setUser(props.user.ID)
+    tracker.trackEvent('Click', 'Cancel_sub')
+    
     props.unsubscribe(props.user.ID)
     if(Platform.OS === 'ios')
       Linking.openURL('https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/manageSubscriptions')

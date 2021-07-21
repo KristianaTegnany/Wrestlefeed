@@ -241,7 +241,6 @@ class Divas extends Component {
         <View style={{ position: 'absolute', left: 16, top: 12, zIndex: 1001 }}>
           {!hideMenu ? <MenuIcon onMenuPress={this.openMenu} /> : null}
         </View>
-        {!isPro && !closed && <NotSubscribed user={user_data} close={() => this.setState({closed: true})} />}
         <RefreshIcon onRefreshPress={this.onRefreshPost} status={refresh_load} hideMenu={hideMenu} />
         <View style={{ flex: 850 }}>
           <TapGestureHandler
@@ -282,6 +281,7 @@ class Divas extends Component {
           <Comment ref="comment" onCloseStory={this.onCommentClose} />
           <Menu ref="menu" onCloseStory={this.onMenuClose} navigation={this.props.navigation} />
         </View>
+        {!isPro && !closed && <NotSubscribed user={user_data} close={() => this.setState({closed: true})} />}
       </View>
     )
   }

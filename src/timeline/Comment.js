@@ -26,11 +26,16 @@ const Legend = (props) => {
           source={legend_icon}
           style={{ width: 25, height: 25}}
         />
-        <Text style={{color: '#c9952c', fontFamily: Platform.OS === 'ios'? 'Eurostile' : 'Eurostile-Bold', marginHorizontal: 5}}>LEGEND</Text>
-        <Image
-          source={legend_icon}
-          style={{ width: 25, height: 25}}
-        />
+        {
+            props.comment_author.length < 20 &&
+            <>
+                <Text style={{color: '#c9952c', fontFamily: Platform.OS === 'ios'? 'Eurostile' : 'Eurostile-Bold', marginHorizontal: 5}}>LEGEND</Text>
+                <Image
+                source={legend_icon}
+                style={{ width: 25, height: 25}}
+                />
+            </>
+        }
       </View>
     )
 }
@@ -75,7 +80,7 @@ const CommentItem = (props) => {
                 }
                 {
                     isPro &&
-                    <Legend/>
+                    <Legend comment_author={comment_author}/>
                 }
             </View>
             <View style={{ paddingTop: 8, paddingBottom: 24, flexDirection: 'row', flexWrap: 'wrap'  }}>

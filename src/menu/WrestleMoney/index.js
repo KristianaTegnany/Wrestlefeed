@@ -16,11 +16,11 @@ import NotSubscribed from '../NotSubscribed'
 import connect from '../../connector';
 import { withNavigationFocus } from 'react-navigation'
 import { tracker } from '../../tracker';
+import config from '../../config';
 
 export const wf = {
   wrestlers: [],
-  team: null,
-  baseUrl: 'https://devapp.wwfoldschool.com/wrestler'
+  team: null
 }
 
 export const updateWM = async (user_id) => {
@@ -28,13 +28,13 @@ export const updateWM = async (user_id) => {
 }
 
 const getWrestlers = async () => {
-  const { data } = await Axios.get(`${wf.baseUrl}/api/wrestler`)
+  const { data } = await Axios.get(`${config.wrestler_api}/api/wrestler`)
   wf.wrestlers = data.data
   return wf.wrestlers
 }
 
 const getTeam = async (user_id) => {
-  const { data } = await Axios.get(`${wf.baseUrl}/api/getmyteam?user_id=${user_id}`)
+  const { data } = await Axios.get(`${config.wrestler_api}/api/getmyteam?user_id=${user_id}`)
   wf.team = data
   return data
 }

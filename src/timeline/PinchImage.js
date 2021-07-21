@@ -59,7 +59,7 @@ export default class PinchImage extends Component {
             <>
                 <PinchGestureHandler {...gestureHandler}>
                     <Animated.View style={{ width, height, }}>
-                        <Animated.View style={{ position: 'absolute', bottom: 16, left: 0, right: 0, zIndex: 1, paddingBottom: 45 }}>
+                        <Animated.View style={{ position: 'absolute', bottom: 16, left: 0, right: 0, zIndex: 1, paddingBottom: 35 }}>
                             <Animated.View style={{ transform: [ { translateX: hideDetail } ] }}>
                                 
                                 <View style={{ flex: 2, justifyContent: 'center', alignItems: 'flex-start', paddingLeft: 16 }}>

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, ActivityIndicator, Dimensions, ImageBackground, Platform, PixelRatio } from 'react-native';
 import AutoHeightWebView from 'react-native-autoheight-webview';
 import LinearGradient from 'react-native-linear-gradient';
-import ViewPager from '@react-native-community/viewpager';
+import { PagerView } from 'react-native-pager-view';
 import Animated from 'react-native-reanimated';
 import DeviceInfo from 'react-native-device-info';
 
@@ -16,7 +16,7 @@ import { tracker } from '../tracker';
 let { width, height } = Dimensions.get('screen');
 let minScreenSize = 390
 let notch = DeviceInfo.hasNotch();
-let reactionImgStyle = { width: width < minScreenSize ? 32 : 40, height: width < minScreenSize ? 32 : 40 }
+let reactionImgStyle = { alignSelf:'center', width: width < minScreenSize ? 32 : 40, height: width < minScreenSize ? 32 : 40 }
 let playBtnStyle = { width: width < minScreenSize ? 18 : 24, height: width < minScreenSize ? 18 : 24 }
 
 const commStyle = {
@@ -265,10 +265,10 @@ export const PostTime = (props) => {
 export const ReactionImage = (props) => {
     let { img_name, status, onPress, num, showText, btn_opacity } = props
     return(
-        <View style={{ flex: 2, opacity: status ? 1 : btn_opacity }}>
+        <View style={{ flex: 2, justifyContent:'center', opacity: status ? 1 : btn_opacity }}>
             <TouchableOpacity onPress={onPress}>
                 <Image source={{ uri: img_name }} style={reactionImgStyle} />
-                {showText ? <Text style={{ color: 'white', paddingLeft: 14, fontSize: 16 }}>{num}</Text> : null}
+                {showText ? <Text style={{ color: 'white', textAlign:'center', fontSize: 16 }}>{num}</Text> : null}
             </TouchableOpacity>
         </View>
     )
@@ -479,7 +479,7 @@ export const Poll = (props) => {
 export const PagerList = (props) => {
     let { post_list, index, pageRef, onPollPress } = props;
     return(
-        <ViewPager style={{ flex: 1 }} 
+        <PagerView style={{ flex: 1 }} 
             ref={pageRef}
             initialPage={index}
             orientation='vertical'
@@ -489,7 +489,7 @@ export const PagerList = (props) => {
                 post_list.length != 0 ?
                 post_list.map((post, index) => {
                     return(
-                        <Animated.View key={index.toString()} style={{ flex: 1 }} >
+                        <View key={index.toString()} style={{ flex: 1 }} >
                             {
                                 post.post_type == "stories" && post.short_desc ?
                                     <Stories 
@@ -510,12 +510,12 @@ export const PagerList = (props) => {
                                     />
                                 : null
                             }
-                        </Animated.View>
+                        </View>
                     )
                 })
                 : null
             }
-        </ViewPager>
+        </PagerView>
     )
 }
 
@@ -595,6 +595,7 @@ export const RenderLoading = ({color, withoutText}) => {
     <View
       style={{
         flex: 1,
+        zIndex: 100,
         position: 'absolute',
         top:0,
         left: 0,

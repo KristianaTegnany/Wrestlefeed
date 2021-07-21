@@ -33,6 +33,11 @@ class SignUp extends Component {
         AsyncStorage.setItem('uid', uid.toString());
         axios.post(config.base_api + 'feed_initial.php', { tab_name: "all", last_id: 0, user_id: uid }).then((resAllPost) => {
             let { all_post, user } = resAllPost.data
+            all_post = all_post.map(post => {
+                if(post.name === "NEWS")
+                  return {name: post.name, data: post.data.filter(item => item.post_title !== 'wrestlemoney_updates')}
+                else return post
+            })
             let resetAction = StackActions.reset({
                 index: 0,
                 actions: [
