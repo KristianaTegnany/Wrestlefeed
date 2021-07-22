@@ -2,6 +2,7 @@ import React from 'react'
 import {
   View, Text, StyleSheet, Platform
 } from 'react-native'
+import _ from 'lodash'
 
 const MyTeam = (props) => {
   const { team: { wrestlers }, backHandler, close, navbar } = props
@@ -20,12 +21,10 @@ const MyTeam = (props) => {
             <Text style={styles.wPointText}>Points</Text>
           </View>
           {
-            wrestlers
-              //.filter(({ point }) => point > 0)
-              .sort(({ point: a, name: na }, { point: b, name: nb }) => {
-                if (a !== b) return a > b ? -1 : 1
-                else return na.toLowerCase() > nb.toLowerCase() ? 1 : -1
-              })
+            wrestlers.sort(({point: a, name: na}, {point: b, name: nb}) => {
+              if(a !== b) return parseFloat(a) > parseFloat(b) ? -1 : 1
+              else return na.toLowerCase() > nb.toLowerCase() ? 1 : -1   
+            })
               .map(({ name, point }, i) => {
                 return <View key={i} style={[styles.wLine]}>
                   <Text style={styles.wNameText}>{name}</Text>

@@ -136,8 +136,7 @@ class News extends Component {
                 this.toggleTab(true)
                 let { post_url, content, post_title, isNextStory, isPrevStory } = read_more_data;
                 let { setting } = this.props;
-                if(post_title !== 'wrestlemoney_updates')
-                    this.refs.storyview.openStory(post_url, content, post_title, setting.dark_mode, isNextStory, isPrevStory);
+                this.refs.storyview.openStory(post_url, content, post_title, setting.dark_mode, isNextStory, isPrevStory);
                 setTimeout(() => {
                     Wrestlefeed.hideSplash();
                 }, 200)
@@ -158,7 +157,7 @@ class News extends Component {
             if(tab){
                 axios.post(config.base_api+'/new_post_check.php', { tab: tab.data, user_id: user_data.ID }).then((resTab) => {
                     if(resTab.data){
-                        this.props.pushTabData('ALL', resTab.data.filter(({post_tile}) => post_tile !== 'wrestlemoney_updates'))
+                        this.props.pushTabData('ALL', resTab.data)
                     }
                 }).catch((err) => {
                     
@@ -223,7 +222,7 @@ class News extends Component {
                                 let { all_post } = resAllPost.data;
                                 all_post = all_post.map(post => {
                                     if(post.name === "NEWS")
-                                      return {name: post.name, data: post.data.filter(item => item.post_title !== 'wrestlemoney_updates')}
+                                      return {name: post.name, data: post.data}
                                     else return post
                                 })
                                 let redux_tab_data = [];

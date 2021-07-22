@@ -35,7 +35,7 @@ class SignUp extends Component {
             let { all_post, user } = resAllPost.data
             all_post = all_post.map(post => {
                 if(post.name === "NEWS")
-                  return {name: post.name, data: post.data.filter(item => item.post_title !== 'wrestlemoney_updates')}
+                  return {name: post.name, data: post.data}
                 else return post
             })
             let resetAction = StackActions.reset({

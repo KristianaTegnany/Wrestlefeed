@@ -108,7 +108,7 @@ class Welcome extends Component {
       let { all_post, user } = resAllPost.data
       all_post = all_post.map(post => {
         if(post.name === "NEWS")
-          return {name: post.name, data: post.data.filter(item => item.post_title !== 'wrestlemoney_updates')}
+          return {name: post.name, data: post.data}
         else return post
       })
       this.setState({ loading: false, loading_apple: false, loading_google: false })

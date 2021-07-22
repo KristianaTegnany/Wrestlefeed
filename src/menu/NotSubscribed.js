@@ -68,7 +68,7 @@ const NotSubscribed = (props) => {
             <Text style={styles.listItem}>- A classy Legend Badge on your comments</Text>
           </View>
           <Text style={[styles.contentText, styles.marginedText]}>
-            <Text>You will be only charged only</Text>
+            <Text>You will be charged only</Text>
             <Text style={{ fontWeight: 'bold' }}> $0.99 </Text>
             <Text>a month, should you wish to continue supporting us.</Text>
           </Text>

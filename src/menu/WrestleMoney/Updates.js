@@ -1,93 +1,143 @@
 import React from 'react'
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
-import Wrestlefeed from '../../common/Wrestlefeed'
-
-export const addZero = (nb) => nb <= 9 ? `0${nb}` : `${nb}`
-export const toDate = (origDate, gmt = true) => {
-  const d = new Date(origDate)
-  const hour = `${addZero(d.getHours())}:${addZero(d.getMinutes())}`
-  const date = `${addZero(d.getDate())}/${addZero(d.getMonth() + 1)}/${addZero(d.getFullYear())}`
-  return `${hour}${gmt ? ' GMT' : ''}, ${date}`
-}
-
-const updates = []
+import { View, StyleSheet, Dimensions } from 'react-native'
+import { WebView } from 'react-native-webview';
+import { RenderLoading } from '../../common/Component';
 
 const Updates = (props) => {
-  const { user: { ID: id }, close, backHandler, navbar } = props
+  const { close, backHandler, navbar } = props
+  const { height } = Dimensions.get('screen')
+  const heightView = height - 56
+
   React.useEffect(() => {
     backHandler.current = close
-  }, [])
-  const [posts, setPosts] = React.useState(updates)
-  React.useEffect(() => {
-    let isSubscribed = true
-    const last_id = updates.length ? updates[updates.length - 1].id : 0
-    Wrestlefeed.fetchUpdates(id, last_id).then(posts => {
-      if(isSubscribed){
-        updates.push(...posts)
-        setPosts(updates.slice(0, 10))
-      }
-    })
-    return () => isSubscribed = false
   }, [])
   return (
     <View style={{ flex: 1 }}>
       {navbar}
       <View style={styles.Updates}>
-        <ScrollView
-          style={styles.UpdatesScrollView}
-          contentContainerStyle={styles.UpdatesContainer}
-        >
-          {
-            posts.map(({ content, post_date }, i) => {
-              return <View key={i} style={styles.update}>
-                <Text style={styles.updateText}>{content}</Text>
-                <Text style={styles.updateDate}>{toDate(post_date)}</Text>
-              </View>
-            })
-          }
-          {
-            !posts.length &&
-            <Text style={styles.none}>No updates for now</Text>
-          }
-        </ScrollView>
+        <WebView
+          style={{ flex: 1, height: heightView }}
+          source={{ uri: 'https://wrestlefeed.wwfoldschool.com/updates/' }}
+          javaScriptEnabled
+          domStorageEnabled
+          startInLoadingState
+          renderLoading={() => <RenderLoading />}
+        />
       </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  none: {
-    fontSize: 12,
-    color: '#fff',
-    opacity: .6,
-    textAlign: 'center',
-    marginVertical: 40
-  },
   Updates: {
     backgroundColor: '#212121',
     justifyContent: 'space-evenly',
-    flex: 1,
-    padding: 10
-  },
-  UpdatesScrollView: {
     flex: 1
   },
-  UpdatesContainer: {
-    paddingHorizontal: 10,
-    paddingVertical: 7
+  table: {
+    width: '80%',
+    alignSelf: 'center',
+    borderColor: "#fff",
+    borderWidth: 1
   },
-  update: {
-    padding: 10,
-    marginVertical: 7,
-    backgroundColor: '#fff',
-    borderRadius: 5
+  title: {
+    color: "#fff",
+    textAlign: 'center',
+    fontSize: 20,
+    fontFamily: 'Eurostile-Bold'
   },
-  updateText: {
-    fontSize: 16
+  wLine: {
+    flexDirection: 'row',
   },
-  updateDate: {
-    textAlign: 'right',
-    color: '#b21a1a'
+  wRed: {
+    backgroundColor: '#b21a1a'
+  },
+  wNameText: {
+    paddingVertical: 10,
+    fontSize: 17,
+    color: '#fff',
+    borderColor: "#fff",
+    borderWidth: 1,
+    flex: 1,
+    textAlign: 'center'
+  },
+  wPointText: {
+    paddingVertical: 10,
+    fontSize: 17,
+    color: '#fff',
+    borderColor: "#fff",
+    borderWidth: 1,
+    width: '30%',
+    textAlign: 'center'
+  },
+  detail: {
+    width: '80%',
+    alignSelf: 'center',
+    fontStyle: 'italic',
+    color: '#fff',
+    fontSize: 16,
+    textAlign: 'center',
+    lineHeight: 23
+  },
+  counterText: {
+    color: '#fff',
+    fontSize: 10,
+    textAlign: 'right'
+  },
+  counterCount: {
+    textAlignVertical: 'center',
+    color: '#fff',
+    fontSize: 20,
+    textAlign: 'right'
+  },
+  wFList: {
+    flex: 1,
+    padding: 5
+  },
+  Wrestlers: {
+    flexDirection: 'row'
+  },
+  Wrestler: {
+    flex: 1,
+    margin: 5,
+    marginBottom: 30
+  },
+  wTextParent: {
+
+  },
+  wText: {
+    textAlign: 'center',
+    color: "white",
+    fontSize: 16,
+    paddingHorizontal: 5,
+    textAlignVertical: 'center',
+    color: '#b21a1a',
+  },
+  wPoint: {
+    textAlign: 'center',
+    color: "#333",
+    fontWeight: "100",
+    fontSize: 25,
+    paddingHorizontal: 5
+  },
+  wImage: {
+    aspectRatio: 1,
+    borderRadius: 15,
+    width: '50%',
+    alignSelf: 'center',
+    overflow: 'hidden',
+    borderColor: 'rgba(0, 0, 0, .05)',
+    borderWidth: 2,
+    resizeMode: 'cover'
+  },
+  wChosen: {
+    position: 'absolute',
+    top: '5%',
+    right: '5%',
+    width: '15%',
+    height: '15%',
+    backgroundColor: 'green',
+    borderRadius: 100
   }
 })
 
