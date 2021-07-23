@@ -6,6 +6,7 @@ import _ from 'lodash'
 
 const MyTeam = (props) => {
   const { team: { wrestlers }, backHandler, close, navbar } = props
+  
   const total = wrestlers.reduce((tot, { point }) => tot + point, 0)
   React.useEffect(() => {
     backHandler.current = close
@@ -21,10 +22,7 @@ const MyTeam = (props) => {
             <Text style={styles.wPointText}>Points</Text>
           </View>
           {
-            wrestlers.sort(({point: a, name: na}, {point: b, name: nb}) => {
-              if(a !== b) return parseFloat(a) > parseFloat(b) ? -1 : 1
-              else return na.toLowerCase() > nb.toLowerCase() ? 1 : -1   
-            })
+            _.orderBy(wrestlers, ['point', 'name'], ['desc', 'asc'])
               .map(({ name, point }, i) => {
                 return <View key={i} style={[styles.wLine]}>
                   <Text style={styles.wNameText}>{name}</Text>
@@ -39,7 +37,7 @@ const MyTeam = (props) => {
         </View>
 
         <Text style={styles.detail}>
-          {`Wrestlers' points are regularly updated by\nthe admins after every event. Your score\nwill be refreshed whenever you come\nback here next time. Good luck!`}
+          {`Wrestlers' points are regularly updated by the admins after every event. Your score will be refreshed whenever you come back here next time. Good luck!`}
         </Text>
       </View>
     </View>

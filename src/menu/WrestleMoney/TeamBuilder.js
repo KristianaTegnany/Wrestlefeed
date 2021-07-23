@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   FlatList, Keyboard, View, Text, StyleSheet,
-  TextInput, TouchableOpacity, KeyboardAvoidingView, Image
+  TextInput, TouchableOpacity, Image
 } from 'react-native'
 import { addZero } from '../../functions'
 import config from '../../config'
@@ -85,10 +85,7 @@ const TeamBuilder = (props) => {
   }, [showConf])
 
   return (
-    <View style={{ flex: 1, marginTop: keyboard - 1 || 0, transform: [{translateY: keyboard ? -16 : 0}] }}>
-      <KeyboardAvoidingView behavior='padding'/>
-      <KeyboardAvoidingView behavior='padding'/>
-      <KeyboardAvoidingView behavior='padding'/>
+    <View style={{ flex: 1, marginBottom: config.ios? (keyboard - 1 || 0) : 0, transform: [{translateY: keyboard ? -16 : 0}] }}>
       {navbar}
       <View
         style={styles.TeamBuilder}
@@ -133,11 +130,12 @@ const TeamBuilder = (props) => {
           style={styles.wFList}
           extraData={props}
           data={
-            Fuzzy.filter(search, wrestlers, { extract: ({ name }) => name }).map(one => one.original || one)
-              .sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
-              .map(wrestler => {
-                return { ...wrestler, toggler: toggleWrestler, chosen }
-              })
+            [...Fuzzy.filter(search, wrestlers.filter(w => !chosen.includes(w.id)), { extract: ({ name }) => name }).map(one => one.original || one),
+              ...wrestlers.filter(w => chosen.includes(w.id))
+            ].sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
+            .map(wrestler => {
+              return { ...wrestler, toggler: toggleWrestler, chosen }
+            })
           }
           keyExtractor={(_, i) => `${i}`}
           renderItem={Wrestler}

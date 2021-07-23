@@ -208,6 +208,7 @@ class Comment extends Component{
         let { comment_content, post_data, user_data, comment_list } = this.state;
         let { ID, display_name, fb_id } = user_data;
         
+        tracker.setUser(this.state.user_data.ID)
         tracker.trackEvent("Made", "Comment")
 
         if(!comment_content){

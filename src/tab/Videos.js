@@ -50,6 +50,7 @@ class Videos extends Component {
     componentDidMount() {
         let { post, user, push } = this.props.navigation.state.params;
 
+        tracker.setUser(this.props.navigation.state.params.user.ID)
         tracker.trackScreenView("VIDEOS")
         tracker.trackEvent("VIDEOS_click")
 

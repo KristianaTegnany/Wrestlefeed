@@ -108,6 +108,7 @@ class Menu extends Component {
   }
 
   onNotification() {
+    tracker.setUser(this.state.user_data.ID)
     tracker.trackEvent('Click', 'Notifications')
     AppEventsLogger.logEvent("Notifications_click");
     if (config.ios) {

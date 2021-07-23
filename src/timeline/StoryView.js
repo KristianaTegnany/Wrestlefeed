@@ -12,6 +12,7 @@ import config from '../config';
 import { BridPlayer, Instagram, StoryAdvanceText, StoryEM, StoryImage, StoryNavbarLogo, StoryText, Twitter, YouTubeVideo } from '../common/StoryComponent';
 import { allStyle } from '../allStyles';
 import { tracker } from '../tracker';
+import AsyncStorage from '@react-native-community/async-storage';
 
 let { height, width } = Dimensions.get('window');
 let fullHeight = height;
@@ -28,13 +29,20 @@ class StoryView extends Component{
         hide_progress: false,
         dark_mode: true,
         isNextStory: true,
-        isPrevStory: true
+        isPrevStory: true,
+        user_id: null
     }
     storyScroll = React.createRef()
     bottomSheetRef = React.createRef()
     
     componentDidMount() {
-        tracker.trackEvent('Views', 'Story')
+        AsyncStorage.getItem('uid').then((value) => {
+            if (value) {
+                this.setState({user_id: value})
+                tracker.setUser(value)
+                tracker.trackEvent('Views', 'Story')
+            }
+        })
     }
 
     renderContent = (props) => {
@@ -156,7 +164,10 @@ class StoryView extends Component{
     }
 
     onSharePost = () => {
-        tracker.trackEvent('Click', 'ShareArticle')
+        if(this.state.user_id){
+            tracker.setUser(this.state.user_id)
+            tracker.trackEvent('Click', 'ShareArticle')
+        }
         AppEventsLogger.logEvent('shareArticle');
         let { post_title, post_url } = this.state
         let shareOptions = {
@@ -173,10 +184,12 @@ class StoryView extends Component{
         this.setState({ dark_mode: !dark_mode });
         this.props.onDarkToggle()
         if(dark_mode){
+            tracker.setUser(this.state.user_id)
             tracker.trackEvent('Click', 'DayMode')
             AppEventsLogger.logEvent("DayMode_Click")
         }else{
             AppEventsLogger.logEvent("NightMode_Click")
+            tracker.setUser(this.state.user_id)
             tracker.trackEvent('Click', 'NightMode')
         }
     }

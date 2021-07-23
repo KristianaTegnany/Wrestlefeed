@@ -6,7 +6,6 @@ import _ from 'lodash'
 const PointsTable = (props) => {
   const { wrestlers, close, backHandler, updateData, navbar } = props
   
-
   React.useEffect(() => {
     backHandler.current = close
     updateData()
@@ -31,10 +30,7 @@ const PointsTable = (props) => {
           </View>
           <ScrollView>
             {
-                wrestlers.sort(({point: a, name: na}, {point: b, name: nb}) => {
-                  if(a !== b) return parseFloat(a) > parseFloat(b) ? -1 : 1
-                  else return na.toLowerCase() > nb.toLowerCase() ? 1 : -1   
-                })      
+                _.orderBy(wrestlers, ['point', 'name'], ['desc', 'asc'])
                 .map(({ name, point }, i) => {
                   return <View key={i} style={[styles.wLine]}>
                     <Text style={styles.wNameText}>{name}</Text>
