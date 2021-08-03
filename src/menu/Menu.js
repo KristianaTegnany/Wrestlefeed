@@ -166,6 +166,10 @@ class Menu extends Component {
               name="Privacy Policy" // / GDPR
               itemPress={() => navigation.navigate("FullWebview", `${config.base}/privacy-policy/`)}
             />
+            <MenuItem
+              name="Terms of Use"
+              itemPress={() => navigation.navigate("FullWebview", `${config.base}/terms-of-use/`)}
+            />
             {/* <MenuItem
               name="WWF Old School"
               itemPress={() => Linking.openURL('https://wwfoldschool.com/')}

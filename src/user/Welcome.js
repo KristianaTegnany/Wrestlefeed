@@ -11,9 +11,7 @@ import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-si
 
 import config from '../config';
 import appleAuth, {
-  AppleButton,
-  AppleAuthRequestOperation,
-  AppleAuthRequestScope
+  AppleButton
 } from '@invertase/react-native-apple-authentication'
 import Wrestlefeed from '../common/Wrestlefeed';
 import connect from '../connector';
@@ -22,7 +20,7 @@ import connect from '../connector';
 let { width, height } = Dimensions.get('screen');
 let bg_height = config.ios ? height : height
 let systemVersion = DeviceInfo.getSystemVersion();
-systemVersion = typeof (systemVersion) == 'string' ? Number(systemVersion) : systemVersion;
+//systemVersion = typeof (systemVersion) == 'string' ? Number(systemVersion) : systemVersion;
 
 class Welcome extends Component {
   state = {
@@ -178,8 +176,8 @@ class Welcome extends Component {
 
   async onAppleLogin() {
     const appleAuthRequestResponse = await appleAuth.performRequest({
-      requestedOperation: AppleAuthRequestOperation.LOGIN,
-      requestedScopes: [AppleAuthRequestScope.EMAIL, AppleAuthRequestScope.FULL_NAME],
+      requestedOperation: appleAuth.Operation.LOGIN,
+      requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME]
     });
     if (appleAuthRequestResponse) {
       let { authorizationCode, email, fullName, identityToken, nonce, user } = appleAuthRequestResponse;
@@ -262,14 +260,14 @@ class Welcome extends Component {
               <View style={{ flex: 2 }}></View>
               <View style={{ flex: 8 }}>
                 {
-                  config.ios && systemVersion > 13 ?
+                  config.ios && parseInt(systemVersion.split('.')[0]) >= 13 ?
                     <View style={{ paddingTop: 16 }}>
                       {
                         !loading_apple ?
                           <AppleButton
                             buttonStyle={AppleButton.Style.WHITE}
                             buttonType={AppleButton.Type.SIGN_IN}
-                            style={{ width: width - 140, height: 50, borderRadius: 2 }}
+                            style={{ width: '100%', height: 50, borderRadius: 2 }}
                             onPress={() => this.onAppleLogin()}
                           />
                           : <ActivityIndicator size="large" color="#b21a1a" />

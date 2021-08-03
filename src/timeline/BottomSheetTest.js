@@ -91,7 +91,6 @@ export default class BottomSheetTest extends Component{
     
 
     onZoomStateChange = event => {
-        console.log(event.nativeEvent);
         let { velocity, scale, oldState } = event.nativeEvent
         this.scale = cond(eq(oldState, State.ACTIVE), [
             // debug("ss", oldState),

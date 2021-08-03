@@ -12,7 +12,7 @@ import StoryView from '../timeline/StoryView';
 import Comment from '../timeline/Comment';
 import Menu from '../menu/Menu';
 import config from '../config';
-import { updateDarkMode, pushTabData } from '../action';
+import { updateDarkMode, pushTabData, retrieveProState } from '../action';
 import { BottomAction } from '../common/Component'
 
 let sheetOpen = false
@@ -36,6 +36,8 @@ class Raw extends Component {
 
     componentDidMount() {
         let { post, user, push } = this.props.navigation.state.params;
+        this.props.retrieveProState(user.ID)
+        
         if(post && !push){
             post.map((post_data) => {
                 let { name, data } = post_data;
@@ -281,4 +283,4 @@ const mapStateToProps = (state) => {
     };
 };
   
-export default connect(mapStateToProps, { updateDarkMode, pushTabData })(Raw);
+export default connect(mapStateToProps, { updateDarkMode, pushTabData, retrieveProState })(Raw);

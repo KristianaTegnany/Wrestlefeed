@@ -22,7 +22,7 @@ const NotSubscribed = (props) => {
     if(!loading) {
       setLoading(true)
       try {
-        await RNIap.requestSubscription(sku);
+        let res = await RNIap.requestSubscription(sku);
         props.subscribe(user.ID, user.display_name)
         close()
       } catch (err) {

@@ -13,7 +13,7 @@ import StoryView from '../timeline/StoryView';
 import Comment from '../timeline/Comment';
 import Menu from '../menu/Menu';
 import config from '../config';
-import { updateDarkMode, pushTabData } from '../action';
+import { updateDarkMode, pushTabData, retrieveProState } from '../action';
 import PlayVideoModal from '../common/PlayVideoModal';
 import { BottomAction } from '../common/Component'
 import { tracker } from '../tracker';
@@ -49,7 +49,8 @@ class Videos extends Component {
 
     componentDidMount() {
         let { post, user, push } = this.props.navigation.state.params;
-
+        this.props.retrieveProState(user.ID)
+        
         tracker.setUser(this.props.navigation.state.params.user.ID)
         tracker.trackScreenView("VIDEOS")
         tracker.trackEvent("VIDEOS_click")
@@ -311,4 +312,4 @@ const mapStateToProps = (state) => {
     };
 };
   
-export default connect(mapStateToProps, { updateDarkMode, pushTabData })(withNavigationFocus(Videos));
+export default connect(mapStateToProps, { updateDarkMode, pushTabData, retrieveProState })(withNavigationFocus(Videos));

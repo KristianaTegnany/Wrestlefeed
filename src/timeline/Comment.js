@@ -8,7 +8,6 @@ import Wrestlefeed from '../common/Wrestlefeed';
 import { AppEventsLogger } from 'react-native-fbsdk';
 import legend_icon from '../assets/images/legend.png';
 import * as Service from '../services/subscription'
-import {  withNavigationFocus } from 'react-navigation'
 import { tracker } from '../tracker'
 
 let { height } = Dimensions.get('screen');

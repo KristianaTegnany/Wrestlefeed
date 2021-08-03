@@ -47,6 +47,7 @@ const WrestleMoney = (props) => {
     navigation: { state: { params: user } }
   } = props
 
+  
   // States
   const [team, setTeam] = React.useState(wf.team)
   const [wrestlers, setWrestlers] = React.useState(wf.wrestlers)
@@ -72,6 +73,7 @@ const WrestleMoney = (props) => {
   }
 
   React.useEffect(() => {
+    props.retrieveProState(user.ID)
     updateData()
     const backHandler = BackHandler.addEventListener("hardwareBackPress", _ => {
       goBackHome()
