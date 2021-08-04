@@ -1,14 +1,13 @@
 import React from 'react'
 import {
   FlatList, Keyboard, View, Text, StyleSheet,
-  TextInput, TouchableOpacity, KeyboardAvoidingView, Image
+  TextInput, TouchableOpacity, Image
 } from 'react-native'
 import { addZero } from '../../functions'
-import { wf } from '.'
-import Axios from 'axios'
 import config from '../../config'
 import Fuzzy from 'fuzzy'
 import { RenderLoading } from '../../common/Component'
+import Axios from 'axios'
 
 const Wrestler = ({ item }) => {
   let {
@@ -20,7 +19,7 @@ const Wrestler = ({ item }) => {
   } = item
 
   if (!image) image = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/John_Cena_2010.jpg/170px-John_Cena_2010.jpg'
-  else if (!image.startsWith('http')) image = `${wf.baseUrl}/${image}`
+  else if (!image.startsWith('http')) image = `${config.wrestler_api}/${image}`
 
   return (
     <View key={id} activeOpacity={.9} style={[styles.Wrestler, { backgroundColor: chosen.includes(id) ? '#b21a1a' : "#eee" }]}>
@@ -50,7 +49,7 @@ const TeamBuilder = (props) => {
     if (chosen.length === MAX) {
       if (showConf) {
         setLoading(true)
-        const { data: team } = await Axios.post(`${wf.baseUrl}/api/team`, {
+        const { data: team } = await Axios.post(`${config.wrestler_api}/api/team`, {
           wrestlers: chosen,
           user_id: user.ID,
           name: user.display_name || ''
@@ -86,10 +85,7 @@ const TeamBuilder = (props) => {
   }, [showConf])
 
   return (
-    <View style={{ flex: 1, marginTop: keyboard - 1 || 0, transform: [{translateY: keyboard ? -16 : 0}] }}>
-      <KeyboardAvoidingView behavior='padding'/>
-      <KeyboardAvoidingView behavior='padding'/>
-      <KeyboardAvoidingView behavior='padding'/>
+    <View style={{ flex: 1, marginBottom: config.ios? (keyboard - 1 || 0) : 0, transform: [{translateY: keyboard ? -16 : 0}] }}>
       {navbar}
       <View
         style={styles.TeamBuilder}
@@ -117,7 +113,7 @@ const TeamBuilder = (props) => {
                 <TouchableOpacity onPressIn={_ => setShowConf(false)} style={styles.confButton}>
                   <Text style={styles.confButtonText}>Edit Team</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPressIn={save} style={styles.confButton}>
+                <TouchableOpacity onPressIn={save} style={[styles.confButton, { opacity: loading? 0.5 : 1 }]}>
                   <Text style={styles.confButtonText}>Freeze</Text>
                 </TouchableOpacity>
               </View>
@@ -134,11 +130,12 @@ const TeamBuilder = (props) => {
           style={styles.wFList}
           extraData={props}
           data={
-            Fuzzy.filter(search, wrestlers, { extract: ({ name }) => name }).map(one => one.original || one)
-              .sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
-              .map(wrestler => {
-                return { ...wrestler, toggler: toggleWrestler, chosen }
-              })
+            [...Fuzzy.filter(search, wrestlers.filter(w => !chosen.includes(w.id)), { extract: ({ name }) => name }).map(one => one.original || one),
+              ...wrestlers.filter(w => chosen.includes(w.id))
+            ].sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
+            .map(wrestler => {
+              return { ...wrestler, toggler: toggleWrestler, chosen }
+            })
           }
           keyExtractor={(_, i) => `${i}`}
           renderItem={Wrestler}

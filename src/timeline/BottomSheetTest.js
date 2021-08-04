@@ -7,6 +7,7 @@ import SplashScreen from 'react-native-splash-screen';
 
 import Animated, { debug } from 'react-native-reanimated';
 import { PinchGestureHandler, State } from 'react-native-gesture-handler';
+import config from '../config';
 
 let { Value, event, cond, set, clockRunning, Clock, spring, startClock, stopClock, eq } = Animated
 
@@ -90,7 +91,6 @@ export default class BottomSheetTest extends Component{
     
 
     onZoomStateChange = event => {
-        console.log(event.nativeEvent);
         let { velocity, scale, oldState } = event.nativeEvent
         this.scale = cond(eq(oldState, State.ACTIVE), [
             // debug("ss", oldState),
@@ -119,7 +119,7 @@ export default class BottomSheetTest extends Component{
                     ref='WweNews'
                     androidHardwareAccelerationDisabled={true}
                     style={{ flex: 1, width: width-32 }}
-                    source={{ uri: 'https://app.wwfoldschool.com/on-this-day-in-wwf-history-june-13-1998-wwf-shotgun-saturday-night/' }}
+                    source={{ uri: `${config.base}/on-this-day-in-wwf-history-june-13-1998-wwf-shotgun-saturday-night/` }}
                     javaScriptEnabled={true}
                     injectedJavaScript={bridgeJs}
                     domStorageEnabled

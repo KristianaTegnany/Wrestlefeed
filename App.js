@@ -2,7 +2,6 @@ import React from 'react'
 import SpInAppUpdates, {
   IAUUpdateKind
 } from 'sp-react-native-in-app-updates'
-
 import {
   Platform
 } from 'react-native'
@@ -76,7 +75,10 @@ class App extends Component {
   checkForUpdates = () => {
     this.inAppUpdates
       .checkNeedsUpdate({
-        //curVersion: '0.0.8'
+        curVersion: Platform.select({
+          android: '42',
+          ios: '1.9'
+        })
       })
       .then((result) => {
          if (result && result.shouldUpdate) {

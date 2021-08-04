@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Component } from 'react';
-import { View, Text, SafeAreaView, KeyboardAvoidingView, TextInput, Dimensions, ImageBackground, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, SafeAreaView, TextInput, Dimensions, ImageBackground, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import axios from 'axios'
 import { StackActions, NavigationActions } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -32,6 +32,11 @@ class Login extends Component {
         axios.post(config.base_api + 'feed_initial.php', { tab_name: "all", last_id: 0, user_id: uid }).then((resAllPost) => {
             this.setState({ loading: false })
             let { all_post, user } = resAllPost.data
+            all_post = all_post.map(post => {
+                if(post.name === "NEWS")
+                  return {name: post.name, data: post.data}
+                else return post
+            })
             let resetAction = StackActions.reset({
                 index: 0,
                 actions: [

@@ -15,6 +15,8 @@ import config from '../config';
 import NotSubscribed from '../menu/NotSubscribed';
 import { BottomAction } from '../common/Component'
 import connect from '../connector';
+import { tracker } from '../tracker';
+import { withNavigationFocus } from 'react-navigation'
 
 let sheetOpen = false
 let loading_more = false
@@ -31,11 +33,22 @@ class Memes extends Component {
     post_position: 0,
     user_data: '',
     hideMenu: false,
-    refresh_load: false
+    refresh_load: false,
+    closed: false
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if(nextProps.isFocused){
+      tracker.setUser(this.props.navigation.state.params.user.ID)
+      tracker.trackEvent("Click", "MEMES")
+      tracker.trackScreenView("MEMES")
+    }
   }
 
   componentDidMount() {
     let { post, user, push } = this.props.navigation.state.params;
+    this.props.retrieveProState(user.ID)
+        
     if (post && !push) {
       post.map((post_data) => {
         let { name, data } = post_data;
@@ -226,13 +239,13 @@ class Memes extends Component {
   doubleTapRef = React.createRef();
 
   render() {
-    let { post_list, post_position, hideMenu, refresh_load } = this.state
+    let { post_list, post_position, hideMenu, refresh_load, closed, user_data } = this.state
     const {
       subs: {isPro}
     } = this.props
     return (
       <View style={{ backgroundColor: '#15202b', flex: 1 }}>
-        {!isPro && <NotSubscribed />}
+        {!isPro && !closed && <NotSubscribed  user={user_data} close={() => this.setState({closed: true})}/>}
         <StatusBar hidden />
         <View style={{ position: 'absolute', left: 16, top: 12, zIndex: 1001 }}>
           {!hideMenu ? <MenuIcon onMenuPress={this.openMenu} /> : null}
@@ -283,4 +296,4 @@ class Memes extends Component {
   }
 }
 
-export default connect(Memes)
+export default connect(withNavigationFocus(Memes))

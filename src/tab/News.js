@@ -15,13 +15,16 @@ import StoryView from '../timeline/StoryView';
 import Comment from '../timeline/Comment';
 import Menu from '../menu/Menu';
 import config from '../config';
-import { pushTabData, updateDarkMode } from '../action'
+import { pushTabData, updateDarkMode, retrieveProState } from '../action'
 import { BottomAction } from '../common/Component'
 import { updateWM } from '../menu/WrestleMoney';
-
+import { tracker } from '../tracker';
+import { withNavigationFocus } from 'react-navigation'
+  
 let sheetOpen = false
 let loading_more = false
 let { width, height } = Dimensions.get('screen');
+
 class News extends Component {
     constructor() {
         super()
@@ -38,11 +41,21 @@ class News extends Component {
         refresh_load: false
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if(nextProps.isFocused){
+            tracker.setUser(this.props.navigation.state.params.user.ID)
+            tracker.trackEvent("Click", "NEWS")
+            tracker.trackScreenView("NEWS")
+        }
+    }
+      
     componentDidMount() {
+        this.props.retrieveProState(this.props.navigation.state.params.user.ID)
         this.pushManage()
         this.props.updateDarkMode(false, true);
         let params = this.props.navigation.state.params;
         let { post, user } = params;
+        
         if(params.push){
             this.showPushData(post, user);
             this.setState({ user_data: user })
@@ -208,6 +221,11 @@ class News extends Component {
                         setTimeout(() => {
                             axios.post(config.base_api+"/feed_initial.php", { tab_name: "all", last_id: 0, user_id: user.ID }).then((resAllPost) => {
                                 let { all_post } = resAllPost.data;
+                                all_post = all_post.map(post => {
+                                    if(post.name === "NEWS")
+                                      return {name: post.name, data: post.data}
+                                    else return post
+                                })
                                 let redux_tab_data = [];
                                 all_post.map((p_d, i) => {
                                     let { name, data } = p_d;
@@ -426,4 +444,4 @@ const mapStateToProps = (state) => {
     };
 };
   
-export default connect(mapStateToProps, { pushTabData, updateDarkMode })(News);
+export default connect(mapStateToProps, { pushTabData, updateDarkMode, retrieveProState })(withNavigationFocus(News));

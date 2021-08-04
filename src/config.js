@@ -12,8 +12,9 @@ export const get = (obj, ...fields) => {
 }
 
 const config = {
-    base_api: 'https://app.wwfoldschool.com/API10/',
-    prev_base_api: 'https://devapp.wwfoldschool.com/API9',
+    base: 'https://proapp.wwfoldschool.com',
+    base_api: 'https://proapp.wwfoldschool.com/API10/',
+    wrestler_api: 'https://proapp.wwfoldschool.com/wrestler',
     show_days_limit: 1,
     ios: Platform.OS == 'ios' ? true : false,
     statusbar_height: StatusBar.currentHeight,

@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, ActivityIndicator, Dimensions, ImageBackground, Platform, PixelRatio } from 'react-native';
 import AutoHeightWebView from 'react-native-autoheight-webview';
 import LinearGradient from 'react-native-linear-gradient';
-import ViewPager from '@react-native-community/viewpager';
-import Animated, {  } from 'react-native-reanimated';
+import { PagerView } from 'react-native-pager-view';
+import Animated from 'react-native-reanimated';
 import DeviceInfo from 'react-native-device-info';
 
 import config from '../config';
@@ -11,11 +11,12 @@ import { allStyle } from '../allStyles';
 import Wrestlefeed from './Wrestlefeed';
 import { TouchableComponent } from './Press';
 import PinchImage from '../timeline/PinchImage';
+import { tracker } from '../tracker';
 
 let { width, height } = Dimensions.get('screen');
 let minScreenSize = 390
 let notch = DeviceInfo.hasNotch();
-let reactionImgStyle = { width: width < minScreenSize ? 32 : 40, height: width < minScreenSize ? 32 : 40 }
+let reactionImgStyle = { alignSelf:'center', width: width < minScreenSize ? 32 : 40, height: width < minScreenSize ? 32 : 40 }
 let playBtnStyle = { width: width < minScreenSize ? 18 : 24, height: width < minScreenSize ? 18 : 24 }
 
 const commStyle = {
@@ -264,10 +265,10 @@ export const PostTime = (props) => {
 export const ReactionImage = (props) => {
     let { img_name, status, onPress, num, showText, btn_opacity } = props
     return(
-        <View style={{ flex: 2, opacity: status ? 1 : btn_opacity }}>
+        <View style={{ flex: 2, justifyContent:'center', opacity: status ? 1 : btn_opacity }}>
             <TouchableOpacity onPress={onPress}>
                 <Image source={{ uri: img_name }} style={reactionImgStyle} />
-                {showText ? <Text style={{ color: 'white', paddingLeft: 14, fontSize: 16 }}>{num}</Text> : null}
+                {showText ? <Text style={{ color: 'white', textAlign:'center', fontSize: 16 }}>{num}</Text> : null}
             </TouchableOpacity>
         </View>
     )
@@ -478,9 +479,8 @@ export const Poll = (props) => {
 export const PagerList = (props) => {
     let { post_list, index, pageRef, onPollPress } = props;
     return(
-        <ViewPager style={[{ flex: 1 }]} 
+        <PagerView style={{ flex: 1 }} 
             ref={pageRef}
-            scrollEnabled
             initialPage={index}
             orientation='vertical'
             onPageSelected={(e) => props.onPostChange(e.nativeEvent.position)}
@@ -489,7 +489,7 @@ export const PagerList = (props) => {
                 post_list.length != 0 ?
                 post_list.map((post, index) => {
                     return(
-                        <Animated.View key={index.toString()} style={{ flex: 1 }} >
+                        <View key={index.toString()} style={{ flex: 1 }} >
                             {
                                 post.post_type == "stories" && post.short_desc ?
                                     <Stories 
@@ -510,12 +510,12 @@ export const PagerList = (props) => {
                                     />
                                 : null
                             }
-                        </Animated.View>
+                        </View>
                     )
                 })
                 : null
             }
-        </ViewPager>
+        </PagerView>
     )
 }
 
@@ -541,7 +541,7 @@ export const BottomAction = (props) => {
             post_type == "stories" && short_desc ?
                 <View style={{ flexDirection: 'row', paddingBottom: 8 }}>
                     <View style={{ flex: 4 }}>
-                        <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => onReactionPress(type)} btn_opacity={0.5} />
+                        <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => {tracker.trackEvent('Click', 'Reaction'); onReactionPress(type)}} btn_opacity={0.5} />
                     </View>
                     <View style={{ flex: 1 }}>
                         <Sidebar onCommentPress={onCommentPress} react_user={react_user} />
@@ -549,7 +549,7 @@ export const BottomAction = (props) => {
                     <View style={{ flex: 2, alignItems: 'flex-end' }}>
                         {
                             isStory ?
-                                category == "videos" ? <PlayButton onReadMorePress={onReadMorePress} /> : <ReadMoreButton onReadMorePress={onReadMorePress} />
+                                category == "videos" ? <PlayButton onReadMorePress={() => {tracker.trackEvent('Click', 'ReadMore'); onReadMorePress()}} /> : <ReadMoreButton onReadMorePress={() => {tracker.trackEvent('Click', 'ReadMore'); onReadMorePress()}} />
                             : null
                         }
                     </View>
@@ -557,7 +557,7 @@ export const BottomAction = (props) => {
             : post_type == "twitter" ?
                 <View style={{ flexDirection: 'row', paddingBottom: 8 }}>
                     <View style={{ flex: 4 }}>
-                        <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => onReactionPress(type)} btn_opacity={0.5} />
+                        <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => {tracker.trackEvent('Click', 'Reaction'); onReactionPress(type)}} btn_opacity={0.5} />
                     </View>
                     <View style={{ flex: 1 }}>
                         <Sidebar onCommentPress={onCommentPress}/>
@@ -567,7 +567,7 @@ export const BottomAction = (props) => {
             : post_type == "stories" && !short_desc ?
                 <View style={{ flexDirection: 'row', paddingBottom: 8 }}>
                     <View style={{ flex: 4 }}>
-                        <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => onReactionPress(type)} btn_opacity={category == "memes" ? 0.5 : 0.8} />
+                        <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => {tracker.trackEvent('Click', 'Reaction'); onReactionPress(type)}} btn_opacity={category == "memes" ? 0.5 : 0.8} />
                     </View>
                     <View style={{ flex: 1 }}>
                         <Sidebar onCommentPress={onCommentPress} react_user={react_user} />
@@ -577,7 +577,7 @@ export const BottomAction = (props) => {
             : post_type == "poll" ?
                 <View style={{ flexDirection: 'row', paddingBottom: 8 }}>
                     <View style={{ flex: 4 }}>
-                        <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => onReactionPress(type)} />
+                        <ReactionBtns reaction={reaction} react_user={react_user} onReactionPress={(type) => {tracker.trackEvent('Click', 'Reaction'); onReactionPress(type)}} />
                     </View>
                     <View style={{ flex: 1 }}>
                         <Sidebar onCommentPress={onCommentPress}/>
@@ -595,6 +595,7 @@ export const RenderLoading = ({color, withoutText}) => {
     <View
       style={{
         flex: 1,
+        zIndex: 100,
         position: 'absolute',
         top:0,
         left: 0,

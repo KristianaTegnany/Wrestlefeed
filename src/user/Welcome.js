@@ -11,10 +11,7 @@ import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-si
 
 import config from '../config';
 import appleAuth, {
-  AppleButton,
-  AppleAuthRequestOperation,
-  AppleAuthRequestScope,
-  AppleAuthCredentialState,
+  AppleButton
 } from '@invertase/react-native-apple-authentication'
 import Wrestlefeed from '../common/Wrestlefeed';
 import connect from '../connector';
@@ -23,7 +20,7 @@ import connect from '../connector';
 let { width, height } = Dimensions.get('screen');
 let bg_height = config.ios ? height : height
 let systemVersion = DeviceInfo.getSystemVersion();
-systemVersion = typeof (systemVersion) == 'string' ? Number(systemVersion) : systemVersion;
+//systemVersion = typeof (systemVersion) == 'string' ? Number(systemVersion) : systemVersion;
 
 class Welcome extends Component {
   state = {
@@ -107,6 +104,11 @@ class Welcome extends Component {
       retrieveProState(uid)
       const resAllPost = await axios.post(config.base_api + "/feed_initial.php", { tab_name: "all", last_id: 0, user_id: uid })
       let { all_post, user } = resAllPost.data
+      all_post = all_post.map(post => {
+        if(post.name === "NEWS")
+          return {name: post.name, data: post.data}
+        else return post
+      })
       this.setState({ loading: false, loading_apple: false, loading_google: false })
       let resetAction = StackActions.reset({
         index: 0,
@@ -174,8 +176,8 @@ class Welcome extends Component {
 
   async onAppleLogin() {
     const appleAuthRequestResponse = await appleAuth.performRequest({
-      requestedOperation: AppleAuthRequestOperation.LOGIN,
-      requestedScopes: [AppleAuthRequestScope.EMAIL, AppleAuthRequestScope.FULL_NAME],
+      requestedOperation: appleAuth.Operation.LOGIN,
+      requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME]
     });
     if (appleAuthRequestResponse) {
       let { authorizationCode, email, fullName, identityToken, nonce, user } = appleAuthRequestResponse;
@@ -258,14 +260,14 @@ class Welcome extends Component {
               <View style={{ flex: 2 }}></View>
               <View style={{ flex: 8 }}>
                 {
-                  config.ios && systemVersion > 13 ?
+                  config.ios && parseInt(systemVersion.split('.')[0]) >= 13 ?
                     <View style={{ paddingTop: 16 }}>
                       {
                         !loading_apple ?
                           <AppleButton
                             buttonStyle={AppleButton.Style.WHITE}
                             buttonType={AppleButton.Type.SIGN_IN}
-                            style={{ width: width - 140, height: 50, borderRadius: 2 }}
+                            style={{ width: '100%', height: 50, borderRadius: 2 }}
                             onPress={() => this.onAppleLogin()}
                           />
                           : <ActivityIndicator size="large" color="#b21a1a" />

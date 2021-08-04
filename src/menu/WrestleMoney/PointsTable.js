@@ -1,22 +1,28 @@
 import React from 'react'
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
-import { toDate } from './Updates'
+import { toDate } from '../../functions'
+import _ from 'lodash'
 
 const PointsTable = (props) => {
   const { wrestlers, close, backHandler, updateData, navbar } = props
-  const total = wrestlers.reduce((tot, { point }) => tot + point, 0)
+  
   React.useEffect(() => {
     backHandler.current = close
     updateData()
   }, [])
+
   const lastUpdate = wrestlers.reduce((last, { updated_at: ua }) => {
     return last < ua ? ua : last
   }, "0000")
+
   return (
     <View style={{ flex: 1 }}>
       {navbar}
       <View style={styles.TeamBuilder}>
-        <Text style={styles.title}>Points last updated at: <Text style={{ color: '#b21a1a' }}>{toDate(lastUpdate)}</Text></Text>
+        {
+          lastUpdate &&
+          <Text style={styles.title}>Points last updated at: <Text style={{ color: '#b21a1a' }}>{toDate(lastUpdate)}</Text></Text>
+        }
         <View style={styles.table}>
           <View style={[styles.wLine, styles.wRed]}>
             <Text style={styles.wNameText}>Wrestlers</Text>
@@ -24,12 +30,7 @@ const PointsTable = (props) => {
           </View>
           <ScrollView>
             {
-              wrestlers
-                .filter(({ point }) => point > 0)
-                .sort(({ point: a, name: na }, { point: b, name: nb }) => {
-                  if (a !== b) return a > b ? -1 : 1
-                  else return na.toLowerCase() > nb.toLowerCase() ? 1 : -1
-                })
+                _.orderBy(wrestlers, ['point', 'name'], ['desc', 'asc'])
                 .map(({ name, point }, i) => {
                   return <View key={i} style={[styles.wLine]}>
                     <Text style={styles.wNameText}>{name}</Text>
@@ -39,10 +40,6 @@ const PointsTable = (props) => {
             }
           </ScrollView>
         </View>
-
-        <Text style={styles.detail}>
-          {`* Any Wrestler not appearing in this table has zero points in the current season`}
-        </Text>
       </View>
     </View>
   )
