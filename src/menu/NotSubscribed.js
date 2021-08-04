@@ -17,7 +17,6 @@ const NotSubscribed = (props) => {
     try {
       await RNIap.requestSubscription(sku);
       props.subscribe(user.ID, user.display_name)
-      //
     } catch (err) {
       console.warn(err.code, err.message)
     }
