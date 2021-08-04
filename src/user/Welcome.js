@@ -124,6 +124,9 @@ class Welcome extends Component {
   }
 
   sendToDashboardPush(uid, all_post, user) {
+    const { retrieveProState } = this.props
+    retrieveProState(uid) 
+
     let resetAction = StackActions.reset({
       index: 0,
       actions: [
