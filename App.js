@@ -16,6 +16,7 @@ import RNIap, {
 } from 'react-native-iap';  
 
 import { Component } from 'react'
+import DeviceInfo from 'react-native-device-info'
 
 const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
 class App extends Component {
@@ -31,7 +32,6 @@ class App extends Component {
   
   async componentDidMount() {
     this.checkForUpdates()
-    
     RNIap.initConnection().then(() => {
       RNIap.flushFailedPurchasesCachedAsPendingAndroid().catch(() => {
       }).then(() => {
@@ -75,10 +75,7 @@ class App extends Component {
   checkForUpdates = () => {
     this.inAppUpdates
       .checkNeedsUpdate({
-        curVersion: Platform.select({
-          android: '42',
-          ios: '1.9'
-        })
+        curVersion: DeviceInfo.getVersion()
       })
       .then((result) => {
          if (result && result.shouldUpdate) {
