@@ -5,6 +5,7 @@ import firebase from 'react-native-firebase';
 import { registerAppListener } from "./Listeners";
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 import DeviceInfo from 'react-native-device-info';
+import AsyncStorage from '@react-native-community/async-storage'
 
 import Welcome from './user/Welcome';
 import Login from './user/Login';
@@ -24,6 +25,8 @@ import Aew from './tab/Aew';
 import Divas from './tab/Divas';
 import config from './config';
 import Tabs from './common/Tabs';
+import connect from './connector'
+import { tracker } from './tracker';
 
 let notch = DeviceInfo.hasNotch();
 
@@ -100,18 +103,20 @@ const AppContainer = createAppContainer(AppNavigator);
 
 class AppBase extends Component {
     async componentDidMount() {
+        AsyncStorage.getItem('uid').then((value) => {
+            if (value) {
+                tracker.setUser(value);
+                this.props.retrieveProState(value);
+            }
+        })
+
         registerAppListener(this.props.navigation); 
-        this.getFirebaseSetup()
         try {
             await firebase.messaging().requestPermission();
             // User has authorised
         } catch (error) {
             // User has rejected permissions
         }
-    }
-
-    getFirebaseSetup() {
-        
     }
 
     render() {
@@ -121,4 +126,4 @@ class AppBase extends Component {
     }
 }
 
-export default AppBase;
+export default connect(AppBase);

@@ -8,7 +8,7 @@ import { AppEventsLogger } from 'react-native-fbsdk';
 import SplashScreen from 'react-native-splash-screen'
 import RNBootSplash from "react-native-bootsplash";
 
-let { width, height } = Dimensions.get('window')
+let { width } = Dimensions.get('window')
 
 class Wrestlefeed {
     static async  fetchPostData(tab_name, last_id, user_id){

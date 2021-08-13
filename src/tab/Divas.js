@@ -39,16 +39,19 @@ class Divas extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if(nextProps.isFocused){
-      tracker.setUser(this.props.navigation.state.params.user.ID)
       tracker.trackEvent("Click", "DIVAS")
       tracker.trackScreenView("DIVAS")
     }
   }
 
+  UNSAFE_componentWillMount(){
+    let { user } = this.props.navigation.state.params;
+    this.props.retrieveProState(user.ID);
+  }
+
   componentDidMount() {
     let { post, user, push } = this.props.navigation.state.params;
-    this.props.retrieveProState(user.ID)
-        
+    
     if (post && !push) {
       post.map((post_data) => {
         let { name, data } = post_data;

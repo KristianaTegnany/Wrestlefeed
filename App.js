@@ -1,8 +1,8 @@
 import React from 'react'
-import SpInAppUpdates, {
-  IAUUpdateKind
-} from 'sp-react-native-in-app-updates'
 import {
+  Alert,
+  BackHandler,
+  Linking,
   Platform
 } from 'react-native'
 import { Provider } from 'react-redux'
@@ -15,17 +15,14 @@ import RNIap, {
   purchaseUpdatedListener,
 } from 'react-native-iap';  
 
+import VersionCheck from 'react-native-version-check';
 import { Component } from 'react'
-import DeviceInfo from 'react-native-device-info'
 
 const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
 class App extends Component {
 
   constructor(props) {
     super(props)
-    this.inAppUpdates = new SpInAppUpdates(
-      true
-    )
     this.purchaseUpdateSubscription = null
     this.purchaseErrorSubscription = null
   }
@@ -72,25 +69,28 @@ class App extends Component {
     }
   }
   
-  checkForUpdates = () => {
-    this.inAppUpdates
-      .checkNeedsUpdate({
-        curVersion: DeviceInfo.getVersion()
-      })
-      .then((result) => {
-         if (result && result.shouldUpdate) {
-          let updateOptions = {}
-          if (Platform.OS === 'android') {
-            updateOptions = {
-              updateType: IAUUpdateKind.IMMEDIATE,
+  checkForUpdates = async () => {
+    try {
+      let updateNeeded = await VersionCheck.needUpdate();
+      if (updateNeeded && updateNeeded.isNeeded) {
+        Alert.alert(
+          'Please Update', 
+          'You will have to update your app to the latest version to continue using.',
+          [
+            {
+              text: 'Update',
+              onPress: () => {
+                BackHandler.exitApp();
+                Linking.openURL(updateNeeded.storeUrl)
+              }
             }
-          }
-          this.inAppUpdates.startUpdate(updateOptions)
-        }
-      })
-      .catch((error) => {
-        
-      })
+          ],
+          { cancelable: false }
+        )
+      }
+    } catch(error) {
+      console.log(error)
+    }
   }
 
   render () {

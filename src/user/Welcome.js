@@ -6,6 +6,7 @@ import { LoginManager, AccessToken } from "react-native-fbsdk";
 import firebase from 'react-native-firebase';
 import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
+import connect from '../connector';
 
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
@@ -14,7 +15,7 @@ import appleAuth, {
   AppleButton
 } from '@invertase/react-native-apple-authentication'
 import Wrestlefeed from '../common/Wrestlefeed';
-import connect from '../connector';
+import { tracker } from '../tracker';
 
 
 let { width, height } = Dimensions.get('screen');
@@ -99,9 +100,9 @@ class Welcome extends Component {
   }
 
   async sendToDashboard(uid) {
-    const { retrieveProState } = this.props
+    tracker.setUser(uid.toString());
+    this.props.retrieveProState(uid.toString());
     try{
-      retrieveProState(uid)
       const resAllPost = await axios.post(config.base_api + "/feed_initial.php", { tab_name: "all", last_id: 0, user_id: uid })
       let { all_post, user } = resAllPost.data
       all_post = all_post.map(post => {
@@ -124,9 +125,8 @@ class Welcome extends Component {
   }
 
   sendToDashboardPush(uid, all_post, user) {
-    const { retrieveProState } = this.props
-    retrieveProState(uid) 
-
+    tracker.setUser(uid.toString());
+    this.props.retrieveProState(uid.toString());
     let resetAction = StackActions.reset({
       index: 0,
       actions: [
@@ -338,4 +338,4 @@ class Welcome extends Component {
   }
 }
 
-export default connect(Welcome, []);
+export default connect(Welcome);

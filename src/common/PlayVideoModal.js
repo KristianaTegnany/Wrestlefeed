@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
 import { View, Text, Modal, Dimensions, Image, TouchableOpacity, Platform } from 'react-native'
-import { YouTubeStandaloneAndroid, YouTubeStandaloneIOS } from 'react-native-youtube';
+import Youtube, { YouTubeStandaloneAndroid, YouTubeStandaloneIOS } from 'react-native-youtube';
 import AutoHeightWebView from 'react-native-autoheight-webview';
 import config from '../config';
 let { height, width } = Dimensions.get('window');
@@ -23,7 +23,10 @@ class PlayVideoModal extends Component {
             if(Platform.OS == 'ios'){
                 YouTubeStandaloneIOS.playVideo(youtube_id)
                 .then(message => console.log(message))
-                .catch(errorMessage => console.error(errorMessage));
+                .catch(errorMessage => {
+                    this.setState({status: true})
+                    console.error(errorMessage)
+                });
               
             }else{
                 YouTubeStandaloneAndroid.playVideo({
@@ -81,7 +84,8 @@ class PlayVideoModal extends Component {
                                             />  
                                         </View>
                                 </View>
-                            : null
+                            : 
+                            <Youtube videoId={this.state.youtube_id} play fullscreen style={{flex: 1}} />
                         }
                     </View>
                 </Modal>

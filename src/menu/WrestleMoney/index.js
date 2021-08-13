@@ -73,7 +73,7 @@ const WrestleMoney = (props) => {
   }
 
   React.useEffect(() => {
-    props.retrieveProState(user.ID)
+    props.retrieveProState(user.ID);
     updateData()
     const backHandler = BackHandler.addEventListener("hardwareBackPress", _ => {
       goBackHome()
@@ -83,7 +83,6 @@ const WrestleMoney = (props) => {
   }, [])
 
   React.useEffect(() => {
-    tracker.setUser(user.ID)
     tracker.trackEvent("Click", "WrestleMoney")
     tracker.trackScreenView('WrestleMoney')
   },[props.isFocused])

@@ -72,7 +72,6 @@ class Menu extends Component {
   }
 
   onRateUs = () => {
-    tracker.setUser(this.state.user_data.ID)
     tracker.trackEvent('Click', 'RateUs')
 
     AppEventsLogger.logEvent("RateUs_click");
@@ -108,7 +107,6 @@ class Menu extends Component {
   }
 
   onNotification() {
-    tracker.setUser(this.state.user_data.ID)
     tracker.trackEvent('Click', 'Notifications')
     AppEventsLogger.logEvent("Notifications_click");
     if (config.ios) {

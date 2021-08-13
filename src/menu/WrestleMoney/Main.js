@@ -15,7 +15,6 @@ const Main = (props) => {
 
   const cancelSubscription = () => {
     // TO DO : how to get if the user was really unsubscribed? 
-    tracker.setUser(props.user.ID)
     tracker.trackEvent('Click', 'Cancel_sub')
     
     props.unsubscribe(props.user.ID)

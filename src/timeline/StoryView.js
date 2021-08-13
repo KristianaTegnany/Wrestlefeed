@@ -39,7 +39,6 @@ class StoryView extends Component{
         AsyncStorage.getItem('uid').then((value) => {
             if (value) {
                 this.setState({user_id: value})
-                tracker.setUser(value)
                 tracker.trackEvent('Views', 'Story')
             }
         })
@@ -165,7 +164,6 @@ class StoryView extends Component{
 
     onSharePost = () => {
         if(this.state.user_id){
-            tracker.setUser(this.state.user_id)
             tracker.trackEvent('Click', 'ShareArticle')
         }
         AppEventsLogger.logEvent('shareArticle');
@@ -184,12 +182,10 @@ class StoryView extends Component{
         this.setState({ dark_mode: !dark_mode });
         this.props.onDarkToggle()
         if(dark_mode){
-            tracker.setUser(this.state.user_id)
             tracker.trackEvent('Click', 'DayMode')
             AppEventsLogger.logEvent("DayMode_Click")
         }else{
             AppEventsLogger.logEvent("NightMode_Click")
-            tracker.setUser(this.state.user_id)
             tracker.trackEvent('Click', 'NightMode')
         }
     }

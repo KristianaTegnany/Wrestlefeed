@@ -37,9 +37,13 @@ class Memes extends Component {
     closed: false
   }
 
+  UNSAFE_componentWillMount(){
+    let { user } = this.props.navigation.state.params;
+    this.props.retrieveProState(user.ID);
+  }
+
   UNSAFE_componentWillReceiveProps(nextProps) {
     if(nextProps.isFocused){
-      tracker.setUser(this.props.navigation.state.params.user.ID)
       tracker.trackEvent("Click", "MEMES")
       tracker.trackScreenView("MEMES")
     }
@@ -47,7 +51,6 @@ class Memes extends Component {
 
   componentDidMount() {
     let { post, user, push } = this.props.navigation.state.params;
-    this.props.retrieveProState(user.ID)
         
     if (post && !push) {
       post.map((post_data) => {

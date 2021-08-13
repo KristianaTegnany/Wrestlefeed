@@ -12,7 +12,7 @@ import StoryView from '../timeline/StoryView';
 import Comment from '../timeline/Comment';
 import Menu from '../menu/Menu';
 import config from '../config';
-import { updateDarkMode, pushTabData, retrieveProState } from '../action';
+import { updateDarkMode, pushTabData } from '../action';
 import { BottomAction } from '../common/Component';
 import { tracker } from '../tracker';
 import { withNavigationFocus } from 'react-navigation'
@@ -38,7 +38,6 @@ class Aew extends Component {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if(nextProps.isFocused){
-            tracker.setUser(this.props.navigation.state.params.user.ID)
             tracker.trackEvent("Click", "AEW")
             tracker.trackScreenView("AEW")
         }
@@ -46,7 +45,6 @@ class Aew extends Component {
 
     componentDidMount() {
         let { post, user, push } = this.props.navigation.state.params;
-        this.props.retrieveProState(user.ID)
         
         if(post && !push){
             post.map((post_data) => {
@@ -291,4 +289,4 @@ const mapStateToProps = (state) => {
     };
 };
   
-export default connect(mapStateToProps, { updateDarkMode, pushTabData, retrieveProState })(withNavigationFocus(Aew));
+export default connect(mapStateToProps, { updateDarkMode, pushTabData })(withNavigationFocus(Aew));

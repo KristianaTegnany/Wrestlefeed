@@ -6,8 +6,10 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import config from '../config';
 import { allStyle } from '../allStyles';
+import connect from '../connector';
 
 import { UserButton, BackWithText } from '../common/Component';
+import { tracker } from '../tracker';
 
 
 let { width, height } = Dimensions.get('screen');
@@ -64,6 +66,8 @@ class Login extends Component {
                 let { Login } = resLogin.data;
                 if(Login.msg == "Success"){
                     this.storeAndSend(Login.uid);
+                    tracker.setUser(Login.uid.toString());
+                    this.props.retrieveProState(Login.uid.toString());
                 }else{
                     this.setState({ loginError: 'Email and password mismatch', loading: false })
                 }
@@ -148,4 +152,4 @@ class Login extends Component {
     }
 }
 
-export default Login;
+export default connect(Login);

@@ -15,7 +15,7 @@ import StoryView from '../timeline/StoryView';
 import Comment from '../timeline/Comment';
 import Menu from '../menu/Menu';
 import config from '../config';
-import { pushTabData, updateDarkMode, retrieveProState } from '../action'
+import { pushTabData, updateDarkMode } from '../action'
 import { BottomAction } from '../common/Component'
 import { updateWM } from '../menu/WrestleMoney';
 import { tracker } from '../tracker';
@@ -43,14 +43,12 @@ class News extends Component {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if(nextProps.isFocused){
-            tracker.setUser(this.props.navigation.state.params.user.ID)
             tracker.trackEvent("Click", "NEWS")
             tracker.trackScreenView("NEWS")
         }
     }
       
-    componentDidMount() {
-        this.props.retrieveProState(this.props.navigation.state.params.user.ID)
+    async componentDidMount() {
         this.pushManage()
         this.props.updateDarkMode(false, true);
         let params = this.props.navigation.state.params;
@@ -444,4 +442,4 @@ const mapStateToProps = (state) => {
     };
 };
   
-export default connect(mapStateToProps, { pushTabData, updateDarkMode, retrieveProState })(withNavigationFocus(News));
+export default connect(mapStateToProps, { pushTabData, updateDarkMode })(withNavigationFocus(News));
