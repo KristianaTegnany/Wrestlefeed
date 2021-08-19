@@ -38,6 +38,7 @@ class Wrestlefeed {
 
     static updateToken(user_id){
         firebase.messaging().getToken().then(token => {
+            console.log('token' + token)
             axios.post(config.base_api + '/firebase_token.php', { user_id, token }).then((resToken) => {})
         });
     }

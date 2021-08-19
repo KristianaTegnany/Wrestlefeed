@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StatusBar, Dimensions, BackHandler } from 'react-native'
+import { View, Text, StatusBar, Dimensions, BackHandler, Modal } from 'react-native'
 import { TapGestureHandler, State } from 'react-native-gesture-handler'
 import Animated, {  } from 'react-native-reanimated';
 import { AppEventsLogger } from 'react-native-fbsdk';
@@ -36,7 +36,8 @@ class Videos extends Component {
         post_position: 0,
         user_data: '',
         hideMenu: false,
-        refresh_load: false
+        refresh_load: false,
+        isOpenVideo: false
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {

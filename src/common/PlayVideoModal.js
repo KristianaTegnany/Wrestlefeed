@@ -1,6 +1,6 @@
-import React, { Component, useState } from 'react';
-import { View, Text, Modal, Dimensions, Image, TouchableOpacity, Platform } from 'react-native'
-import Youtube, { YouTubeStandaloneAndroid, YouTubeStandaloneIOS } from 'react-native-youtube';
+import React, { Component } from 'react';
+import { View, Modal, Dimensions, Image, TouchableOpacity, Platform } from 'react-native'
+import Youtube, { YouTubeStandaloneAndroid } from 'react-native-youtube';
 import AutoHeightWebView from 'react-native-autoheight-webview';
 import config from '../config';
 let { height, width } = Dimensions.get('window');
@@ -19,16 +19,13 @@ class PlayVideoModal extends Component {
             this.setState({ type, player_id, video_id, status: true });
         }else{
             let { type, youtube_id } = data
-            this.setState({ type, youtube_id })
-            if(Platform.OS == 'ios'){
-                YouTubeStandaloneIOS.playVideo(youtube_id)
-                .then(message => console.log(message))
-                .catch(errorMessage => {
-                    this.setState({status: true})
-                    console.error(errorMessage)
-                });
-              
-            }else{
+            this.setState({ type, youtube_id, status: Platform.OS == 'ios' })
+            /*YouTubeStandaloneIOS.playVideo(youtube_id)
+            .then(message => console.log(message))
+            .catch(errorMessage => {
+                console.error(errorMessage)
+            });*/
+            if(Platform.OS !== 'ios'){
                 YouTubeStandaloneAndroid.playVideo({
                     apiKey: 'AIzaSyA4CG8_qmW6LQ4KMAuUv-LKzbfKD-4O7J4', // Your YouTube Developer API Key
                     videoId: youtube_id, // YouTube video ID
@@ -85,7 +82,7 @@ class PlayVideoModal extends Component {
                                         </View>
                                 </View>
                             : 
-                            <Youtube videoId={this.state.youtube_id} play fullscreen style={{flex: 1}} />
+                            <Youtube apiKey='AIzaSyA4CG8_qmW6LQ4KMAuUv-LKzbfKD-4O7J4' videoId={this.state.youtube_id} play fullscreen style={{flex: 1}} />
                         }
                     </View>
                 </Modal>
