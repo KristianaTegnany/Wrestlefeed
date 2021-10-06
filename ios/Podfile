@@ -7,8 +7,9 @@ target 'wrestlefeed' do
   config = use_native_modules!
   pod 'Firebase/Core', '~> 6.10.0'
   pod 'Firebase/Messaging'
-  pod 'XCDYouTubeKit', :git => 'https://github.com/hinge-agency/XCDYouTubeKit.git', :branch => 'fix/issue-534-XCDYouTubeVideoErrorDomain-error-code-3'
-  
+  pod 'XCDYouTubeKit', '~> 2.8'
+  pod 'Firebase/AdMob'
+
   use_react_native!(:path => config["reactNativePath"])
 
 

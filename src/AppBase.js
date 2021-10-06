@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Platform, View } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import firebase from 'react-native-firebase';
@@ -25,8 +26,10 @@ import Aew from './tab/Aew';
 import Divas from './tab/Divas';
 import config from './config';
 import Tabs from './common/Tabs';
-import connect from './connector'
 import { tracker } from './tracker';
+
+const { Banner, AdRequest } = firebase.admob
+const request = new AdRequest()
 
 let notch = DeviceInfo.hasNotch();
 
@@ -80,13 +83,28 @@ const Dashboard = createMaterialTopTabNavigator(
     }
 )
 
+const DashboardWithAds = (props) => {
+    return(
+        <>
+            <Dashboard {...props}/>
+            <Banner
+                unitId={Platform.OS === 'ios'? 'ca-app-pub-5290391503017361/1996651647' : 'ca-app-pub-5290391503017361/1801210520'}
+                size={"SMART_BANNER"}
+                request={request.build()}
+            />
+        </>
+    )
+}
+
+DashboardWithAds.router = Dashboard.router
+
 const AppNavigator = createStackNavigator(
     {
         Welcome: Welcome,
         Login: Login,
         SignUp: SignUp,
         ForgotPassword: ForgotPassword,
-        Dashboard: Dashboard,
+        Dashboard: DashboardWithAds,
         ContactUs: ContactUs,
         WrestleMoney: WrestleMoney,
         FullWebview: FullWebview,
@@ -99,14 +117,11 @@ const AppNavigator = createStackNavigator(
 );
 const AppContainer = createAppContainer(AppNavigator);
 
-
-
 class AppBase extends Component {
     async componentDidMount() {
         AsyncStorage.getItem('uid').then((value) => {
             if (value) {
                 tracker.setUser(value);
-                this.props.retrieveProState(value);
             }
         })
 
@@ -126,4 +141,4 @@ class AppBase extends Component {
     }
 }
 
-export default connect(AppBase);
+export default AppBase;

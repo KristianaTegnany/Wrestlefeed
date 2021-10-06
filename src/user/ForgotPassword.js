@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Component } from 'react';
-import { View, Text, SafeAreaView, Image, TextInput, Dimensions, ImageBackground, KeyboardAvoidingView } from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, SafeAreaView, TextInput, Dimensions, ImageBackground } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { UserButton, BackWithText } from '../common/Component';
 import axios from 'axios';

@@ -12,8 +12,6 @@ import MyTeam from './MyTeam';
 import Updates from './Updates';
 import Rules from './Rules';
 import Main from './Main';
-import NotSubscribed from '../NotSubscribed'
-import connect from '../../connector';
 import { withNavigationFocus } from 'react-navigation'
 import { tracker } from '../../tracker';
 import config from '../../config';
@@ -73,7 +71,6 @@ const WrestleMoney = (props) => {
   }
 
   React.useEffect(() => {
-    props.retrieveProState(user.ID);
     updateData()
     const backHandler = BackHandler.addEventListener("hardwareBackPress", _ => {
       goBackHome()
@@ -104,25 +101,7 @@ const WrestleMoney = (props) => {
   )
 }
 
-const GoPro = (props) => {
-  const { close, user } = props
-  return <View
-    style={{
-      backgroundColor: '#212121',
-      position: 'absolute',
-      overflow: 'hidden',
-      zIndex: 9999999,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      height: Dimensions.get('screen').height
-    }}
-  >
-    <NotSubscribed user={user} cancelable close={close} />
-  </View>
-}
-
-const funcs = ({ subs: { isPro } }, { team }) => [
+const funcs = ({ team }) => [
   {
     title: _defTitle,
     component: Main,
@@ -130,11 +109,11 @@ const funcs = ({ subs: { isPro } }, { team }) => [
   },
   {
     title: 'My Team',
-    component: isPro ? (team && team.wrestlers ? MyTeam : TeamBuilder) : GoPro
+    component: team && team.wrestlers ? MyTeam : TeamBuilder
   },
   {
     title: 'Points Table',
-    component: isPro? PointsTable : GoPro,
+    component: PointsTable,
     condition: _ => team && team.wrestlers && team.wrestlers.length,
     errorText: 'You need to make a team first!'
   },
@@ -144,8 +123,8 @@ const funcs = ({ subs: { isPro } }, { team }) => [
   },
   {
     title: 'Updates',
-    component: isPro? Updates : GoPro
+    component: Updates
   }
 ]
 
-export default connect(withNavigationFocus(WrestleMoney))
+export default withNavigationFocus(WrestleMoney)

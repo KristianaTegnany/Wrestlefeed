@@ -1,28 +1,20 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {
-  Linking, View, Text, StyleSheet,
+  View, Text, StyleSheet,
   TouchableOpacity, Platform, ImageBackground
 } from 'react-native'
+import firebase from 'react-native-firebase'
+
+const { Banner, AdRequest } = firebase.admob
+const request = new AdRequest()
+
 import Error from './Error'
 import { RenderLoading } from '../../common/Component';
 import bg from '../../assets/images/bg.png'
-import connect from '../../connector';
-import { tracker } from '../../tracker';
 
 const Main = (props) => {
-  const { navbar, funcs, backHandler, updateData, setActive } = props
+  const { navbar, funcs, backHandler, setActive } = props
   const [errorText, setErrorText] = React.useState('')
-
-  const cancelSubscription = () => {
-    // TO DO : how to get if the user was really unsubscribed? 
-    tracker.trackEvent('Click', 'Cancel_sub')
-    
-    props.unsubscribe(props.user.ID)
-    if(Platform.OS === 'ios')
-      Linking.openURL('https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/manageSubscriptions')
-    else if(Platform.OS === 'android')
-      Linking.openURL('https://play.google.com/store/account/subscriptions?package=com.wrestlefeed&sku=wf_20_pro_user')
-  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -63,13 +55,12 @@ const Main = (props) => {
           (!!errorText && errorText !== 'Loading') &&
           <Error text={errorText} close={backHandler.current} />
         }
-        {
-          props.subs && props.subs.isPro &&
-          <TouchableOpacity style={{ position: 'absolute', left: 0, right: 0, bottom: 60 }} onPress={cancelSubscription}>
-            <Text style={[styles.btnText, { fontSize: 14, color: '#d7d4d4' }]}>Cancel my subscription</Text>
-          </TouchableOpacity>
-        }
       </ImageBackground>
+      <Banner
+        unitId={Platform.OS === 'ios'? 'ca-app-pub-5290391503017361/1996651647' : 'ca-app-pub-5290391503017361/1801210520'}
+        size={"SMART_BANNER"}
+        request={request.build()}
+      />
     </View>
   )
 }
@@ -101,4 +92,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default connect(Main)
+export default Main

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StatusBar, Dimensions, BackHandler, AppState, Text } from 'react-native'
+import { View, StatusBar, Dimensions, BackHandler, AppState, Platform } from 'react-native'
 import { TapGestureHandler, State } from 'react-native-gesture-handler'
 import AsyncStorage from "@react-native-community/async-storage";
 import Animated, {  } from 'react-native-reanimated';
@@ -10,7 +10,7 @@ import axios from 'axios'
 import firebase from 'react-native-firebase';
 
 import Wrestlefeed from '../common/Wrestlefeed'
-import { PagerListWrapper, MenuIcon, PleaseWait, RefreshIcon } from '../common/Component'
+import { PagerListWrapper, MenuIcon, PleaseWait, RefreshIcon, MoneyIcon } from '../common/Component'
 import StoryView from '../timeline/StoryView';
 import Comment from '../timeline/Comment';
 import Menu from '../menu/Menu';
@@ -20,7 +20,7 @@ import { BottomAction } from '../common/Component'
 import { updateWM } from '../menu/WrestleMoney';
 import { tracker } from '../tracker';
 import { withNavigationFocus } from 'react-navigation'
-  
+
 let sheetOpen = false
 let loading_more = false
 let { width, height } = Dimensions.get('screen');
@@ -384,6 +384,7 @@ class News extends Component {
                     { !hideMenu ? <MenuIcon onMenuPress={this.openMenu} /> : null }
                 </View>
                 <RefreshIcon onRefreshPress={this.onRefreshPost} status={refresh_load} hideMenu={hideMenu} />
+                <MoneyIcon onPress={() => this.props.navigation.navigate("WrestleMoney", this.state.user_data)} hidden={hideMenu}/>
                 <View style={{ flex: 850 }}>
                     <TapGestureHandler
                         onHandlerStateChange={this.singleTap}

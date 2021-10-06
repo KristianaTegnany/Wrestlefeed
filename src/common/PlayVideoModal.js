@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Modal, Dimensions, Image, TouchableOpacity, Platform } from 'react-native'
-import Youtube, { YouTubeStandaloneAndroid } from 'react-native-youtube';
+import Youtube, { YouTubeStandaloneAndroid, YouTubeStandaloneIOS } from 'react-native-youtube';
 import AutoHeightWebView from 'react-native-autoheight-webview';
 import config from '../config';
 let { height, width } = Dimensions.get('window');
@@ -20,12 +20,13 @@ class PlayVideoModal extends Component {
         }else{
             let { type, youtube_id } = data
             this.setState({ type, youtube_id, status: Platform.OS == 'ios' })
-            /*YouTubeStandaloneIOS.playVideo(youtube_id)
-            .then(message => console.log(message))
-            .catch(errorMessage => {
-                console.error(errorMessage)
-            });*/
-            if(Platform.OS !== 'ios'){
+            if(Platform.OS === 'ios')
+                YouTubeStandaloneIOS.playVideo(youtube_id)
+                .then(message => console.log(message))
+                .catch(errorMessage => {
+                    console.error(errorMessage)
+                });
+            else
                 YouTubeStandaloneAndroid.playVideo({
                     apiKey: 'AIzaSyA4CG8_qmW6LQ4KMAuUv-LKzbfKD-4O7J4', // Your YouTube Developer API Key
                     videoId: youtube_id, // YouTube video ID
@@ -34,7 +35,6 @@ class PlayVideoModal extends Component {
                   })
                 .then(() => console.log('Standalone Player Exited'))
                 .catch(errorMessage => console.error(errorMessage));
-            }
         }
         
     }
@@ -82,7 +82,7 @@ class PlayVideoModal extends Component {
                                         </View>
                                 </View>
                             : 
-                            <Youtube apiKey='AIzaSyA4CG8_qmW6LQ4KMAuUv-LKzbfKD-4O7J4' videoId={this.state.youtube_id} play fullscreen style={{flex: 1}} />
+                            null
                         }
                     </View>
                 </Modal>

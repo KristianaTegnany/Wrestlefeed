@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { Component } from 'react';
 import { View, Text, Dimensions, Image, Keyboard, Platform, ActivityIndicator } from 'react-native';
 import BottomSheet from 'reanimated-bottom-sheet'
 import { TouchableOpacity, TextInput, FlatList } from 'react-native-gesture-handler';
@@ -7,7 +7,6 @@ import config from '../config';
 import Wrestlefeed from '../common/Wrestlefeed';
 import { AppEventsLogger } from 'react-native-fbsdk';
 import legend_icon from '../assets/images/legend.png';
-import * as Service from '../services/subscription'
 import { tracker } from '../tracker'
 
 let { height } = Dimensions.get('screen');
@@ -18,41 +17,10 @@ let heightForKeyboard = height + key_height - height/10
 isKeyboardActive = false;
 let commenting = false
 
-const Legend = (props) => {
-    return (
-      <View style={{marginLeft: 10, flexDirection:'row', alignSelf:'center', alignItems: 'flex-end'}}> 
-        <Image
-          source={legend_icon}
-          style={{ width: 25, height: 25}}
-        />
-        {
-            props.comment_author.length < 20 &&
-            <>
-                <Text style={{color: '#c9952c', fontFamily: Platform.OS === 'ios'? 'Eurostile' : 'Eurostile-Bold', marginHorizontal: 5}}>LEGEND</Text>
-                <Image
-                source={legend_icon}
-                style={{ width: 25, height: 25}}
-                />
-            </>
-        }
-      </View>
-    )
-}
-
 const CommentItem = (props) => {
-    const [isPro, setIsPro] = useState(false)
-    let { user_id, comment_content, comment_author, comment_date, comment_author_url } = props.data;
+    let { comment_content, comment_author, comment_date, comment_author_url } = props.data;
     let valid_comment_date = Wrestlefeed.getFormatDate(comment_date);
     
-    const getSubscription = async () => {
-        const { subscribed } = await Service.retrieveProState(user_id)
-        setIsPro(subscribed)
-    }
-
-    useEffect(() => {
-        getSubscription()
-    }, [])
-
     return(
         <View style={{  }}>
             <View style={{ flexDirection: 'row', flexWrap:'wrap' }}>
@@ -71,16 +39,9 @@ const CommentItem = (props) => {
                 <View style={{ justifyContent: 'center', paddingLeft: 8, paddingRight: 8 }}>
                     <View style={{  backgroundColor: '#B21A1A', width: 8, height: 8, borderRadius: 4 }}></View>
                 </View>
-                {
-                    !isPro &&
-                    <View style={{ justifyContent: 'center' }}>
-                        <Text>{valid_comment_date}</Text>
-                    </View>
-                }
-                {
-                    isPro &&
-                    <Legend comment_author={comment_author}/>
-                }
+                <View style={{ justifyContent: 'center' }}>
+                    <Text>{valid_comment_date}</Text>
+                </View>
             </View>
             <View style={{ paddingTop: 8, paddingBottom: 24, flexDirection: 'row', flexWrap: 'wrap'  }}>
                 <View style={{ backgroundColor: 'rgba(85,87,99,0.08)', alignItems: 'center', padding: 8, borderRadius: 8, paddingLeft: 16, paddingRight: 16 }}>
@@ -95,6 +56,7 @@ class Comment extends Component{
     constructor() {
         super();
         this.bottomSheetRef = React.createRef();
+        this.inputRef = React.createRef();
     }
     state = {
         comment_list: [],
@@ -126,7 +88,7 @@ class Comment extends Component{
         let { comment_list, loading, comment_content, comment_placeholder } = this.state;
         return(
             <View style={{ height: storyHeight, backgroundColor: 'white', padding: 16 }} key="0">
-                <View style={{ height: storyHeight-130 }}>
+                <View style={{ height: storyHeight - (Platform.OS === 'ios'? 130 :210) }}>
                     <View style={{ flex: 1, justifyContent: 'flex-end' }}>
                         {
                             !loading?
@@ -149,6 +111,7 @@ class Comment extends Component{
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ flex: 8 }}>
                             <TextInput 
+                                ref={this.inputRef}
                                 style={{ height: 40, color: 'black' }}
                                 placeholder={comment_placeholder} 
                                 onChangeText={(text) => this.setState({ comment_content: text })}
@@ -203,7 +166,7 @@ class Comment extends Component{
     }
 
     onComment = () => {
-        let { comment_content, post_data, user_data, comment_list } = this.state;
+        let { comment_content, post_data, user_data } = this.state;
         let { ID, display_name, fb_id } = user_data;
         
         tracker.trackEvent("Made", "Comment")
@@ -253,6 +216,7 @@ class Comment extends Component{
     }
 
     hideKeyboard = () => {
+        this.inputRef.current.blur()
         let { isOpenComment } = this.state;
         if(isOpenComment && isKeyboardActive){
             this.bottomSheetRef.current.snapTo(1)
@@ -292,7 +256,7 @@ class Comment extends Component{
             <View style={{ flex: 1 }}>
                 <BottomSheet
                     ref={this.bottomSheetRef}
-                    snapPoints = {[heightForKeyboard, storyHeight, 0]}
+                    snapPoints = {[heightForKeyboard - (Platform.OS === 'ios'? 0 : 170), storyHeight - (Platform.OS === 'ios'? 0 : 70), 0]}
                     initialSnap={2}
                     renderContent={this.renderContent}
                     renderHeader={this.renderHeader}

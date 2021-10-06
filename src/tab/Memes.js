@@ -12,7 +12,6 @@ import StoryView from '../timeline/StoryView';
 import Comment from '../timeline/Comment';
 import Menu from '../menu/Menu';
 import config from '../config';
-import NotSubscribed from '../menu/NotSubscribed';
 import { BottomAction } from '../common/Component'
 import connect from '../connector';
 import { tracker } from '../tracker';
@@ -35,11 +34,6 @@ class Memes extends Component {
     hideMenu: false,
     refresh_load: false,
     closed: false
-  }
-
-  UNSAFE_componentWillMount(){
-    let { user } = this.props.navigation.state.params;
-    this.props.retrieveProState(user.ID);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -243,12 +237,8 @@ class Memes extends Component {
 
   render() {
     let { post_list, post_position, hideMenu, refresh_load, closed, user_data } = this.state
-    const {
-      subs: {isPro}
-    } = this.props
     return (
       <View style={{ backgroundColor: '#15202b', flex: 1 }}>
-        {!isPro && !closed && <NotSubscribed  user={user_data} close={() => this.setState({closed: true})}/>}
         <StatusBar hidden />
         <View style={{ position: 'absolute', left: 16, top: 12, zIndex: 1001 }}>
           {!hideMenu ? <MenuIcon onMenuPress={this.openMenu} /> : null}

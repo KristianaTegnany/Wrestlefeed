@@ -11,7 +11,6 @@ import StoryView from '../timeline/StoryView';
 import Comment from '../timeline/Comment';
 import Menu from '../menu/Menu';
 import config from '../config';
-import NotSubscribed from '../menu/NotSubscribed';
 import { BottomAction } from '../common/Component'
 import connect from '../connector';
 import { tracker } from '../tracker';
@@ -42,11 +41,6 @@ class Divas extends Component {
       tracker.trackEvent("Click", "DIVAS")
       tracker.trackScreenView("DIVAS")
     }
-  }
-
-  UNSAFE_componentWillMount(){
-    let { user } = this.props.navigation.state.params;
-    this.props.retrieveProState(user.ID);
   }
 
   componentDidMount() {
@@ -236,9 +230,6 @@ class Divas extends Component {
 
   render() {
     let { post_list, post_position, hideMenu, refresh_load, closed, user_data } = this.state
-    const {
-      subs: {isPro}
-    } = this.props
     return (
       <View style={{ backgroundColor: '#15202b', flex: 1 }}>
         <StatusBar hidden />
@@ -285,7 +276,6 @@ class Divas extends Component {
           <Comment ref="comment" onCloseStory={this.onCommentClose} />
           <Menu ref="menu" onCloseStory={this.onMenuClose} navigation={this.props.navigation} />
         </View>
-        {!isPro && !closed && <NotSubscribed user={user_data} close={() => this.setState({closed: true})} />}
       </View>
     )
   }

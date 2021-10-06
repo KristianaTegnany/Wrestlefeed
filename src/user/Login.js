@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, SafeAreaView, TextInput, Dimensions, ImageBackground, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, SafeAreaView, TextInput, Dimensions, ImageBackground, TouchableOpacity, Alert } from 'react-native';
 import axios from 'axios'
 import { StackActions, NavigationActions } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import config from '../config';
 import { allStyle } from '../allStyles';
-import connect from '../connector';
 
 import { UserButton, BackWithText } from '../common/Component';
 import { tracker } from '../tracker';
@@ -67,7 +66,6 @@ class Login extends Component {
                 if(Login.msg == "Success"){
                     this.storeAndSend(Login.uid);
                     tracker.setUser(Login.uid.toString());
-                    this.props.retrieveProState(Login.uid.toString());
                 }else{
                     this.setState({ loginError: 'Email and password mismatch', loading: false })
                 }
@@ -152,4 +150,4 @@ class Login extends Component {
     }
 }
 
-export default connect(Login);
+export default Login;

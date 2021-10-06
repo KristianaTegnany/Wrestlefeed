@@ -6,7 +6,6 @@ import { LoginManager, AccessToken } from "react-native-fbsdk";
 import firebase from 'react-native-firebase';
 import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
-import connect from '../connector';
 
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
@@ -101,7 +100,6 @@ class Welcome extends Component {
 
   async sendToDashboard(uid) {
     tracker.setUser(uid.toString());
-    this.props.retrieveProState(uid.toString());
     try{
       const resAllPost = await axios.post(config.base_api + "/feed_initial.php", { tab_name: "all", last_id: 0, user_id: uid })
       let { all_post, user } = resAllPost.data
@@ -126,7 +124,6 @@ class Welcome extends Component {
 
   sendToDashboardPush(uid, all_post, user) {
     tracker.setUser(uid.toString());
-    this.props.retrieveProState(uid.toString());
     let resetAction = StackActions.reset({
       index: 0,
       actions: [
@@ -338,4 +335,4 @@ class Welcome extends Component {
   }
 }
 
-export default connect(Welcome);
+export default Welcome;

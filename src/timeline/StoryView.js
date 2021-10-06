@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, Image, TouchableOpacity, StatusBar} from 'react-native';
+import { View, Text, Dimensions, Image, TouchableOpacity, StatusBar, Platform} from 'react-native';
 import BottomSheet from 'reanimated-bottom-sheet'
 import { ScrollView } from 'react-native-gesture-handler';
 import { AppEventsLogger } from 'react-native-fbsdk';
@@ -14,7 +14,7 @@ import { allStyle } from '../allStyles';
 import { tracker } from '../tracker';
 import AsyncStorage from '@react-native-community/async-storage';
 
-let { height, width } = Dimensions.get('window');
+let { height } = Dimensions.get('window');
 let fullHeight = height;
 let notch = DeviceInfo.hasNotch();
 
@@ -51,7 +51,7 @@ class StoryView extends Component{
             post_data = Wrestlefeed.parseContent(post_content);
         }
         return(
-            <View style={{ height: fullHeight, backgroundColor: dark_mode ? '#141414' : 'white',}}>
+            <View style={{ height: fullHeight, backgroundColor: dark_mode ? '#141414' : 'white', paddingBottom: 80 }}>
                     
                 <ScrollView ref={this.storyScroll} style={{ flex: 1, padding: 16, paddingTop: 0 }}>
                     <View style={{ paddingBottom: 8, paddingTop: 12 }}>
@@ -220,7 +220,7 @@ class StoryView extends Component{
             <View style={{ flex: 1 }}>
                 <BottomSheet
                     ref={this.bottomSheetRef}
-                    snapPoints = {[fullHeight, 0]}
+                    snapPoints = {[fullHeight - (Platform.OS === 'ios'? 20 : 80), 0]}
                     initialSnap={1}
                     renderContent={this.renderContent}
                     renderHeader={this.renderHeader}
