@@ -12,7 +12,7 @@ import StoryView from '../timeline/StoryView';
 import Comment from '../timeline/Comment';
 import Menu from '../menu/Menu';
 import config from '../config';
-import { updateDarkMode, pushTabData } from '../action';
+import { updateDarkMode, pushTabData, refreshAds } from '../action';
 import { BottomAction } from '../common/Component'
 
 let sheetOpen = false
@@ -31,7 +31,8 @@ class SmackDown extends Component {
         post_position: 0,
         user_data: '',
         hideMenu: false,
-        refresh_load: false
+        refresh_load: false,
+        nb_swipe: 0
     }
 
     componentDidMount() {
@@ -106,6 +107,11 @@ class SmackDown extends Component {
     }
 
     onPostChange = (position) => {
+        if(this.state.nb_swipe === 4) {
+            this.setState({nb_swipe: 0 })
+            this.props.refreshAds(true);
+          }
+        else this.setState({nb_swipe: this.state.nb_swipe + 1 })
         let { post_list, last_id, post_position, user_data } = this.state;
         if(post_list.length-position < 5 && loading_more == false){
             loading_more = true
@@ -280,4 +286,4 @@ const mapStateToProps = (state) => {
     };
 };
   
-export default connect(mapStateToProps, { updateDarkMode, pushTabData })(SmackDown);
+export default connect(mapStateToProps, { updateDarkMode, pushTabData, refreshAds })(SmackDown);

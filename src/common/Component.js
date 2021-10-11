@@ -303,7 +303,7 @@ export const Stories = (props) => {
                 end={{x: 0, y: 0.8}} 
             >
                 <View style={{ flex: 5 }}></View>
-                <View style={{ flex: 6, paddingLeft: 16, paddingRight: 60, justifyContent: 'flex-end', paddingBottom: 10 }}>
+                <View style={{ flex: 6, paddingLeft: 16, paddingRight: 80, justifyContent: 'flex-end', paddingBottom: 10 }}>
                     <View style={{ flex: 1, alignItems: 'flex-start', justifyContent: 'flex-end', paddingBottom: 2 }}>
                         <PostTime post_date={post_date} post_title={post_title} />
                     </View>

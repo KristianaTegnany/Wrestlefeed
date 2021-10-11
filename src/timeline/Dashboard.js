@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, Dimensions, BackHandler, StatusBar, Text, Alert } from 'react-native';
+import { View, Dimensions, BackHandler, StatusBar, Text, Alert } from 'react-native';
 import Animated, { Easing } from 'react-native-reanimated';
 import { State, TapGestureHandler } from 'react-native-gesture-handler'
 import AsyncStorage from '@react-native-community/async-storage';
@@ -10,7 +10,7 @@ import firebase from 'react-native-firebase';
 import { AppEventsLogger } from "react-native-fbsdk";
 
 import AllTab from './AllTab';
-import { PagerListWrapper, PagerListWrapper1, PagerListWrapper2, PagerListWrapper3, PagerListWrapper4, PagerListWrapper5, PagerListWrapper6, PagerListWrapper7, PagerListWrapper8 } from '../common/Component';
+import { PagerListWrapper, PagerListWrapper1, PagerListWrapper3, PagerListWrapper6, PagerListWrapper7, PagerListWrapper8 } from '../common/Component';
 import StoryView from './StoryView';
 import Comment from './Comment';
 import config from '../config';
@@ -320,7 +320,6 @@ class Dashboard extends Component {
     }
 
     onPostChange(position) {
-
         let current_position = position;
         let { post_list, tab_data, all_post, count_swipe_down, count_swipe_up, post_pos } = this.state;
         let { name, last_id } = tab_data;

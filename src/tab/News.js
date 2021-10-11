@@ -15,7 +15,7 @@ import StoryView from '../timeline/StoryView';
 import Comment from '../timeline/Comment';
 import Menu from '../menu/Menu';
 import config from '../config';
-import { pushTabData, updateDarkMode } from '../action'
+import { pushTabData, updateDarkMode, refreshAds } from '../action'
 import { BottomAction } from '../common/Component'
 import { updateWM } from '../menu/WrestleMoney';
 import { tracker } from '../tracker';
@@ -38,7 +38,8 @@ class News extends Component {
         user_data: '',
         hideMenu: false,
         showGreen: false,
-        refresh_load: false
+        refresh_load: false,
+        nb_swipe: 0
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -49,6 +50,28 @@ class News extends Component {
     }
       
     async componentDidMount() {
+        const advert = firebase.admob().interstitial('ca-app-pub-3940256099942544/1033173712');
+
+        const AdRequest = firebase.admob.AdRequest;
+        const request = new AdRequest();
+        request.addKeyword('foo').addKeyword('bar');
+
+        // Load the advert with our AdRequest
+        advert.loadAd(request.build());
+
+        advert.on('onAdLoaded', () => {
+        console.log('Advert ready to show.');
+        });
+
+        // Simulate the interstitial being shown "sometime" later during the apps lifecycle
+        setTimeout(() => {
+        if (advert.isLoaded()) {
+            advert.show();
+        } else {
+            // Unable to show interstitial - not loaded yet.
+        }
+        }, 1000);
+
         this.pushManage()
         this.props.updateDarkMode(false, true);
         let params = this.props.navigation.state.params;
@@ -242,6 +265,11 @@ class News extends Component {
     }
 
     onPostChange = (position) => {
+        if(this.state.nb_swipe === 4) {
+            this.setState({nb_swipe: 0 })
+            this.props.refreshAds(true);
+        }
+        else this.setState({nb_swipe: this.state.nb_swipe + 1 })
         let { post_list, last_id, post_position, user_data } = this.state;
         if(post_list.length-position < 7 && loading_more == false){
             loading_more = true
@@ -443,4 +471,4 @@ const mapStateToProps = (state) => {
     };
 };
   
-export default connect(mapStateToProps, { pushTabData, updateDarkMode })(withNavigationFocus(News));
+export default connect(mapStateToProps, { pushTabData, updateDarkMode, refreshAds })(withNavigationFocus(News));

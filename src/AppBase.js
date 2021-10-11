@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { Platform, View } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -27,9 +27,10 @@ import Divas from './tab/Divas';
 import config from './config';
 import Tabs from './common/Tabs';
 import { tracker } from './tracker';
+import { useDispatch, useSelector } from 'react-redux';
+import { refreshAds } from './action';
 
 const { Banner, AdRequest } = firebase.admob
-const request = new AdRequest()
 
 let notch = DeviceInfo.hasNotch();
 
@@ -84,14 +85,29 @@ const Dashboard = createMaterialTopTabNavigator(
 )
 
 const DashboardWithAds = (props) => {
+    const dispatch = useDispatch()
+    const { adsShouldRefreshed } = useSelector(state => state.ads)
+    
+    const [request, setRequest] = useState(new AdRequest())
+
+    useEffect(() => {
+        if(adsShouldRefreshed){
+            setRequest(new AdRequest())
+            dispatch(refreshAds(false))   
+        }
+    }, [adsShouldRefreshed])
+
     return(
         <>
             <Dashboard {...props}/>
-            <Banner
-                unitId={Platform.OS === 'ios'? 'ca-app-pub-5290391503017361/1996651647' : 'ca-app-pub-5290391503017361/1801210520'}
-                size={"SMART_BANNER"}
-                request={request.build()}
-            />
+            {
+                !adsShouldRefreshed &&
+                <Banner
+                    unitId={Platform.OS === 'ios'? 'ca-app-pub-5290391503017361/1996651647' : 'ca-app-pub-5290391503017361/1801210520'}
+                    size={"SMART_BANNER"}
+                    request={request.build()}
+                />
+            }
         </>
     )
 }

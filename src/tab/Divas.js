@@ -12,9 +12,10 @@ import Comment from '../timeline/Comment';
 import Menu from '../menu/Menu';
 import config from '../config';
 import { BottomAction } from '../common/Component'
-import connect from '../connector';
 import { tracker } from '../tracker';
 import { withNavigationFocus } from 'react-navigation'
+import { updateDarkMode, pushTabData, refreshAds } from '../action'
+import { connect } from 'react-redux';
 
 let sheetOpen = false
 let loading_more = false
@@ -33,7 +34,8 @@ class Divas extends Component {
     user_data: '',
     hideMenu: false,
     refresh_load: false,
-    closed: false
+    closed: false,
+    nb_swipe: 0
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -116,6 +118,11 @@ class Divas extends Component {
   }
 
   onPostChange = (position) => {
+    if(this.state.nb_swipe === 4) {
+      this.setState({nb_swipe: 0 })
+      this.props.refreshAds(true);
+    }
+    else this.setState({nb_swipe: this.state.nb_swipe + 1 })
     let { post_list, last_id, post_position, user_data } = this.state;
     if (post_list.length - position < 5 && loading_more == false) {
       loading_more = true
@@ -281,4 +288,13 @@ class Divas extends Component {
   }
 }
 
-export default connect(withNavigationFocus(Divas))
+
+const mapStateToProps = (state) => {
+  return {
+      tab: state.tab,
+      setting: state.setting,
+      swipe: state.swipe
+  };
+};
+
+export default connect(mapStateToProps, { updateDarkMode, pushTabData, refreshAds })(withNavigationFocus(Divas));
