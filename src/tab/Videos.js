@@ -18,6 +18,9 @@ import PlayVideoModal from '../common/PlayVideoModal';
 import { BottomAction } from '../common/Component'
 import { tracker } from '../tracker';
 import { withNavigationFocus } from 'react-navigation'
+import firebase from 'react-native-firebase';
+const AdRequest = firebase.admob.AdRequest;
+const request = new AdRequest();
 
 let sheetOpen = false
 let loading_more = false
@@ -38,7 +41,8 @@ class Videos extends Component {
         hideMenu: false,
         refresh_load: false,
         isOpenVideo: false,
-        nb_swipe: 0
+        nb_swipe: 0,
+        advert: firebase.admob().interstitial(config.advert)
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -82,6 +86,16 @@ class Videos extends Component {
         }
     }
 
+    showAdvert() {
+        //request.addKeyword('foo').addKeyword('bar');
+        const { advert } = this.state
+        if (!advert.isLoaded())
+            setTimeout(() => {
+                advert.show()
+            }, 1000);
+        else advert.show()
+    }
+
     setToLatest(cat_id, isrefresh, top_id) {
         let { post_list } = this.state;
         let { data } = this.props.tab;
@@ -109,6 +123,7 @@ class Videos extends Component {
         let self = this;
         BackHandler.addEventListener('hardwareBackPress', function() {
             if(sheetOpen){
+                self.showAdvert()
                 self.refs.comment.closeStory();
                 self.refs.storyview.closeStory();
                 self.refs.menu.closeStory();
@@ -154,6 +169,9 @@ class Videos extends Component {
     }
 
     onReadMorePress = () => {
+        this.setState({advert: firebase.admob().interstitial(config.advert)}, () => {
+            this.state.advert.loadAd(request.build())
+        })
         let { post_list, post_position } = this.state;
         const read_more_data = Wrestlefeed.readMoreProcess(post_list, post_position, sheetOpen)
         if(read_more_data){
@@ -240,7 +258,10 @@ class Videos extends Component {
     }
 
     onMenuClose = () => { sheetOpen = false }
-    onCloseStory = () => { this.toggleTab(false) }
+    onCloseStory = () => { 
+        this.showAdvert();
+        this.toggleTab(false)
+    }
     onCommentClose = () => { this.toggleTab(false) }
     doubleTap = (event) => {
         if (event.nativeEvent.state === State.ACTIVE) {

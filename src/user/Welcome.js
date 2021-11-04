@@ -51,6 +51,7 @@ class Welcome extends Component {
         this.setState({ user_id: value });
         firebase.notifications().getInitialNotification().then((notificationOpen) => {
           if (notificationOpen) {
+            console.log('open notification')
             const notif = notificationOpen.notification;
             if (notif._data && notif._data.pid) {
               this.pushNonLiveApp(notif._data.pid, value, false);
@@ -86,6 +87,7 @@ class Welcome extends Component {
   }
 
   pushNonLiveApp(pid, userId, splash_show) {
+    console.log('push non live app')
     axios.post(`${config.base_api}/push_notify.php`, { "last_id": pid, "user_id": userId }).then((resPostData) => {
       let { all_post, user } = resPostData.data;
       if (all_post) {

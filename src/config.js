@@ -25,6 +25,7 @@ const config = {
         client_id: '126096465796-8v9vo61qobjuel9pgpdc0gfnpvctjg6h.apps.googleusercontent.com',
         client_secret: 'Tw799qAnuAIRFrhgXPpAyvRH',
     },
+    advert: Platform.OS === 'ios'? 'ca-app-pub-3940256099942544/8691691433' : 'ca-app-pub-3940256099942544/1033173712'
 };
   
 export default config;

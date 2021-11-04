@@ -17,6 +17,10 @@ import config from '../config';
 import Wrestlefeed from '../common/Wrestlefeed';
 import Menu from '../menu/Menu';
 
+import firebase from 'react-native-firebase';
+const AdRequest = firebase.admob.AdRequest;
+const request = new AdRequest();
+
 let sheetOpen = false
 let { width, height } = Dimensions.get('screen');
 const { Value, event, block, cond, eq, set, Clock, clockRunning, startClock, timing, stopClock, debug } = Animated;
@@ -80,7 +84,8 @@ class Dashboard extends Component {
             post_raw: [],
             post_ads_data: { post_swiped: 0, post_swiped_index: 0, tab_name: 'NEWS' }, 
             count_swipe_down: 0,
-            count_swipe_up: 0  
+            count_swipe_up: 0,
+            advert: firebase.admob().interstitial(config.advert)  
         }
         this.cartTopOpacity = new Value(1);
         this.tapState = new Value(0);
@@ -113,9 +118,12 @@ class Dashboard extends Component {
         ],[
             set(this.topTab, toggleSidebar(0, -100))
         ])
+        console.log('constructor')
     }
 
     componentDidMount(){
+
+        console.log('did mount')
         this.handleBackPress()
         let params = this.props.navigation.state.params;
         if(params.post_data){
@@ -147,9 +155,18 @@ class Dashboard extends Component {
         this.updateToken(params.userId);
     }
 
+    showAdvert() {
+        //request.addKeyword('foo').addKeyword('bar');
+        const { advert } = this.state
+        if (!advert.isLoaded())
+            setTimeout(() => {
+                advert.show()
+            }, 1000);
+        else advert.show()
+    }
+    
     updateToken(user_id){
         firebase.messaging().getToken().then(token => {
-            console.log('token' + token)
             axios.post(config.base_api + '/firebase_token.php', { user_id, token }).then((resToken) => {
 
             })
@@ -210,6 +227,7 @@ class Dashboard extends Component {
         let self = this;
         BackHandler.addEventListener('hardwareBackPress', function() {
             if(sheetOpen){
+                self.showAdvert()
                 self.refs.comment.closeStory();
                 self.refs.storyview.closeStory();
                 self.refs.menu.closeStory();
@@ -246,6 +264,9 @@ class Dashboard extends Component {
         let post_data = post_list[post_pos];
         let { post_url, isStory } = post_data;
         if(isStory && !sheetOpen){
+            this.setState({advert: firebase.admob().interstitial(config.advert)}, () => {
+                this.state.advert.loadAd(request.build())
+            })
             this.sidebarStatus.setValue(1)
             this.topTabStatus.setValue(1)
             this.refs.storyview.openStory(post_url);

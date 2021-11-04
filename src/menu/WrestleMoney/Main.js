@@ -56,11 +56,14 @@ const Main = (props) => {
           <Error text={errorText} close={backHandler.current} />
         }
       </ImageBackground>
-      <Banner
-        unitId={Platform.OS === 'ios'? 'ca-app-pub-5290391503017361/1996651647' : 'ca-app-pub-5290391503017361/1801210520'}
-        size={"SMART_BANNER"}
-        request={request.build()}
-      />
+      <View style={{height: 70, backgroundColor: 'black'}}>
+        <Banner
+          style={{backgroundColor: 'black'}}
+          unitId={Platform.OS === 'ios'? 'ca-app-pub-3940256099942544/2934735716' : 'ca-app-pub-3940256099942544/6300978111'}
+          size={"SMART_BANNER"}
+          request={request.build()}
+        />
+      </View>
     </View>
   )
 }

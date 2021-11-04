@@ -7,8 +7,6 @@ import { AppEventsLogger } from 'react-native-fbsdk';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import axios from 'axios'
-import firebase from 'react-native-firebase';
-
 import Wrestlefeed from '../common/Wrestlefeed'
 import { PagerListWrapper, MenuIcon, PleaseWait, RefreshIcon, MoneyIcon } from '../common/Component'
 import StoryView from '../timeline/StoryView';
@@ -20,6 +18,10 @@ import { BottomAction } from '../common/Component'
 import { updateWM } from '../menu/WrestleMoney';
 import { tracker } from '../tracker';
 import { withNavigationFocus } from 'react-navigation'
+
+import firebase from 'react-native-firebase';
+const AdRequest = firebase.admob.AdRequest;
+const request = new AdRequest();
 
 let sheetOpen = false
 let loading_more = false
@@ -39,7 +41,8 @@ class News extends Component {
         hideMenu: false,
         showGreen: false,
         refresh_load: false,
-        nb_swipe: 0
+        nb_swipe: 0,
+        advert: firebase.admob().interstitial(config.advert)       
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -50,28 +53,12 @@ class News extends Component {
     }
       
     async componentDidMount() {
-        const advert = firebase.admob().interstitial('ca-app-pub-3940256099942544/1033173712');
-
-        const AdRequest = firebase.admob.AdRequest;
-        const request = new AdRequest();
-        request.addKeyword('foo').addKeyword('bar');
-
-        // Load the advert with our AdRequest
-        advert.loadAd(request.build());
-
-        advert.on('onAdLoaded', () => {
-        console.log('Advert ready to show.');
-        });
-
-        // Simulate the interstitial being shown "sometime" later during the apps lifecycle
-        setTimeout(() => {
-        if (advert.isLoaded()) {
-            advert.show();
-        } else {
-            // Unable to show interstitial - not loaded yet.
-        }
-        }, 1000);
-
+        console.log('did mount News')
+        console.log(request)
+        const newRequest = new firebase.admob.AdRequest()
+        this.setState({advert: firebase.admob().interstitial(config.advert)}, () => {
+            this.state.advert.loadAd(newRequest.build())
+        })
         this.pushManage()
         this.props.updateDarkMode(false, true);
         let params = this.props.navigation.state.params;
@@ -121,8 +108,19 @@ class News extends Component {
         
     }
 
+    showAdvert() {
+        //request.addKeyword('foo').addKeyword('bar');
+        const { advert } = this.state
+        if (!advert.isLoaded())
+            setTimeout(() => {
+                advert.show()
+            }, 1000);
+        else advert.show()
+    }
+    
     pushManage() {
         this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+            console.log('open notification News')
             const notif = notificationOpen.notification;
             // console.log('notif', notif);
             if(notif._data) {
@@ -142,6 +140,7 @@ class News extends Component {
     }
 
     getPushPostData(post_id){
+        console.log('in get push post data')
         let { user_data } = this.state
         Wrestlefeed.showSplash()
         this.refs.storyview.closeStory();
@@ -150,6 +149,7 @@ class News extends Component {
         if(this.props.navigation.isFocused() == false){
             this.props.navigation.navigate("News")
         }
+        console.log('before axios')
         axios.post(`${config.base_api}/push_notify.php`, { "last_id": post_id, "user_id": user_data.ID }).then((resPostData) => {
             let { all_post, user } = resPostData.data;
             let { data } = all_post[0];
@@ -158,6 +158,9 @@ class News extends Component {
                 this.toggleTab(true)
                 let { post_url, content, post_title, isNextStory, isPrevStory } = read_more_data;
                 let { setting } = this.props;
+                this.setState({advert: firebase.admob().interstitial(config.advert)}, () => {
+                    this.state.advert.loadAd(request.build())
+                })
                 this.refs.storyview.openStory(post_url, content, post_title, setting.dark_mode, isNextStory, isPrevStory);
                 setTimeout(() => {
                     Wrestlefeed.hideSplash();
@@ -215,6 +218,7 @@ class News extends Component {
         let self = this;
         BackHandler.addEventListener('hardwareBackPress', function() {
             if(sheetOpen){
+                self.showAdvert()
                 self.refs.comment.closeStory();
                 self.refs.storyview.closeStory();
                 self.refs.menu.closeStory();
@@ -234,6 +238,9 @@ class News extends Component {
                 let { post_url, content, post_title, isNextStory, isPrevStory } = read_more_data;
                 AsyncStorage.getItem('dark_mode').then((resDark) => {
                     let dark_mode = resDark ? true : false;
+                    this.setState({advert: firebase.admob().interstitial(config.advert)}, () => {
+                        this.state.advert.loadAd(request.build())
+                    })
                     this.refs.storyview.openStory(post_url, content, post_title, dark_mode, isNextStory, isPrevStory);
                     setTimeout(() => {
                         this.toggleTab(true)
@@ -291,6 +298,10 @@ class News extends Component {
     }  
 
     onReadMorePress = () => {
+        this.setState({advert: firebase.admob().interstitial(config.advert)}, () => {
+            this.state.advert.loadAd(request.build())
+        })
+            
         const setParamsAction = NavigationActions.setParams({
             params: { hideTabBar: true },
             key: this.props.navigation.state.key,
@@ -391,6 +402,7 @@ class News extends Component {
 
     onMenuClose = () => { sheetOpen = false }
     onCloseStory = () => { 
+        this.showAdvert();
         this.toggleTab(false);
         // this.showAds()
     }
@@ -424,7 +436,7 @@ class News extends Component {
                         ref={this.doubleTapRef}
                         style={{ width, height }}
                     > 
-                        <Animated.View style={{ flex: 1, marginBottom: -1}}>
+                        <Animated.View style={{ flex: 1 }}>
                             {
                                 post_list.length != 0 ?
                                     <>

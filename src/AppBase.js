@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import { Platform, View } from 'react-native';
+import { ActivityIndicator, Platform, View, Dimensions } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import firebase from 'react-native-firebase';
@@ -29,6 +29,7 @@ import Tabs from './common/Tabs';
 import { tracker } from './tracker';
 import { useDispatch, useSelector } from 'react-redux';
 import { refreshAds } from './action';
+const { width } = Dimensions.get('window')
 
 const { Banner, AdRequest } = firebase.admob
 
@@ -87,12 +88,10 @@ const Dashboard = createMaterialTopTabNavigator(
 const DashboardWithAds = (props) => {
     const dispatch = useDispatch()
     const { adsShouldRefreshed } = useSelector(state => state.ads)
+    const request = new AdRequest().build()
     
-    const [request, setRequest] = useState(new AdRequest())
-
     useEffect(() => {
         if(adsShouldRefreshed){
-            setRequest(new AdRequest())
             dispatch(refreshAds(false))   
         }
     }, [adsShouldRefreshed])
@@ -100,14 +99,17 @@ const DashboardWithAds = (props) => {
     return(
         <>
             <Dashboard {...props}/>
+            <View style={{height: 70, backgroundColor: 'black'}}>
             {
                 !adsShouldRefreshed &&
                 <Banner
-                    unitId={Platform.OS === 'ios'? 'ca-app-pub-5290391503017361/1996651647' : 'ca-app-pub-5290391503017361/1801210520'}
+                    style={{backgroundColor: 'black'}}
+                    unitId={Platform.OS === 'ios'? 'ca-app-pub-3940256099942544/2934735716' : 'ca-app-pub-3940256099942544/6300978111'} // 'ca-app-pub-5290391503017361/1801210520'}
                     size={"SMART_BANNER"}
-                    request={request.build()}
+                    request={request}
                 />
             }
+            </View>
         </>
     )
 }

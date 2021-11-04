@@ -441,6 +441,7 @@ export const PagerList = (props) => {
     return(
         <PagerView style={{ flex: 1 }} 
             ref={pageRef}
+            overdrag={true}
             initialPage={index}
             orientation='vertical'
             onPageSelected={(e) => props.onPostChange(e.nativeEvent.position)}
