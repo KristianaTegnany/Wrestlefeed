@@ -13,8 +13,10 @@ import { RenderLoading } from '../../common/Component';
 import bg from '../../assets/images/bg.png'
 
 const Main = (props) => {
-  const { navbar, funcs, backHandler, setActive } = props
+  const { navbar, funcs, backHandler, setActive, team } = props
   const [errorText, setErrorText] = React.useState('')
+
+  console.log(team)
 
   return (
     <View style={{ flex: 1 }}>
@@ -59,7 +61,7 @@ const Main = (props) => {
       <View style={{height: 70, backgroundColor: 'black'}}>
         <Banner
           style={{backgroundColor: 'black'}}
-          unitId={Platform.OS === 'ios'? 'ca-app-pub-3940256099942544/2934735716' : 'ca-app-pub-3940256099942544/6300978111'}
+          unitId={Platform.OS === 'ios'? 'ca-app-pub-5290391503017361/1996651647' : 'ca-app-pub-5290391503017361/1801210520'} // 'ca-app-pub-5290391503017361/1801210520'}
           size={"SMART_BANNER"}
           request={request.build()}
         />

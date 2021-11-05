@@ -790,12 +790,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = wrestlefeed/wrestlefeed.entitlements;
-				CURRENT_PROJECT_VERSION = 39.3;
+				CURRENT_PROJECT_VERSION = 5.0.4;
 				DEVELOPMENT_TEAM = 6B9XB2HBDW;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = wrestlefeed/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 4.9.3;
+				MARKETING_VERSION = 5.0.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -817,11 +817,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = wrestlefeed/wrestlefeed.entitlements;
-				CURRENT_PROJECT_VERSION = 39.3;
+				CURRENT_PROJECT_VERSION = 5.0.4;
 				DEVELOPMENT_TEAM = 6B9XB2HBDW;
 				INFOPLIST_FILE = wrestlefeed/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 4.9.3;
+				MARKETING_VERSION = 5.0.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

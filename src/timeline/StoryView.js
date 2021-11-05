@@ -220,7 +220,7 @@ class StoryView extends Component{
             <View style={{ flex: 1 }}>
                 <BottomSheet
                     ref={this.bottomSheetRef}
-                    snapPoints = {[fullHeight - (Platform.OS === 'ios'? 20 : 80), 0]}
+                    snapPoints = {[fullHeight - (Platform.OS === 'ios'? 60 : 70), 0]}
                     initialSnap={1}
                     renderContent={this.renderContent}
                     renderHeader={this.renderHeader}

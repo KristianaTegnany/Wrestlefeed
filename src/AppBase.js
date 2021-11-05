@@ -104,7 +104,7 @@ const DashboardWithAds = (props) => {
                 !adsShouldRefreshed &&
                 <Banner
                     style={{backgroundColor: 'black'}}
-                    unitId={Platform.OS === 'ios'? 'ca-app-pub-3940256099942544/2934735716' : 'ca-app-pub-3940256099942544/6300978111'} // 'ca-app-pub-5290391503017361/1801210520'}
+                    unitId={Platform.OS === 'ios'? 'ca-app-pub-5290391503017361/1996651647' : 'ca-app-pub-5290391503017361/1801210520'} // 'ca-app-pub-5290391503017361/1801210520'}
                     size={"SMART_BANNER"}
                     request={request}
                 />

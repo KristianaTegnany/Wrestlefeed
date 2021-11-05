@@ -2,7 +2,7 @@ import React from 'react'
 import {Dimensions} from 'react-native'
 
 import {
- View, BackHandler, SafeAreaView
+ Alert, View, BackHandler, SafeAreaView
 } from 'react-native'
 import { Navbar } from '../../common/Component';
 import PointsTable from './PointsTable';
@@ -50,7 +50,7 @@ const WrestleMoney = (props) => {
   const [team, setTeam] = React.useState(wf.team)
   const [wrestlers, setWrestlers] = React.useState(wf.wrestlers)
   const backHandler = React.useRef(null)
-  const fct = funcs(props, { team })
+  const fct = funcs({ team })
   const [active, setActive] = React.useState(fct[0])
 
   const goBackHome = () => {
